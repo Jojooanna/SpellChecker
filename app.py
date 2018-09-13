@@ -71,11 +71,13 @@ class Example(wx.Frame):
 
     def ZoomOut(self, event):
 
-        font2 = wx.Font(12, wx.MODERN, wx.NORMAL, wx.NORMAL, False, u'Consolas')
+        font2 = wx.Font(12, wx.DEFAULT, wx.NORMAL, wx.NORMAL, False, 'Sans')
         self.inputtext.SetFont(font2)
 
     def OnNew(self, event):
         self.inputtext.Clear()
+        font2 = wx.Font(12, wx.DEFAULT, wx.NORMAL, wx.NORMAL, False, u'Consolas')
+        self.inputtext.SetFont(font2)
         with wx.FileDialog(self, "Save txt file", wildcard = "TXT files (*.txt)|*.txt",
                            style=wx.CREATE | wx.FD_OVERWRITE_PROMPT) as fileDialog:
 

@@ -61,7 +61,7 @@ class Example(wx.Frame):
 
     def OnNew(self, event):
         self.inputtext.Clear()
-        with wx.FileDialog(self, "Save txt file", wildcard = "TXT files (*.txt)|*.txt",
+        with wx.FileDialog(self, "Save txt file", wildcard = "Save Text (*.txt) | *.txt | All Files (*.*)|*.*",
                            style=wx.CREATE | wx.FD_OVERWRITE_PROMPT) as fileDialog:
 
             if fileDialog.ShowModal() == wx.ID_CANCEL:

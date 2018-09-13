@@ -71,7 +71,7 @@ class Example(wx.Frame):
 
     def ZoomOut(self, event):
 
-        font2 = wx.Font(12, wx.DEFAULT, wx.NORMAL, wx.NORMAL, False, 'Sans')
+        font2 = wx.Font(80, wx.MODERN, wx.NORMAL, wx.NORMAL, False, u'Consolas')
         self.inputtext.SetFont(font2)
 
     def OnNew(self, event):

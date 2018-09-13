@@ -8,7 +8,7 @@ class Example(wx.Frame):
         super(Example, self).__init__(*args, **kwargs)
 
         self.inputtext = wx.TextCtrl(self, size = (800, 650), style=wx.TE_MULTILINE)
-
+        self.aboutme = wx.MessageDialog(self, "Basic Commands in this Program", "About Spell Checker", wx.OK)
         self.InitUI()
 
     def InitUI(self):
@@ -18,18 +18,15 @@ class Example(wx.Frame):
         menubar = wx.MenuBar()
         FileMenu = wx.Menu()
 
-        fileNew = FileMenu.Append(wx.ID_NEW, '&New')
-        fileOpen = FileMenu.Append(wx.ID_OPEN, '&Open')
+        fileNew = FileMenu.Append(wx.ID_NEW, '&New', "Create New File")
+        fileOpen = FileMenu.Append(wx.ID_OPEN, '&Open', "Open File")
         FileMenu.AppendSeparator()
 
-        fileSave = FileMenu.Append(wx.ID_SAVE, '&Save')
-        fileSaveAs = FileMenu.Append(wx.ID_SAVEAS, '&Save As')
+        fileSave = FileMenu.Append(wx.ID_SAVE, '&Save',"Save File")
+        fileSaveAs = FileMenu.Append(wx.ID_SAVEAS, '&Save As', "Save File As")
         FileMenu.AppendSeparator()
 
-        FileMenu.Append(wx.ID_EDIT, '&Rename')
-        FileMenu.AppendSeparator()
-
-        fileQuit = FileMenu.Append(wx.ID_EXIT, 'Quit\tCtrl+Q', 'Quit application')
+        fileQuit = FileMenu.Append(wx.ID_EXIT, 'Quit\tCtrl+Q', 'Quit Program')
         # fileItem1 = NewMenu.Append(wx.ID_EXIT, 'New\tCtrl+F', 'Create New File')
 
         ViewMenu = wx.Menu()
@@ -43,7 +40,7 @@ class Example(wx.Frame):
 
         HelpMenu = wx.Menu()
 
-        HelpMenu.Append(wx.ITEM_NORMAL, '&Help')
+        help = HelpMenu.Append(wx.ID_ABOUT, '&Help')
 
         menubar.Append(FileMenu, '&File')
         menubar.Append(ViewMenu, '&View')
@@ -54,7 +51,8 @@ class Example(wx.Frame):
         self.Bind(wx.EVT_MENU, self.OnOpen, fileOpen) #works
         self.Bind(wx.EVT_MENU, self.OnSave, fileSave)
         self.Bind(wx.EVT_MENU, self.OnSaveAs, fileSaveAs)
-        self.Bind(wx.EVT_MENU, self.OnQuit, fileQuit)
+        self.Bind(wx.EVT_MENU, self.OnAbout, help) #kuwang
+        self.Bind(wx.EVT_MENU, self.OnQuit, fileQuit) #works
         # self.Bind(wx.EVT_MENU, self.NewFile, fileItem1)
 
         self.SetSize((1200, 700))
@@ -62,6 +60,7 @@ class Example(wx.Frame):
         self.Centre()
 
     def OnNew(self, event):
+        self.inputtext.Clear()
         with wx.FileDialog(self, "Save txt file", wildcard = "TXT files (*.txt)|*.txt",
                            style=wx.CREATE | wx.FD_OVERWRITE_PROMPT) as fileDialog:
 
@@ -77,6 +76,7 @@ class Example(wx.Frame):
                 wx.LogError("Cannot save current data in file '%s'." % pathname)
 
     def OnOpen(self, event):
+        self.inputtext.Clear()
         wildcard = "TXT files (*.txt)|*.txt"
         dialog = wx.FileDialog(self, "Open", wildcard=wildcard,
                                style=wx.FD_OPEN | wx.FD_FILE_MUST_EXIST)
@@ -89,28 +89,17 @@ class Example(wx.Frame):
         if os.path.exists(path):
             with open(path) as fileobject:
                 for line in fileobject:
-                    print "You chose %s" % dialog.GetPath()
+                    print "%s" % dialog.GetPath()
                     self.inputtext.WriteText(line)
 
     def OnSave(self, event):
-        dlg = wx.FileDialog(
-            self, message="Save file as ...",
-            defaultFile="", wildcard="txt files (*.txt)|*.txt|All Files (*.*)|*.*", style=wx.FD_SAVE
-        )
-        if dlg.ShowModal() == wx.ID_OK:
-            path = dlg.GetPath()
-            print "You chose the following filename: %s" % path
-        dlg.Destroy()
-
-        """self.dirname = ""
-        dialog = wx.FileDialog(self, "Save txt file", self.dirname, "",
-                                       wildcard="txt files (*.txt)|*.txt|All Files (*.*)|*.*",
-                                       style = wx.SAVE | wx.OVERWRITE_PROMPT)"""
-
+        self.inputtext.SaveFile()
 
     def OnSaveAs(self, event):
-        with wx.FileDialog(self, "Save txt file", wildcard="All Files (*.*)|*.*",
-                           style=wx.FD_SAVE | wx.FD_OVERWRITE_PROMPT) as fileDialog:
+        self.inputtext.SaveFile()
+        dialog = wx.FileDialog(self, "Save txt file", wildcard="All Files (*.*)|*.*",
+                           style=wx.FD_SAVE | wx.FD_OVERWRITE_PROMPT)
+        with dialog as fileDialog:
 
             if fileDialog.ShowModal() == wx.ID_CANCEL:
                 return  # the user changed their mind
@@ -119,6 +108,7 @@ class Example(wx.Frame):
             pathname = fileDialog.GetPath()
             try:
                 with open(pathname, 'w') as file:
+                    #self.inputtext.SaveFile()
                     self.doSaveData(file)
             except IOError:
                 wx.LogError("Cannot save current data in file '%s'." % pathname)
@@ -128,6 +118,8 @@ class Example(wx.Frame):
             self.Close()
             return
 
+    def OnAbout(self, event):
+        self.aboutme.ShowModal()
 
 def main():
 

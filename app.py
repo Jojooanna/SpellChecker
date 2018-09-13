@@ -29,11 +29,13 @@ class Example(wx.Frame):
         fileQuit = FileMenu.Append(wx.ID_EXIT, 'Quit\tCtrl+Q', 'Quit Program')
         # fileItem1 = NewMenu.Append(wx.ID_EXIT, 'New\tCtrl+F', 'Create New File')
 
+
         ViewMenu = wx.Menu()
+
+        ZoomIn = ViewMenu.Append(wx.ITEM_NORMAL, '&Zoom In', "Zoom In")
 
         ViewMenu.Append(wx.ITEM_NORMAL, '&Zoom Out')
         ViewMenu.Append(wx.ITEM_NORMAL, '&Normal')
-        ViewMenu.Append(wx.ITEM_NORMAL, '&Zoom In')
         ViewMenu.AppendSeparator()
 
         ViewMenu.Append(wx.ITEM_NORMAL, '&Full Screen')
@@ -50,14 +52,21 @@ class Example(wx.Frame):
         self.Bind(wx.EVT_MENU, self.OnNew, fileNew)
         self.Bind(wx.EVT_MENU, self.OnOpen, fileOpen) #works
         self.Bind(wx.EVT_MENU, self.OnSave, fileSave)
-        self.Bind(wx.EVT_MENU, self.OnSaveAs, fileSaveAs)
+        self.Bind(wx.EVT_MENU, self.OnSaveAs, fileSaveAs)#works(.txt)
         self.Bind(wx.EVT_MENU, self.OnAbout, help) #kuwang
         self.Bind(wx.EVT_MENU, self.OnQuit, fileQuit) #works
         # self.Bind(wx.EVT_MENU, self.NewFile, fileItem1)
+        self.Bind(wx.EVT_MENU, self.ZoomIn, ZoomIn)
 
         self.SetSize((1200, 700))
         self.SetTitle('Filipino Spelling Checker')
         self.Centre()
+
+
+    def ZoomIn(self, event):
+
+        font1 = wx.Font(90, wx.MODERN, wx.NORMAL, wx.NORMAL, False, u'Consolas')
+        self.inputtext.SetFont(font1)
 
     def OnNew(self, event):
         self.inputtext.Clear()

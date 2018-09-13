@@ -401,9 +401,7 @@ class meta:
         return primary, secondary
 
 
-top = tkinter.Tk()
-# Code to add widgets will go here...
-top.mainloop()
+
 dict = {"hell": [1, 2, 3], "ej": [1, 2], "TSK": ['hello', 'world']}
 # How to use metaphone algorithm
 x = meta()

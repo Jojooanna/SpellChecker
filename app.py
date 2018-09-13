@@ -63,7 +63,7 @@ class Example(wx.Frame):
 
     def OnNew(self, event):
         with wx.FileDialog(self, "Save txt file", wildcard = "TXT files (*.txt)|*.txt",
-                           style=wx.FD_SAVE | wx.FD_OVERWRITE_PROMPT) as fileDialog:
+                           style=wx.CREATE | wx.FD_OVERWRITE_PROMPT) as fileDialog:
 
             if fileDialog.ShowModal() == wx.ID_CANCEL:
                 return  # the user changed their mind
@@ -89,14 +89,23 @@ class Example(wx.Frame):
         if os.path.exists(path):
             with open(path) as fileobject:
                 for line in fileobject:
+                    print "You chose %s" % dialog.GetPath()
                     self.inputtext.WriteText(line)
-                    print path
 
     def OnSave(self, event):
-        self.dirname = ""
+        dlg = wx.FileDialog(
+            self, message="Save file as ...",
+            defaultFile="", wildcard="txt files (*.txt)|*.txt|All Files (*.*)|*.*", style=wx.FD_SAVE
+        )
+        if dlg.ShowModal() == wx.ID_OK:
+            path = dlg.GetPath()
+            print "You chose the following filename: %s" % path
+        dlg.Destroy()
+
+        """self.dirname = ""
         dialog = wx.FileDialog(self, "Save txt file", self.dirname, "",
                                        wildcard="txt files (*.txt)|*.txt|All Files (*.*)|*.*",
-                                       style = wx.SAVE | wx.OVERWRITE_PROMPT)
+                                       style = wx.SAVE | wx.OVERWRITE_PROMPT)"""
 
 
     def OnSaveAs(self, event):

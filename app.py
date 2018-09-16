@@ -1,13 +1,25 @@
 import os
 import wx
+import pymysql
 
+connection = pymysql.connect(host='hostname', user='', password='', db= '' )
+cursor = connection.cursor()
+sql = 'CREATE DATABASE spelling'
+cursor.execute(sql)
+
+commonwords = '''CREATE TABLE common (
+       id INT(3) PRIMARY,
+       word VARCHAR(50) DEFAULT
+       )
+       '''
+cursor.execute(commonwords)
 
 class Example(wx.Frame):
 
     def __init__(self, *args, **kwargs):
         super(Example, self).__init__(*args, **kwargs)
 
-        self.inputtext = wx.TextCtrl(self, size = (800, 650), style=wx.TE_MULTILINE)
+        self.inputtext = wx.TextCtrl(self, size = (800, 640), style=wx.TE_MULTILINE)
         self.aboutme = wx.MessageDialog(self, "Basic Commands in this Program", "About Spell Checker", wx.OK)
         self.InitUI()
 
@@ -71,7 +83,7 @@ class Example(wx.Frame):
 
     def ZoomOut(self, event):
 
-        font2 = wx.Font(80, wx.MODERN, wx.NORMAL, wx.NORMAL, False, u'Consolas')
+        font2 = wx.Font(80, wx.DEFAULT, wx.NORMAL, wx.NORMAL, False, u'Consolas')
         self.inputtext.SetFont(font2)
 
     def OnNew(self, event):

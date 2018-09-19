@@ -32,10 +32,10 @@ class Example(wx.Frame):
 
         ViewMenu = wx.Menu()
 
-        ZoomIn = ViewMenu.Append(wx.ITEM_NORMAL, '&Zoom In', "Zoom In")
-        ZoomOut = ViewMenu.Append(wx.ITEM_NORMAL, '&Zoom Out', "Zoom Out")
+        ZoomIn = ViewMenu.Append(wx.ITEM_NORMAL, '&Zoom In')
+        Normal = ViewMenu.Append(wx.ITEM_NORMAL, '&Normal')
+        ZoomOut = ViewMenu.Append(wx.ITEM_NORMAL, '&Zoom Out')
 
-        ViewMenu.Append(wx.ITEM_NORMAL, '&Normal')
         ViewMenu.AppendSeparator()
 
         ViewMenu.Append(wx.ITEM_NORMAL, '&Full Screen')
@@ -52,32 +52,21 @@ class Example(wx.Frame):
         self.Bind(wx.EVT_MENU, self.OnNew, fileNew)
         self.Bind(wx.EVT_MENU, self.OnOpen, fileOpen) #works
         self.Bind(wx.EVT_MENU, self.OnSave, fileSave)
-        self.Bind(wx.EVT_MENU, self.OnSaveAs, fileSaveAs)#works(.txt)
+        self.Bind(wx.EVT_MENU, self.OnSaveAs, fileSaveAs) #works(.txt)
         self.Bind(wx.EVT_MENU, self.OnAbout, help) #kuwang
         self.Bind(wx.EVT_MENU, self.OnQuit, fileQuit) #works
         # self.Bind(wx.EVT_MENU, self.NewFile, fileItem1)
-        self.Bind(wx.EVT_MENU, self.ZoomIn, ZoomIn)#works
-        self.Bind(wx.EVT_MENU, self.ZoomIn, ZoomOut)#notworking
+
+        self.Bind(wx.EVT_MENU, self.ZoomIn, ZoomIn) #works
+        self.Bind(wx.EVT_MENU, self.Normal, Normal)
+        self.Bind(wx.EVT_MENU, self.ZoomOut, ZoomOut) #notworking
 
         self.SetSize((1200, 700))
         self.SetTitle('Filipino Spelling Checker')
         self.Centre()
 
-
-    def ZoomIn(self, event):
-
-        font1 = wx.Font(90, wx.MODERN, wx.NORMAL, wx.NORMAL, False, u'Consolas')
-        self.inputtext.SetFont(font1)
-
-    def ZoomOut(self, event):
-
-        font2 = wx.Font(80, wx.MODERN, wx.NORMAL, wx.NORMAL, False, u'Consolas')
-        self.inputtext.SetFont(font2)
-
     def OnNew(self, event):
         self.inputtext.Clear()
-        font2 = wx.Font(12, wx.DEFAULT, wx.NORMAL, wx.NORMAL, False, u'Consolas')
-        self.inputtext.SetFont(font2)
         with wx.FileDialog(self, "Save txt file", wildcard = "TXT files (*.txt)|*.txt",
                            style=wx.CREATE | wx.FD_OVERWRITE_PROMPT) as fileDialog:
 
@@ -137,6 +126,19 @@ class Example(wx.Frame):
 
     def OnAbout(self, event):
         self.aboutme.ShowModal()
+
+
+    def ZoomIn(self, event):
+        font = wx.Font(24, wx.MODERN, wx.NORMAL, wx.NORMAL, False, u'Consolas')
+        self.inputtext.SetFont(font)
+
+    def Normal(self, event):
+        font = wx.Font(12, wx.MODERN, wx.NORMAL, wx.NORMAL, False, u'Consolas')
+        self.inputtext.SetFont(font)
+
+    def ZoomOut(self, event):
+        font = wx.Font(6, wx.MODERN, wx.NORMAL, wx.NORMAL, False, u'Consolas')
+        self.inputtext.SetFont(font)
 
 def main():
 

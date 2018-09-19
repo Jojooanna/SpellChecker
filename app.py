@@ -1,31 +1,38 @@
 import os
 import wx
 import pymysql
+import re
+import string
 
-connection = pymysql.connect(host='hostname', user='', password='', db= '' )
-cursor = connection.cursor()
-sql = 'CREATE DATABASE spelling'
-cursor.execute(sql)
-
-commonwords = '''CREATE TABLE common (
-       id INT(3) PRIMARY,
-       word VARCHAR(50) DEFAULT
-       )
-       '''
-cursor.execute(commonwords)
+# connection = pymysql.connect(host='hostname', user='', password='', db= '' )
+# cursor = connection.cursor()
+# sql = 'CREATE DATABASE spelling'
+# cursor.execute(sql)
+#
+# commonwords = '''CREATE TABLE common (
+#        id INT(3) PRIMARY,
+#        word VARCHAR(50) DEFAULT
+#        )
+#        '''
+# cursor.execute(commonwords)
 
 class Example(wx.Frame):
 
     def __init__(self, *args, **kwargs):
         super(Example, self).__init__(*args, **kwargs)
 
-        self.inputtext = wx.TextCtrl(self, size = (800, 640), style=wx.TE_MULTILINE)
         self.aboutme = wx.MessageDialog(self, "Basic Commands in this Program", "About Spell Checker", wx.OK)
+
         self.InitUI()
+
+
 
     def InitUI(self):
 
-        panel = wx.Panel(self)
+        self.panel = wx.Panel(self)
+        self.inputtext = wx.TextCtrl(self.panel, size=(880, 600))
+        self.button = wx.Button(self.panel, label="Check Spelling", pos=(780, 605))
+        self.button.Bind(wx.EVT_BUTTON, self.OnButton)
 
         menubar = wx.MenuBar()
         FileMenu = wx.Menu()
@@ -75,11 +82,19 @@ class Example(wx.Frame):
         self.SetTitle('Filipino Spelling Checker')
         self.Centre()
 
+    def OnButton(self, e):
+            # self.result.SetLabel(self.editname.GetValue())
+            print(self.inputtext.GetValue())
+    def closeButton(self, event):
+        print "Button pressed."
 
     def ZoomIn(self, event):
 
-        font1 = wx.Font(90, wx.MODERN, wx.NORMAL, wx.NORMAL, False, u'Consolas')
+        font1 = wx.Font(20, wx.MODERN, wx.NORMAL, wx.NORMAL, False, u'Consolas')
         self.inputtext.SetFont(font1)
+        self.inputtext = "'" +self.inputtext.GetValue() + "'"
+        self.inputtext.split()
+        print(self.inputtext.split())
 
     def ZoomOut(self, event):
 
@@ -137,10 +152,15 @@ class Example(wx.Frame):
             pathname = fileDialog.GetPath()
             try:
                 with open(pathname, 'w') as file:
-                    #self.inputtext.SaveFile()
+                    self.inputtext.SaveFile()
                     self.doSaveData(file)
             except IOError:
                 wx.LogError("Cannot save current data in file '%s'." % pathname)
+
+    def dosave(self, event):
+        savefile = open(self.filename, 'w')
+        savefile.write(self.inputtext.GetValue())
+        savefile.close()
 
     def OnQuit(self, event):
         if wx.MessageBox("Exit SpellChecker?", "Please confirm", wx.YES_NO) != wx.NO:

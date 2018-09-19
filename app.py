@@ -1,13 +1,13 @@
 import os
 import wx
-
+#import sql
 
 class Example(wx.Frame):
 
     def __init__(self, *args, **kwargs):
         super(Example, self).__init__(*args, **kwargs)
 
-        self.inputtext = wx.TextCtrl(self, size = (800, 650), style=wx.TE_MULTILINE)
+        self.inputtext = wx.TextCtrl(self, size = (800, 640), style=wx.TE_MULTILINE)
         self.aboutme = wx.MessageDialog(self, "Basic Commands in this Program", "About Spell Checker", wx.OK)
         self.InitUI()
 
@@ -57,9 +57,9 @@ class Example(wx.Frame):
         self.Bind(wx.EVT_MENU, self.OnQuit, fileQuit) #works
         # self.Bind(wx.EVT_MENU, self.NewFile, fileItem1)
 
-        self.Bind(wx.EVT_MENU, self.ZoomIn, ZoomIn) #works
-        self.Bind(wx.EVT_MENU, self.Normal, Normal)
-        self.Bind(wx.EVT_MENU, self.ZoomOut, ZoomOut) #notworking
+        # self.Bind(wx.EVT_MENU, self.ZoomIn, ZoomIn) #works
+        # self.Bind(wx.EVT_MENU, self.Normal, Normal)
+        # self.Bind(wx.EVT_MENU, self.ZoomOut, ZoomOut) #notworking
 
         self.SetSize((1200, 700))
         self.SetTitle('Filipino Spelling Checker')
@@ -127,18 +127,17 @@ class Example(wx.Frame):
     def OnAbout(self, event):
         self.aboutme.ShowModal()
 
-
-    def ZoomIn(self, event):
-        font = wx.Font(24, wx.MODERN, wx.NORMAL, wx.NORMAL, False, u'Consolas')
-        self.inputtext.SetFont(font)
-
-    def Normal(self, event):
-        font = wx.Font(12, wx.MODERN, wx.NORMAL, wx.NORMAL, False, u'Consolas')
-        self.inputtext.SetFont(font)
-
-    def ZoomOut(self, event):
-        font = wx.Font(6, wx.MODERN, wx.NORMAL, wx.NORMAL, False, u'Consolas')
-        self.inputtext.SetFont(font)
+    # def ZoomIn(self, event):
+    #     font = wx.Font(24, wx.MODERN, wx.NORMAL, wx.NORMAL, False, u'Consolas')
+    #     self.inputtext.SetFont(font)
+    #
+    # def Normal(self, event):
+    #     font = wx.Font(12, wx.MODERN, wx.NORMAL, wx.NORMAL, False, u'Consolas')
+    #     self.inputtext.SetFont(font)
+    #
+    # def ZoomOut(self, event):
+    #     font = wx.Font(6, wx.MODERN, wx.NORMAL, wx.NORMAL, False, u'Consolas')
+    #     self.inputtext.SetFont(font)
 
 def main():
 

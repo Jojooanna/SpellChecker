@@ -1,19 +1,33 @@
 import os
 import wx
-#import sql
+import pymysql
+import re
+import string
+
+# connection = pymysql.connect(host='hostname', user='', password='', db= '' )
+# cursor = connection.cursor()
+# sql = 'CREATE DATABASE spelling'
+# cursor.execute(sql)
+#
+# commonwords = '''CREATE TABLE common (
+#        id INT(3) PRIMARY,
+#        word VARCHAR(50) DEFAULT
+#        )
+#        '''
+# cursor.execute(commonwords)
 
 class Example(wx.Frame):
 
     def __init__(self, *args, **kwargs):
         super(Example, self).__init__(*args, **kwargs)
 
-        self.inputtext = wx.TextCtrl(self, size = (900, 640), style=wx.TE_MULTILINE)
         self.aboutme = wx.MessageDialog(self, "Basic Commands in this Program", "About Spell Checker", wx.OK)
         self.InitUI()
 
+
     def InitUI(self):
 
-        panel = wx.Panel(self)
+        self.panel = wx.Panel(self)
 
         menubar = wx.MenuBar()
         FileMenu = wx.Menu()
@@ -31,10 +45,10 @@ class Example(wx.Frame):
 
         ViewMenu = wx.Menu()
 
-        ZoomIn = ViewMenu.Append(wx.ITEM_NORMAL, '&Zoom In')
-        Normal = ViewMenu.Append(wx.ITEM_NORMAL, '&Normal')
-        ZoomOut = ViewMenu.Append(wx.ITEM_NORMAL, '&Zoom Out')
+        ZoomIn = ViewMenu.Append(wx.ITEM_NORMAL, '&Zoom In', "Zoom In")
+        ZoomOut = ViewMenu.Append(wx.ITEM_NORMAL, '&Zoom Out', "Zoom Out")
 
+        ViewMenu.Append(wx.ITEM_NORMAL, '&Normal')
         ViewMenu.AppendSeparator()
 
         ViewMenu.Append(wx.ITEM_NORMAL, '&Full Screen')
@@ -48,41 +62,76 @@ class Example(wx.Frame):
         menubar.Append(HelpMenu, '&Help')
         self.SetMenuBar(menubar)
 
-        hcontainer = wx.BoxSizer(wx.HORIZONTAL)
-        vcontainer = wx.BoxSizer(wx.VERTICAL)
+        hbox = wx.BoxSizer(wx.HORIZONTAL)
 
-        hcontainer1 = wx.BoxSizer(wx.HORIZONTAL)
-        previous = wx.Button(panel, label="<", size=(30,30))
-        hcontainer1.Add(previous)
+        self.inputtext = wx.TextCtrl(self.panel, size=(900, 600), style=wx.TE_MULTILINE)
+        self.check = wx.Button(self.panel, label="Check Spelling")
+        self.check.Bind(wx.EVT_BUTTON, self.OnButton)
+
+        vbox1 = wx.BoxSizer(wx.VERTICAL)
+        vbox1.Add((-1,10))
+        vbox1.Add(self.inputtext)
+        vbox1.Add((-1,10))
+        vbox1.Add(self.check, flag=wx.CENTER)
+        hbox.Add(vbox1, flag=wx.LEFT)
+
+        vbox2 = wx.BoxSizer(wx.VERTICAL)
+        hbox1 = wx.BoxSizer(wx.HORIZONTAL)
+
+        vbox2.Add((-1,10))
+        previous = wx.Button(self.panel, label="<")
+        hbox1.Add(previous, 0, flag=wx.EXPAND)
         # Misspelled word will be displayed here.
-        word = wx.StaticText(panel, label="Misspelled Word")
-        hcontainer1.Add(word)
-        next = wx.Button(panel, label=">", size=(30,30))
-        hcontainer1.Add(next)
+        word = wx.StaticText(self.panel, label="Misspelled Word")
+        hbox1.Add(word, 1, flag=wx.EXPAND)
+        next = wx.Button(self.panel, label=">")
+        hbox1.Add(next, 0, flag=wx.EXPAND)
 
-        vcontainer.Add(hcontainer1)
+        vbox2.Add(hbox1, flag=wx.CENTER)
 
-        hcontainer.Add(self.inputtext, flag=wx.LEFT)
-        hcontainer.Add(vcontainer, flag=wx.RIGHT)
+        # wordsuggest = wx.ListBox(parent, choices=['word1', 'word2', 'word3', 'word4', 'word5', 'word6', 'word7'], style=wx.LB_HSCROLL)
+        # vbox2.Add(wordsuggest, flag=wx.CENTER)
+
+        hbox.Add(vbox2, flag=wx.RIGHT)
 
         self.Bind(wx.EVT_MENU, self.OnNew, fileNew)
         self.Bind(wx.EVT_MENU, self.OnOpen, fileOpen) #works
-        #self.Bind(wx.EVT_MENU, self.inputtext.SaveFile(), fileSave)
-        self.Bind(wx.EVT_MENU, self.OnSaveAs, fileSaveAs) #works(.txt)
+        #self.Bind(wx.EVT_MENU, self.OnSave, fileSave)
+        self.Bind(wx.EVT_MENU, self.OnSaveAs, fileSaveAs)#works(.txt)
         self.Bind(wx.EVT_MENU, self.OnAbout, help) #kuwang
         self.Bind(wx.EVT_MENU, self.OnQuit, fileQuit) #works
         # self.Bind(wx.EVT_MENU, self.NewFile, fileItem1)
+        self.Bind(wx.EVT_MENU, self.ZoomIn, ZoomIn)#works
+        self.Bind(wx.EVT_MENU, self.ZoomIn, ZoomOut)#notworking
 
-        # self.Bind(wx.EVT_MENU, self.ZoomIn, ZoomIn) #works
-        # self.Bind(wx.EVT_MENU, self.Normal, Normal)
-        # self.Bind(wx.EVT_MENU, self.ZoomOut, ZoomOut) #notworking
-
+        self.panel.SetSizer(hbox)
         self.SetSize((1200, 700))
         self.SetTitle('Filipino Spelling Checker')
         self.Centre()
 
+    def OnButton(self, e):
+            # self.result.SetLabel(self.editname.GetValue())
+            print(self.inputtext.GetValue())
+    def closeButton(self, event):
+        print "Button pressed."
+
+    def ZoomIn(self, event):
+
+        font1 = wx.Font(20, wx.MODERN, wx.NORMAL, wx.NORMAL, False, u'Consolas')
+        self.inputtext.SetFont(font1)
+        self.inputtext = "'" +self.inputtext.GetValue() + "'"
+        self.inputtext.split()
+        print(self.inputtext.split())
+
+    def ZoomOut(self, event):
+
+        font2 = wx.Font(80, wx.DEFAULT, wx.NORMAL, wx.NORMAL, False, u'Consolas')
+        self.inputtext.SetFont(font2)
+
     def OnNew(self, event):
         self.inputtext.Clear()
+        font2 = wx.Font(12, wx.DEFAULT, wx.NORMAL, wx.NORMAL, False, u'Consolas')
+        self.inputtext.SetFont(font2)
         with wx.FileDialog(self, "Save txt file", wildcard = "TXT files (*.txt)|*.txt",
                            style=wx.CREATE | wx.FD_OVERWRITE_PROMPT) as fileDialog:
 
@@ -128,10 +177,15 @@ class Example(wx.Frame):
             pathname = fileDialog.GetPath()
             try:
                 with open(pathname, 'w') as file:
-                    #self.inputtext.SaveFile()
+                    self.inputtext.SaveFile()
                     self.doSaveData(file)
             except IOError:
                 wx.LogError("Cannot save current data in file '%s'." % pathname)
+
+    def dosave(self, event):
+        savefile = open(self.filename, 'w')
+        savefile.write(self.inputtext.GetValue())
+        savefile.close()
 
     def OnQuit(self, event):
         if wx.MessageBox("Exit SpellChecker?", "Please confirm", wx.YES_NO) != wx.NO:
@@ -140,18 +194,6 @@ class Example(wx.Frame):
 
     def OnAbout(self, event):
         self.aboutme.ShowModal()
-
-    # def ZoomIn(self, event):
-    #     font = wx.Font(24, wx.MODERN, wx.NORMAL, wx.NORMAL, False, u'Consolas')
-    #     self.inputtext.SetFont(font)
-    #
-    # def Normal(self, event):
-    #     font = wx.Font(12, wx.MODERN, wx.NORMAL, wx.NORMAL, False, u'Consolas')
-    #     self.inputtext.SetFont(font)
-    #
-    # def ZoomOut(self, event):
-    #     font = wx.Font(6, wx.MODERN, wx.NORMAL, wx.NORMAL, False, u'Consolas')
-    #     self.inputtext.SetFont(font)
 
 def main():
 

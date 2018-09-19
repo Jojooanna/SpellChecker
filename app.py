@@ -7,7 +7,7 @@ class Example(wx.Frame):
     def __init__(self, *args, **kwargs):
         super(Example, self).__init__(*args, **kwargs)
 
-        self.inputtext = wx.TextCtrl(self, size = (800, 640), style=wx.TE_MULTILINE)
+        self.inputtext = wx.TextCtrl(self, size = (900, 640), style=wx.TE_MULTILINE)
         self.aboutme = wx.MessageDialog(self, "Basic Commands in this Program", "About Spell Checker", wx.OK)
         self.InitUI()
 
@@ -29,7 +29,6 @@ class Example(wx.Frame):
         fileQuit = FileMenu.Append(wx.ID_EXIT, 'Quit\tCtrl+Q', 'Quit Program')
         # fileItem1 = NewMenu.Append(wx.ID_EXIT, 'New\tCtrl+F', 'Create New File')
 
-
         ViewMenu = wx.Menu()
 
         ZoomIn = ViewMenu.Append(wx.ITEM_NORMAL, '&Zoom In')
@@ -49,9 +48,26 @@ class Example(wx.Frame):
         menubar.Append(HelpMenu, '&Help')
         self.SetMenuBar(menubar)
 
+        hcontainer = wx.BoxSizer(wx.HORIZONTAL)
+        vcontainer = wx.BoxSizer(wx.VERTICAL)
+
+        hcontainer1 = wx.BoxSizer(wx.HORIZONTAL)
+        previous = wx.Button(panel, label="<", size=(30,30))
+        hcontainer1.Add(previous)
+        # Misspelled word will be displayed here.
+        word = wx.StaticText(panel, label="Misspelled Word")
+        hcontainer1.Add(word)
+        next = wx.Button(panel, label=">", size=(30,30))
+        hcontainer1.Add(next)
+
+        vcontainer.Add(hcontainer1)
+
+        hcontainer.Add(self.inputtext, flag=wx.LEFT)
+        hcontainer.Add(vcontainer, flag=wx.RIGHT)
+
         self.Bind(wx.EVT_MENU, self.OnNew, fileNew)
         self.Bind(wx.EVT_MENU, self.OnOpen, fileOpen) #works
-        self.Bind(wx.EVT_MENU, self.OnSave, fileSave)
+        #self.Bind(wx.EVT_MENU, self.inputtext.SaveFile(), fileSave)
         self.Bind(wx.EVT_MENU, self.OnSaveAs, fileSaveAs) #works(.txt)
         self.Bind(wx.EVT_MENU, self.OnAbout, help) #kuwang
         self.Bind(wx.EVT_MENU, self.OnQuit, fileQuit) #works
@@ -98,8 +114,6 @@ class Example(wx.Frame):
                     print "%s" % dialog.GetPath()
                     self.inputtext.WriteText(line)
 
-    def OnSave(self, event):
-        self.inputtext.SaveFile()
 
     def OnSaveAs(self, event):
         self.inputtext.SaveFile()

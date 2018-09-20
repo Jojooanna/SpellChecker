@@ -110,8 +110,17 @@ class Example(wx.Frame):
         self.Centre()
 
     def OnButton(self, e):
-            # self.result.SetLabel(self.editname.GetValue())
-            print(self.inputtext.GetValue())
+            self.inputtext = str(self.inputtext.GetValue())
+            self.inputtext = self.inputtext.split()
+            words = self.inputtext
+            print (words) # list and words?
+            List = []
+            for i in words:
+                if i in List:
+                    continue
+                else:
+                    List.append(i)
+            print (List)
     def closeButton(self, event):
         print "Button pressed."
 

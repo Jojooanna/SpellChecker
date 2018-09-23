@@ -69,9 +69,9 @@ class Example(wx.Frame):
         self.check.Bind(wx.EVT_BUTTON, self.OnButton)
 
         vbox1 = wx.BoxSizer(wx.VERTICAL)
-        vbox1.Add((-1,10))
+        vbox1.Add((-1,5))
         vbox1.Add(self.inputtext)
-        vbox1.Add((-1,10))
+        vbox1.Add((-1,5))
         vbox1.Add(self.check, flag=wx.CENTER)
         hbox.Add(vbox1, flag=wx.LEFT)
 
@@ -121,21 +121,26 @@ class Example(wx.Frame):
                 else:
                     List.append(i)
             print (List)
+            count = 0
+            for i in List: #for phoenics and lev.
+                count = 0
+                for j in i:
+                    count = count + 1
+                print count
+
     def closeButton(self, event):
         print "Button pressed."
 
     def ZoomIn(self, event):
+        self.defaultstyle = wx.inputtext.GetPointSize()
+        self.defaultsize = self.defaultstyle.GetFont().GetPointSize()
+        print(self.defaultsize)
 
-        font1 = wx.Font(20, wx.MODERN, wx.NORMAL, wx.NORMAL, False, u'Consolas')
+        font1 = wx.Font(size, wx.MODERN, wx.NORMAL, wx.NORMAL, False, u'Consolas')
         self.inputtext.SetFont(font1)
-        self.inputtext = "'" +self.inputtext.GetValue() + "'"
-        self.inputtext.split()
-        print(self.inputtext.split())
 
     def ZoomOut(self, event):
-
-        font2 = wx.Font(80, wx.DEFAULT, wx.NORMAL, wx.NORMAL, False, u'Consolas')
-        self.inputtext.SetFont(font2)
+            self.inputtext.SetSize(self.inputtext.MaxSize())
 
     def OnNew(self, event):
         self.inputtext.Clear()

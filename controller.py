@@ -27,3 +27,12 @@ def displayWords():
     # display all data in words table
     for x in session.query(Words):
         print x.code, x.words
+
+def deleteAllCommon():
+
+    # funtion to delete all common words
+
+    session = connectToDatabase()
+    for x in session.query(Common):
+        session.delete(x)
+        session.commit()

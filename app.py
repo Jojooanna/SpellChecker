@@ -107,9 +107,9 @@ class Example(wx.Frame):
         self.Centre()
 
     def OnButton(self, e):
-        self.inputtext = str(self.inputtext.GetValue())
-        self.inputtext = self.inputtext.split()
-        words = self.inputtext
+        self.value = str(self.inputtext.GetValue())
+        self.value2 = self.value.split()
+        words = self.value2
         print (words) # list and words?
         List = []
         for i in words:

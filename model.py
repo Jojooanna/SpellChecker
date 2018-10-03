@@ -12,11 +12,20 @@ class Words(Base):
     code = Column(String)
     words = Column(String)
 
-    def __init__(self, code, words,codeid):
+    def __init__(self, code, words):
 
         self.code =code
         self.words = words
-        self.codeid =codeid
 
+class Common(Base):
+    __tablename__ = 'common'
+
+    wordid = Column(Integer, primary_key=True)
+    words = Column(String)
+
+    def __init__(self, words):
+        self.words = words
+
+    # def _
 Session = sessionmaker(engine)
 session = Session()

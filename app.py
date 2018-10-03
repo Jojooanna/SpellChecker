@@ -3,18 +3,15 @@ import wx
 import pymysql
 import re
 import string
+import datetime
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
+from model import *
 
-# connection = pymysql.connect(host='hostname', user='', password='', db= '' )
-# cursor = connection.cursor()
-# sql = 'CREATE DATABASE spelling'
-# cursor.execute(sql)
-#
-# commonwords = '''CREATE TABLE common (
-#        id INT(3) PRIMARY,
-#        word VARCHAR(50) DEFAULT
-#        )
-#        '''
-# cursor.execute(commonwords)
+engine = create_engine('postgresql://postgres:mvjunetwo@localhost:5432/spell')
+# create a Session
+Session = sessionmaker(bind=engine)
+session = Session()
 
 class Example(wx.Frame):
 
@@ -82,7 +79,7 @@ class Example(wx.Frame):
         previous = wx.Button(self.panel, label="<")
         hbox1.Add(previous, 0, flag=wx.EXPAND)
         # Misspelled word will be displayed here.
-        word = wx.StaticText(self.panel, label="Misspelled Word")
+        word = wx.StaticText(self.panel, label="jwajja")
         hbox1.Add(word, 1, flag=wx.EXPAND)
         next = wx.Button(self.panel, label=">")
         hbox1.Add(next, 0, flag=wx.EXPAND)
@@ -110,23 +107,27 @@ class Example(wx.Frame):
         self.Centre()
 
     def OnButton(self, e):
-            self.inputtext = str(self.inputtext.GetValue())
-            self.inputtext = self.inputtext.split()
-            words = self.inputtext
-            print (words) # list and words?
-            List = []
-            for i in words:
-                if i in List:
-                    continue
-                else:
-                    List.append(i)
-            print (List)
+        self.inputtext = str(self.inputtext.GetValue())
+        self.inputtext = self.inputtext.split()
+        words = self.inputtext
+        print (words) # list and words?
+        List = []
+        for i in words:
+            if i in List:
+                continue
+            else:
+                List.append(i)
+        print (List)
+        count = 0
+        for i in List: #for phoenics and lev.
             count = 0
-            for i in List: #for phoenics and lev.
-                count = 0
-                for j in i:
-                    count = count + 1
-                print count
+            for j in i:
+                count = count + 1
+            print count
+        # self.word.SetLabel(self.inputtext)
+        for x in session.query(Words):
+            print x.code, x.words
+
 
     def closeButton(self, event):
         print "Button pressed."

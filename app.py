@@ -1,20 +1,6 @@
 import os
 import wx
-import pymysql
-import re
-import string
 
-# connection = pymysql.connect(host='hostname', user='', password='', db= '' )
-# cursor = connection.cursor()
-# sql = 'CREATE DATABASE spelling'
-# cursor.execute(sql)
-#
-# commonwords = '''CREATE TABLE common (
-#        id INT(3) PRIMARY,
-#        word VARCHAR(50) DEFAULT
-#        )
-#        '''
-# cursor.execute(commonwords)
 
 class Example(wx.Frame):
 

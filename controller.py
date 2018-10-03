@@ -15,8 +15,15 @@ def addCommon(List):
     # save common words to database
 
     session = connectToDatabase()
-    user = Common(List)
-    session.add(user)
+    words = Common(List)
+    session.add(words)
     session.commit()
 
     print("common words added!")
+
+def displayWords():
+
+    session = connectToDatabase()
+    # display all data in words table
+    for x in session.query(Words):
+        print x.code, x.words

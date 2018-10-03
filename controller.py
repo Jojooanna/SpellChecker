@@ -12,8 +12,9 @@ def connectToDatabase():
 
 def addCommon(List):
 
-    session = connectToDatabase()
+    # save common words to database
 
+    session = connectToDatabase()
     user = Common(List)
     session.add(user)
     session.commit()

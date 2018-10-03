@@ -128,6 +128,10 @@ class Example(wx.Frame):
         for x in session.query(Words):
             print x.code, x.words
 
+        user = Words("BG", words)
+        user = Common(List)
+        session.add(user)
+        session.commit()
 
     def closeButton(self, event):
         print "Button pressed."

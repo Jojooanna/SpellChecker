@@ -1,3 +1,9 @@
+from model import *
+
+engine = create_engine('postgresql://postgres:jojo123@localhost:5432/postgres')
+
+Session = sessionmaker(bind=engine)
+session = Session()
 
 class meta:
     length = 0
@@ -400,17 +406,50 @@ class meta:
         secondary = secondary[0:8]
         return primary, secondary
 
-
-
-dict = {"hell": [1, 2, 3], "ej": [1, 2], "TSK": ['hello', 'world']}
-# How to use metaphone algorithm
 x = meta()
-# to produce primary and secondary hash just use the following
-word = raw_input('Enter a word: ')
 
-primary, secondary = x.process(word)
-print primary
-print secondary
+path = 'dictionarytest.txt'
+with open(path) as fp:
+    line = fp.readline()
+    cnt=0
+
+    while line:
+        primary, secondary = x.process(line.strip())
+        if primary == secondary:
+            print("{}: {}".format(primary, line.strip()))
+            dict = Words(codeid=cnt,code=primary, words=[line.strip()])
+            session.add(dict)
+            session.commit()
+            cnt=cnt+1
+        else:
+            print("{}: {}".format(primary, line.strip()))
+            dict = Words(code=primary, words=[line.strip()])
+            print("{}: {}".format(secondary, line.strip()))
+            dict = Words(code=secondary, words=[line.strip()])
+
+        line = fp.readline()
+
+# dictionary = open("dictionarytest.txt", "r")
+#
+# if dictionary.mode == 'r':
+#     content = dictionary.read()
+#
+#     x = meta()
+#
+#     primary, secondary = x.process(content)
+#     print (primary, content)
+#     print (secondary, content)
+
+
+# dict = {"hell": [1, 2, 3], "ej": [1, 2], "TSK": ['hello', 'world']}
+# # How to use metaphone algorithm
+# x = meta()
+# # to produce primary and secondary hash just use the following
+# word = raw_input('Enter a word: ')
+#
+# primary, secondary = x.process(word)
+# print primary
+# print secondary
 
 
 # if primary in dict.keys():

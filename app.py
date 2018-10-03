@@ -7,11 +7,8 @@ import datetime
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from model import *
+import controller
 
-engine = create_engine('postgresql://postgres:mvjunetwo@localhost:5432/spell')
-# create a Session
-Session = sessionmaker(bind=engine)
-session = Session()
 
 class Example(wx.Frame):
 
@@ -118,20 +115,32 @@ class Example(wx.Frame):
             else:
                 List.append(i)
         print (List)
-        count = 0
-        for i in List: #for phoenics and lev.
-            count = 0
-            for j in i:
-                count = count + 1
-            print count
+        # count = 0
+        # for i in List: #for phoenics and lev.
+        #     count = 0
+        #     for j in i:
+        #         count = count + 1
+        #     print count
         # self.word.SetLabel(self.inputtext)
+
+        # display all data in words table
         for x in session.query(Words):
             print x.code, x.words
 
-        user = Words("BG", words)
-        user = Common(List)
-        session.add(user)
-        session.commit()
+        # save common words to database
+        # user = Words("BG", words)
+        # user = Common(List)
+        # session.add(user)
+        # session.commit()
+        if not words:
+            wx.MessageBox("Please Enter something!!")
+        else:
+            controller.addCommon(List)
+       # delete all in common words after spell check
+        # for x in session.query(Common):
+        #     session.delete(x)
+        #     session.commit()
+
 
     def closeButton(self, event):
         print "Button pressed."

@@ -87,8 +87,13 @@ class Example(wx.Frame):
 
         vbox2.Add(hbox1, flag=wx.CENTER)
 
-        # wordsuggest = wx.ListBox(parent, choices=['word1', 'word2', 'word3', 'word4', 'word5', 'word6', 'word7'], style=wx.LB_HSCROLL)
-        # vbox2.Add(wordsuggest, flag=wx.CENTER)
+        # wx.StaticBox(self.panel, label="text", pos=(920, 50),
+        #           size=(200,500), style = 0)
+
+        # words = List
+        words = ['word1', 'word2', 'word3', 'word4', 'word5', 'word6', 'word7']
+        wordsuggest = wx.ListBox(self.panel, choices=words, size=(200,250), style=wx.LB_HSCROLL)
+        vbox2.Add(wordsuggest, flag=wx.CENTER)
 
         hbox.Add(vbox2, flag=wx.RIGHT)
 
@@ -127,23 +132,10 @@ class Example(wx.Frame):
         #     print count
         # self.word.SetLabel(self.inputtext)
 
-        # display all data in words table
-        for x in session.query(Words):
-            print x.code, x.words
-
-        # save common words to database
-        # user = Words("BG", words)
-        # user = Common(List)
-        # session.add(user)
-        # session.commit()
         if not words:
-            wx.MessageBox("Please Enter something!!")
+            wx.MessageBox("Please enter something for us to check your work!!")
         else:
-            controller.addCommon(List)
-       # delete all in common words after spell check
-        # for x in session.query(Common):
-        #     session.delete(x)
-        #     session.commit()
+            controller.addCommon(words,self)
 
 
     def closeButton(self, event):

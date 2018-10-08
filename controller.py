@@ -6,7 +6,7 @@ def connectToDatabase():
     """
     Connect to our SQLite database and return a Session object
     """
-    engine = create_engine("postgresql://postgres:mvjunetwo@localhost:5432/spell")
+    engine = create_engine("postgresql://postgres:jojo123@localhost:5432/postgres")
     Session = sessionmaker(bind=engine)
     session = Session()
     return session
@@ -14,7 +14,7 @@ def connectToDatabase():
 def addCommon(List, self):
 
     #/ save common words to database
-    # -echeck pa data kung naa na bato sya na common words before sya mag add
+    # -echeck pa data kung naa na ba sya na common words before sya mag add
     session = connectToDatabase()
     words = Common(List)
     session.add(words)

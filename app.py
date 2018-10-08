@@ -9,7 +9,7 @@ from sqlalchemy.orm import sessionmaker
 from model import *
 import controller
 
-engine = create_engine('postgresql://postgres:jojo123@localhost:5432/spell')
+engine = create_engine('postgresql://postgres:jojo123@localhost:5432/postgres')
 
 Session = sessionmaker(bind=engine)
 session = Session()

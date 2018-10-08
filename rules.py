@@ -417,7 +417,7 @@ with open(path) as fp:
         primary, secondary = x.process(line.strip())
         if primary == secondary:
             print("{}: {}".format(primary, line.strip()))
-            dict = Words(codeid=cnt,code=primary, words=[line.strip()])
+            dict = Words(code=primary, words=[line.strip()])
             session.add(dict)
             session.commit()
             cnt=cnt+1

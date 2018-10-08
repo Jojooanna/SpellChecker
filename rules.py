@@ -1,4 +1,6 @@
 from model import *
+import codecs
+# -*- coding: utf-8 -*-
 
 def connectToDatabase():
     """
@@ -265,6 +267,17 @@ class meta:
                 else:
                     primary += "N"
                     secondary += "N"
+                    current += 1
+                continue
+
+            elif (symbol == codecs.encode(u"Ñ", "utf-8")):
+                if (self.sub(word, current + 1, 1, [u"Ñ".encode("utf-8")])):
+                    primary += "7"
+                    secondary += "7"
+                    current += 1
+                else:
+                    primary += "7"
+                    secondary += "7"
                     current += 1
                 continue
 

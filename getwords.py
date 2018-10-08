@@ -1,12 +1,13 @@
 from model import *
 from sqlalchemy import create_engine, select
 import wx
+from io import open
 
 def connectToDatabase():
     """
     Connect to our SQLite database and return a Session object
     """
-    engine = create_engine("postgresql://postgres:jojo123@localhost:5432/postgres")
+    engine = create_engine("postgresql://postgres:mvjunetwo@localhost:5432/spell")
     Session = sessionmaker(bind=engine)
     session = Session()
     return session
@@ -14,13 +15,19 @@ def connectToDatabase():
 session = connectToDatabase()
 
 #sa pagsave nis data from dictionary to database !!!! important
-with open("dictionary.txt") as f:
+
+with open("dictionary.txt", encoding = "utf-8") as f:
+    # s = u'Capit\xe1n\n'
+    # sutf8 = s.encode('UTF-8')
     F = f.read().splitlines()
 for words in F:
-    ed_user = inputWords(word=words)
-    session.add(ed_user)
-    session.commit()
-    print words
+    data = session.query(inputWords).filter(inputWords.word == words).first()
+    if data is None:
+        ed_user = inputWords(word=words)
+        session.add(ed_user)
+        session.commit()
+    else:
+        print words
 
 
 #

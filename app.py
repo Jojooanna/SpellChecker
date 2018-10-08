@@ -38,6 +38,9 @@ class Example(wx.Frame):
         fileSaveAs = FileMenu.Append(wx.ID_SAVEAS, '&Save As', "Save File As")
         FileMenu.AppendSeparator()
 
+        dict = FileMenu.Append(wx.ITEM_NORMAL, '&Dict',"Dictionary")
+        FileMenu.AppendSeparator()
+
         fileQuit = FileMenu.Append(wx.ID_EXIT, 'Quit\tCtrl+Q', 'Quit Program')
         # fileItem1 = NewMenu.Append(wx.ID_EXIT, 'New\tCtrl+F', 'Create New File')
 
@@ -52,7 +55,6 @@ class Example(wx.Frame):
         ViewMenu.Append(wx.ITEM_NORMAL, '&Full Screen')
 
         HelpMenu = wx.Menu()
-
         help = HelpMenu.Append(wx.ID_ABOUT, '&Help')
 
         menubar.Append(FileMenu, '&File')
@@ -106,11 +108,28 @@ class Example(wx.Frame):
         # self.Bind(wx.EVT_MENU, self.NewFile, fileItem1)
         self.Bind(wx.EVT_MENU, self.ZoomIn, ZoomIn)#works
         self.Bind(wx.EVT_MENU, self.ZoomIn, ZoomOut)#notworking
+        self.Bind(wx.EVT_MENU, self.OnDict, dict)
 
         self.panel.SetSizer(hbox)
         self.SetSize((1200, 700))
         self.SetTitle('Filipino Spelling Checker')
         self.Centre()
+
+    def OnDict(self, e):
+        app = wx.App()
+
+        frame = wx.Frame(None, -1, 'win.py')
+        frame.SetDimensions(0, 0, 200, 100)
+
+        # Create text input
+        dlg = wx.TextEntryDialog(frame, 'Enter some text', 'Text Entry')
+        dlg.SetValue("Dictionary Filename")
+        btn = wx.Button(frame, label="Modal Dialog", pos=(75,60))
+        btn.Bind(wx.EVT_BUTTON, self.OnOpen)
+
+        if dlg.ShowModal() == wx.ID_OK:
+            print('You entered: %s\n' % dlg.GetValue())
+        dlg.Destroy()
 
     def OnButton(self, e):
         self.value = str(self.inputtext.GetValue())
@@ -218,6 +237,26 @@ class Example(wx.Frame):
 
     def OnAbout(self, event):
         self.aboutme.ShowModal()
+
+
+class Modal(wx.Frame):
+    def __init__(self):
+        app = wx.App()
+
+        frame = wx.Frame(None, -1, 'win.py')
+        frame.SetDimensions(0, 0, 200, 50)
+
+        # Create text input
+        dlg = wx.TextEntryDialog(frame, 'Enter some text', 'Text Entry')
+        dlg.SetValue("Default")
+        if dlg.ShowModal() == wx.ID_OK:
+            print('You entered: %s\n' % dlg.GetValue())
+        dlg.Destroy()
+
+    def onButton(event):
+        print "Button pressed."
+
+
 
 def main():
 

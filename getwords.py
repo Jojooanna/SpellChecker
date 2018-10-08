@@ -5,9 +5,8 @@ import wx
 def connectToDatabase():
     """
     Connect to our SQLite database and return a Session object
-    Connect to our SQLite database and return a Session object
     """
-    engine = create_engine("postgresql://postgres:mvjunetwo@localhost:5432/spell")
+    engine = create_engine("postgresql://postgres:jojo123@localhost:5432/postgres")
     Session = sessionmaker(bind=engine)
     session = Session()
     return session
@@ -22,6 +21,8 @@ for words in F:
     session.add(ed_user)
     session.commit()
     print words
+
+
 #
 # List = ['aabot', 'ambot', 'aalisan', 'makapagtatag', 'makakikita', 'makapananghali', 'aalis', 'aabutin', 'makipagkuwentuhan', 'makapagtatag']
 #

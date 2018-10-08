@@ -1,9 +1,15 @@
 from model import *
 
-engine = create_engine('postgresql://postgres:jojo123@localhost:5432/postgres')
+def connectToDatabase():
+    """
+    Connect to our SQLite database and return a Session object
+    """
+    engine = create_engine("postgresql://postgres:jojo123@localhost:5432/postgres")
+    Session = sessionmaker(bind=engine)
+    session = Session()
+    return session
 
-Session = sessionmaker(bind=engine)
-session = Session()
+session = connectToDatabase()
 
 class meta:
     length = 0
@@ -411,23 +417,49 @@ x = meta()
 path = 'dictionarytest.txt'
 with open(path) as fp:
     line = fp.readline()
-    cnt=0
 
     while line:
         primary, secondary = x.process(line.strip())
         if primary == secondary:
-            print("{}: {}".format(primary, line.strip()))
-            dict = Words(code=primary, words=[line.strip()])
-            session.add(dict)
-            session.commit()
-            cnt=cnt+1
+            #print("{}: {}".format(primary, line.strip()))
+            data = session.query(Words).filter(Words.code == primary).first()
+            if data is None:
+                dict = Words(code=primary, words=[line.strip()])
+                session.add(dict)
+                session.commit()
+            else:
+                data.words = list(data.words)
+                data.words.append(line.strip())
+                session.merge(data)
+                session.commit()
         else:
-            print("{}: {}".format(primary, line.strip()))
-            dict = Words(code=primary, words=[line.strip()])
-            print("{}: {}".format(secondary, line.strip()))
-            dict = Words(code=secondary, words=[line.strip()])
+            dataPri = session.query(Words).filter(Words.code == primary).first()
+            if dataPri is None:
+                #print("{}: {}".format(primary, line.strip()))
+                dict = Words(code=primary, words=[line.strip()])
+                session.add(dict)
+                session.commit()
+            else:
+                dataPri.words = list(dataPri.words)
+                dataPri.words.append(line.strip())
+                session.merge(dataPri)
+                session.commit()
+
+            dataSec = session.query(Words).filter(Words.code == secondary).first()
+            if dataSec is None:
+                #print("{}: {}".format(primary, line.strip()))
+                dict = Words(code=secondary, words=[line.strip()])
+                session.add(dict)
+                session.commit()
+            else:
+                dataSec.words = list(dataSec.words)
+                dataSec.words.append(line.strip())
+                session.merge(dataSec)
+                session.commit()
 
         line = fp.readline()
+
+
 
 # dictionary = open("dictionarytest.txt", "r")
 #

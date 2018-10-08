@@ -27,7 +27,6 @@ def spellingCheck(List):
     session = connectToDatabase()
     wrong = []
     for i in List:
-
         data = session.query(inputWords).filter(inputWords.word == i).first()
         if data is None:
             wrong.append(i)

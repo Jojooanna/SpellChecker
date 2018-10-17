@@ -84,6 +84,8 @@ class Example(wx.Frame):
         vbox1.Add(self.check, 0,flag=wx.CENTER)
 
         vbox1.AddSpacer(10)
+        vbox6 = wx.BoxSizer(wx.VERTICAL)
+        #dapat ma-hide ang mga items sa vbox6 kung wa pa naclick ang "CheckSpelling" nga button
 
         hbox1 = wx.BoxSizer(wx.HORIZONTAL)
         hbox1.AddSpacer(10)
@@ -95,8 +97,6 @@ class Example(wx.Frame):
         vbox1.Add(hbox1, flag=wx.CENTER)
 
         vbox1.AddSpacer(10)
-
-        vbox6 = wx.BoxSizer(wx.VERTICAL)
 
         hbox2 = wx.BoxSizer(wx.HORIZONTAL)
         hbox2.AddSpacer(10)

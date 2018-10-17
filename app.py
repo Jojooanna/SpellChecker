@@ -64,18 +64,29 @@ class Example(wx.Frame):
 
         hbox = wx.BoxSizer(wx.HORIZONTAL)
 
+        hbox.AddSpacer(10)
+
+        vbox5 = wx.BoxSizer(wx.VERTICAL)
+        vbox5.AddSpacer(15)
+        self.filename = wx.StaticText(self.panel, style=wx.ALIGN_CENTER, label="Filename", size=(900,30))
         self.inputtext = wx.TextCtrl(self.panel, size=(900, 600), style=wx.TE_MULTILINE)
+        vbox5.Add(self.filename, flag=wx.CENTER)
+        vbox5.Add(self.inputtext, flag=wx.CENTER)
+
+        hbox.Add(vbox5, flag=wx.LEFT)
 
         vbox1 = wx.BoxSizer(wx.VERTICAL)
+        vbox1.AddSpacer(45)
         self.check = wx.Button(self.panel, size=(300,30), label="Check Spelling")
         self.check.Bind(wx.EVT_BUTTON, self.OnButton)
-        vbox1.Add(self.check, flag=wx.CENTER)
+        vbox1.Add(self.check, 0,flag=wx.CENTER)
 
         vbox1.AddSpacer(10)
 
         hbox1 = wx.BoxSizer(wx.HORIZONTAL)
+        hbox1.AddSpacer(10)
         self.checktext = wx.TextCtrl(self.panel,size=(200,30),)
-        self.changebtn = wx.Button(self.panel, label="Change", size=(100,30),)
+        self.changebtn = wx.Button(self.panel, label="Change", size=(100,30))
         self.changebtn.Bind(wx.EVT_BUTTON, self.OnTest)
         hbox1.Add(self.checktext, flag=wx.LEFT)
         hbox1.Add(self.changebtn, flag=wx.RIGHT)
@@ -84,27 +95,34 @@ class Example(wx.Frame):
         vbox1.AddSpacer(10)
 
         hbox2 = wx.BoxSizer(wx.HORIZONTAL)
-        self.notfoundmsg = wx.StaticText(self.panel, label="The word was not found.",size=(200,30),)
-        self.findnextbtn = wx.Button(self.panel, label="Find Next", size=(100,30),)
+        hbox2.AddSpacer(10)
+        self.notfoundmsg = wx.StaticText(self.panel, label="The word was not found.",size=(200,30))
+        vbox4 = wx.BoxSizer(wx.VERTICAL)
+        self.findnextbtn = wx.Button(self.panel, label="Find Next", size=(100,30))
         self.findnextbtn.Bind(wx.EVT_BUTTON, self.OnTest)
+        self.previousbtn = wx.Button(self.panel, label="Previous", size=(100,30))
+        self.previousbtn.Bind(wx.EVT_BUTTON, self.OnTest)
+        vbox4.Add(self.findnextbtn, flag=wx.CENTER)
+        vbox4.Add(self.previousbtn, flag=wx.CENTER)
         hbox2.Add(self.notfoundmsg, flag=wx.LEFT)
-        hbox2.Add(self.findnextbtn, flag=wx.RIGHT)
+        hbox2.Add(vbox4, flag=wx.RIGHT)
         vbox1.Add(hbox2, flag=wx.CENTER)
 
         vbox1.AddSpacer(10)
 
         hbox3 = wx.BoxSizer(wx.HORIZONTAL)
+        hbox3.AddSpacer(10)
         vbox2 = wx.BoxSizer(wx.VERTICAL)
         words = ['word1', 'word2', 'word3', 'word4', 'word5', 'word6', 'word7']
-        wordsuggest = wx.ListBox(self.panel, choices=words, style=wx.LB_HSCROLL,size=(200,60),)
+        wordsuggest = wx.ListBox(self.panel, choices=words, style=wx.LB_HSCROLL,size=(200,100))
         vbox2.Add(wordsuggest, flag=wx.CENTER)
 
         vbox3 = wx.BoxSizer(wx.VERTICAL)
         hbox4 = wx.BoxSizer(wx.HORIZONTAL)
         hbox5 = wx.BoxSizer(wx.HORIZONTAL)
-        self.ignorebtn = wx.Button(self.panel, label="Ignore", size=(100,30),)
+        self.ignorebtn = wx.Button(self.panel, label="Ignore", size=(100,30))
         self.ignorebtn.Bind(wx.EVT_BUTTON, self.OnTest)
-        self.learnbtn = wx.Button(self.panel, label="Learn", size=(100,30),)
+        self.learnbtn = wx.Button(self.panel, label="Learn", size=(100,30))
         self.learnbtn.Bind(wx.EVT_BUTTON, self.OnTest)
         hbox4.Add(self.ignorebtn, flag=wx.CENTER)
         hbox5.Add(self.learnbtn, flag=wx.CENTER)
@@ -115,40 +133,8 @@ class Example(wx.Frame):
         hbox3.Add(vbox3, flag=wx.RIGHT)
 
         vbox1.Add(hbox3, flag=wx.CENTER)
-        hbox.Add(self.inputtext, flag=wx.LEFT)
         hbox.Add(vbox1, flag=wx.RIGHT)
 
-
-        # vbox1 = wx.BoxSizer(wx.VERTICAL)
-        # vbox1.Add((-1,5))
-        # vbox1.Add(self.inputtext)
-        # vbox1.Add((-1,5))
-        # vbox1.Add(self.check, flag=wx.CENTER)
-        # hbox.Add(vbox1, flag=wx.LEFT)
-
-        # vbox2 = wx.BoxSizer(wx.VERTICAL)
-        # hbox1 = wx.BoxSizer(wx.HORIZONTAL)
-        #
-        # vbox2.Add((-1,10))
-        # previous = wx.Button(self.panel, label="<")
-        # hbox1.Add(previous, 0, flag=wx.EXPAND)
-        # # Misspelled word will be displayed here.
-        # word = wx.StaticText(self.panel, label="jwajja")
-        # hbox1.Add(word, 1, flag=wx.EXPAND)
-        # next = wx.Button(self.panel, label=">")
-        # hbox1.Add(next, 0, flag=wx.EXPAND)
-        #
-        # vbox2.Add(hbox1, flag=wx.CENTER)
-        #
-        # # wx.StaticBox(self.panel, label="text", pos=(920, 50),
-        # #           size=(200,500), style = 0)
-        #
-        # # words = List
-        # words = ['word1', 'word2', 'word3', 'word4', 'word5', 'word6', 'word7']
-        # wordsuggest = wx.ListBox(self.panel, choices=words, size=(200,250), style=wx.LB_HSCROLL)
-        # vbox2.Add(wordsuggest, flag=wx.CENTER)
-        #
-        # hbox.Add(vbox2, flag=wx.RIGHT)
 
         self.Bind(wx.EVT_MENU, self.OnNew, fileNew)
         self.Bind(wx.EVT_MENU, self.OnOpen, fileOpen) #works

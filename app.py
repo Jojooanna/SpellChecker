@@ -77,7 +77,9 @@ class Example(wx.Frame):
 
         vbox1 = wx.BoxSizer(wx.VERTICAL)
         vbox1.AddSpacer(45)
-        self.check = wx.Button(self.panel, size=(300,30), label="Check Spelling")
+        self.check = wx.Button(self.panel, size=(300,50), label="Check Spelling")
+        self.check.SetBackgroundColour("dim grey")
+        self.check.SetForegroundColour("white")
         self.check.Bind(wx.EVT_BUTTON, self.OnButton)
         vbox1.Add(self.check, 0,flag=wx.CENTER)
 
@@ -94,6 +96,8 @@ class Example(wx.Frame):
 
         vbox1.AddSpacer(10)
 
+        vbox6 = wx.BoxSizer(wx.VERTICAL)
+
         hbox2 = wx.BoxSizer(wx.HORIZONTAL)
         hbox2.AddSpacer(10)
         self.notfoundmsg = wx.StaticText(self.panel, label="The word was not found.",size=(200,30))
@@ -106,9 +110,9 @@ class Example(wx.Frame):
         vbox4.Add(self.previousbtn, flag=wx.CENTER)
         hbox2.Add(self.notfoundmsg, flag=wx.LEFT)
         hbox2.Add(vbox4, flag=wx.RIGHT)
-        vbox1.Add(hbox2, flag=wx.CENTER)
+        vbox6.Add(hbox2, flag=wx.CENTER)
 
-        vbox1.AddSpacer(10)
+        vbox6.AddSpacer(10)
 
         hbox3 = wx.BoxSizer(wx.HORIZONTAL)
         hbox3.AddSpacer(10)
@@ -132,7 +136,8 @@ class Example(wx.Frame):
         hbox3.Add(vbox2, flag=wx.LEFT)
         hbox3.Add(vbox3, flag=wx.RIGHT)
 
-        vbox1.Add(hbox3, flag=wx.CENTER)
+        vbox6.Add(hbox3, flag=wx.CENTER)
+        vbox1.Add(vbox6, flag=wx.CENTER)
         hbox.Add(vbox1, flag=wx.RIGHT)
 
 

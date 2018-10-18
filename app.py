@@ -181,6 +181,7 @@ class Example(wx.Frame):
             self.currentword = self.wrong[self.currentindex]
         except IndexError:
             wx.MessageBox("YEY NO MORE WRONG WORDS")
+            
 
     def Previous(self, e):
         try:

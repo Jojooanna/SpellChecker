@@ -171,7 +171,6 @@ class Example(wx.Frame):
         checkindexNew = checkindexCurr + 1
         self.checktext.SetValue(self.wrong[checkindexNew])
 
-
         # self.checktext.SetValue(self.wrong[0])
 
     # def OnDict(self, e):

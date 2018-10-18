@@ -30,7 +30,6 @@ def spellingCheck(self, List):
         data = session.query(inputWords).filter(inputWords.word == i).first()
         if data is None:
             self.wrong.append(i)
-
         else:
             print i  # kung wala ang words e append sya sa wrong na list
     # print wrong

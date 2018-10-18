@@ -91,7 +91,7 @@ class Example(wx.Frame):
         hbox1.AddSpacer(10)
         self.checktext = wx.TextCtrl(self.panel,size=(200,30),)
         self.changebtn = wx.Button(self.panel, label="Change", size=(100,30))
-        self.changebtn.Bind(wx.EVT_BUTTON, self.OnTest)
+        self.changebtn.Bind(wx.EVT_BUTTON, self.Change)
         hbox1.Add(self.checktext, flag=wx.LEFT)
         hbox1.Add(self.changebtn, flag=wx.RIGHT)
         vbox1.Add(hbox1, flag=wx.CENTER)
@@ -166,17 +166,25 @@ class Example(wx.Frame):
         checkindexNew = checkindexCurr + 1
         self.checktext.SetValue(self.wrong[checkindexNew])
 
+    def Change(self, e):
+
+        self.selected = self.wordsuggest.GetStringSelection()
+        self.inputtext.SetValue(self.inputtext.GetValue().replace(self.currentword, self.selected))
+        # replace/update pod ang words sa wrong[]
+
     def Next(self, e):
         try:
-            checkindexCurr = self.wrong.index(self.checktext.GetValue())
+            checkindexCurr = self.wrong.index(self.currentword)
             checkindexNew = checkindexCurr + 1
             self.checktext.SetValue(self.wrong[checkindexNew])
+            self.currentindex = self.wrong.index(self.checktext.GetValue())
+            self.currentword = self.wrong[self.currentindex]
         except IndexError:
             wx.MessageBox("YEY NO MORE WRONG WORDS")
 
     def Previous(self, e):
         try:
-            checkindexCurr = self.wrong.index(self.checktext.GetValue())
+            checkindexCurr = self.wrong.index(self.currentword)
             checkindexNew = checkindexCurr - 1
             self.checktext.SetValue(self.wrong[checkindexNew])
         except IndexError:

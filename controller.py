@@ -37,6 +37,7 @@ def spellingCheck(self, List):
     print self.wrong
     self.checktext.SetValue(self.wrong[0])
 
+
 def displayCommon(self):
 
     panel = wx.Panel(self)

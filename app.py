@@ -109,9 +109,10 @@ class Example(wx.Frame):
         self.notfoundmsg = wx.StaticText(self.panel, label="The word was not found.",size=(200,30))
         self.vbox4 = wx.BoxSizer(wx.VERTICAL)
         self.findnextbtn = wx.Button(self.panel, label="Find Next", size=(100,30))
-        self.findnextbtn.Bind(wx.EVT_BUTTON, self.OnTest)
+        self.findnextbtn.Bind(wx.EVT_BUTTON, self.Next)
         self.previousbtn = wx.Button(self.panel, label="Previous", size=(100,30))
-        self.previousbtn.Bind(wx.EVT_BUTTON, self.OnTest)
+
+        self.previousbtn.Bind(wx.EVT_BUTTON, self.Previous)
         self.vbox4.Add(self.findnextbtn, flag=wx.CENTER)
         self.vbox4.Add(self.previousbtn, flag=wx.CENTER)
         self.hbox2.Add(self.notfoundmsg, flag=wx.LEFT)
@@ -129,10 +130,13 @@ class Example(wx.Frame):
         self.vbox3 = wx.BoxSizer(wx.VERTICAL)
         self.hbox4 = wx.BoxSizer(wx.HORIZONTAL)
         self.hbox5 = wx.BoxSizer(wx.HORIZONTAL)
+
         self.ignorebtn = wx.Button(self.panel, label="Ignore", size=(100,30))
-        self.ignorebtn.Bind(wx.EVT_BUTTON, self.OnTest)
+        self.ignorebtn.Bind(wx.EVT_BUTTON, self.OnIgnore)
+
         self.learnbtn = wx.Button(self.panel, label="Learn", size=(100,30))
-        self.learnbtn.Bind(wx.EVT_BUTTON, self.OnTest)
+        self.learnbtn.Bind(wx.EVT_BUTTON, self.OnLearn)
+
         self.hbox4.Add(self.ignorebtn, flag=wx.CENTER)
         self.hbox5.Add(self.learnbtn, flag=wx.CENTER)
         self.vbox3.Add(self.hbox4, flag=wx.CENTER)
@@ -162,6 +166,19 @@ class Example(wx.Frame):
         self.SetTitle('Filipino Spelling Checker')
         self.Centre()
 
+    def OnIgnore(self, event):
+        self.getword = self.checktext.GetValue()
+        self.wrong.remove(self.getword)
+
+    def OnLearn(self, event):
+        input = inputWords(word=self.checktext.GetValue())
+        session.add(input)
+        session.commit()
+
+        self.wrong.remove(self.checktext.GetValue())
+
+        wx.MessageBox("Word Added!")
+
     def OnWordSuggest(self, event):
         self.selected = self.wordsuggest.GetStringSelection()
         self.checktext.SetValue(self.selected)
@@ -171,23 +188,37 @@ class Example(wx.Frame):
         checkindexNew = checkindexCurr + 1
         self.checktext.SetValue(self.wrong[checkindexNew])
 
-        # self.checktext.SetValue(self.wrong[0])
+    def Next(self, e):
+        try:
+            checkindexCurr = self.wrong.index(self.checktext.GetValue())
+            checkindexNew = checkindexCurr + 1
+            self.checktext.SetValue(self.wrong[checkindexNew])
+        except IndexError:
+            wx.MessageBox("YEY NO MORE WRONG WORDS")
 
-    # def OnDict(self, e):
-    #     app = wx.App()
-    #
-    #     frame = wx.Frame(None, -1, 'win.py')
-    #     frame.SetDimensions(0, 0, 200, 100)
-    #
-    #     # Create text input
-    #     dlg = wx.TextEntryDialog(frame, 'Enter some text', 'Text Entry')
-    #     dlg.SetValue("Dictionary Filename")
-    #     btn = wx.Button(frame, label="Modal Dialog", pos=(75,60))
-    #     btn.Bind(wx.EVT_BUTTON, self.OnOpen)
-    #
-    #     if dlg.ShowModal() == wx.ID_OK:
-    #         print('You entered: %s\n' % dlg.GetValue())
-    #     dlg.Destroy()
+    def Previous(self, e):
+        try:
+            checkindexCurr = self.wrong.index(self.checktext.GetValue())
+            checkindexNew = checkindexCurr - 1
+            self.checktext.SetValue(self.wrong[checkindexNew])
+        except IndexError:
+            wx.MessageBox("YEY NO MORE WRONG WORDS")
+
+    def OnDict(self, e):
+        app = wx.App()
+
+        frame = wx.Frame(None, -1, 'win.py')
+        frame.SetDimensions(0, 0, 200, 100)
+
+        # Create text input
+        dlg = wx.TextEntryDialog(frame, 'Enter some text', 'Text Entry')
+        dlg.SetValue("Dictionary Filename")
+        btn = wx.Button(frame, label="Modal Dialog", pos=(75,60))
+        btn.Bind(wx.EVT_BUTTON, self.OnOpen)
+
+        if dlg.ShowModal() == wx.ID_OK:
+            print('You entered: %s\n' % dlg.GetValue())
+        dlg.Destroy()
 
     def OnButton(self, e):
         self.value = str(self.inputtext.GetValue())

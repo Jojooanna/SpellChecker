@@ -11,7 +11,7 @@ def connectToDatabase():
     session = Session()
     return session
 
-def addCommon(List, self):
+def addCommon(self, List):
 
     #/ save common words to database
     # -echeck pa data kung naa na ba sya na common words before sya mag add
@@ -21,19 +21,21 @@ def addCommon(List, self):
     session.commit()
     print("common words added!")
     # displayWords(self)
-    spellingCheck(List)
+    spellingCheck(self, List)
 
-def spellingCheck(List):
+def spellingCheck(self, List):
     session = connectToDatabase()
-    wrong = []
+    self.wrong = []
     for i in List:
         data = session.query(inputWords).filter(inputWords.word == i).first()
         if data is None:
-            wrong.append(i)
+            self.wrong.append(i)
+
         else:
             print i  # kung wala ang words e append sya sa wrong na list
     # print wrong
-    print wrong
+    print self.wrong
+    self.checktext.SetValue(self.wrong[0])
 
 def displayCommon(self):
 

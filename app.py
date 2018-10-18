@@ -162,7 +162,12 @@ class Example(wx.Frame):
         self.checktext.SetValue(self.selected)
 
     def OnTest(self, e):
-        print "HelloWorld"
+        checkindexCurr = self.wrong.index(self.checktext.GetValue())
+        checkindexNew = checkindexCurr + 1
+        self.checktext.SetValue(self.wrong[checkindexNew])
+
+
+        # self.checktext.SetValue(self.wrong[0])
 
     def OnDict(self, e):
         app = wx.App()
@@ -203,7 +208,7 @@ class Example(wx.Frame):
         if not words:
             wx.MessageBox("Please enter something for us to check your work!!")
         else:
-            controller.addCommon(words,self)
+            controller.addCommon(self, words)
 
 
     def closeButton(self, event):

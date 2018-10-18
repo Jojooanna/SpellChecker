@@ -118,8 +118,8 @@ class Example(wx.Frame):
         hbox3.AddSpacer(10)
         vbox2 = wx.BoxSizer(wx.VERTICAL)
         words = ['word1', 'word2', 'word3', 'word4', 'word5', 'word6', 'word7']
-        wordsuggest = wx.ListBox(self.panel, choices=words, style=wx.LB_HSCROLL,size=(200,100))
-        vbox2.Add(wordsuggest, flag=wx.CENTER)
+        self.wordsuggest = wx.ListBox(self.panel, choices=words, style=wx.LB_HSCROLL,size=(200,100))
+        vbox2.Add(self.wordsuggest, flag=wx.CENTER)
 
         vbox3 = wx.BoxSizer(wx.VERTICAL)
         hbox4 = wx.BoxSizer(wx.HORIZONTAL)
@@ -140,7 +140,7 @@ class Example(wx.Frame):
         vbox1.Add(vbox6, flag=wx.CENTER)
         hbox.Add(vbox1, flag=wx.RIGHT)
 
-
+        self.Bind(wx.EVT_LISTBOX, self.wordsugges, self.wordsuggest )
         self.Bind(wx.EVT_MENU, self.OnNew, fileNew)
         self.Bind(wx.EVT_MENU, self.OnOpen, fileOpen) #works
         #self.Bind(wx.EVT_MENU, self.OnSave, fileSave)
@@ -156,6 +156,10 @@ class Example(wx.Frame):
         self.SetSize((1200, 700))
         self.SetTitle('Filipino Spelling Checker')
         self.Centre()
+
+    def wordsugges(self, event):
+        self.selected = self.wordsuggest.GetStringSelection()
+        self.checktext.SetValue(self.selected)
 
     def OnTest(self, e):
         print "HelloWorld"

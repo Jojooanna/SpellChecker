@@ -90,13 +90,19 @@ class Example(wx.Frame):
         self.hbox1 = wx.BoxSizer(wx.HORIZONTAL)
         self.hbox1.AddSpacer(10)
         self.checktext = wx.TextCtrl(self.panel,size=(200,30),)
+        self.vbox7 = wx.BoxSizer(wx.VERTICAL)
         self.changebtn = wx.Button(self.panel, label="Change", size=(100,30))
-        self.changebtn.Bind(wx.EVT_BUTTON, self.OnTest)
+        #self.changebtn.Bind(wx.EVT_BUTTON, self.OnTest)
+        self.changeallbtn = wx.Button(self.panel, label="Change All", size=(100,30))
+        #self.changeallbtn.Bind(wx.EVT_BUTTON, self.OnTest)
+
         self.hbox1.Add(self.checktext, flag=wx.LEFT)
-        self.hbox1.Add(self.changebtn, flag=wx.RIGHT)
+        self.vbox7.Add(self.changebtn, flag=wx.RIGHT)
+        self.vbox7.Add(self.changeallbtn, flag=wx.RIGHT)
+        self.hbox1.Add(self.vbox7, flag=wx.CENTER)
         self.vbox6.Add(self.hbox1, flag=wx.CENTER)
 
-        self.vbox1.AddSpacer(10)
+        self.vbox6.AddSpacer(10)
 
         self.hbox2 = wx.BoxSizer(wx.HORIZONTAL)
         self.hbox2.AddSpacer(10)
@@ -117,8 +123,8 @@ class Example(wx.Frame):
         self.hbox3.AddSpacer(10)
         self.vbox2 = wx.BoxSizer(wx.VERTICAL)
         words = ['word1', 'word2', 'word3', 'word4', 'word5', 'word6', 'word7']
-        wordsuggest = wx.ListBox(self.panel, choices=words, style=wx.LB_HSCROLL,size=(200,100))
-        self.vbox2.Add(wordsuggest, flag=wx.CENTER)
+        self.wordsuggest = wx.ListBox(self.panel, choices=words, style=wx.LB_HSCROLL,size=(200,100))
+        self.vbox2.Add(self.wordsuggest, flag=wx.CENTER)
 
         self.vbox3 = wx.BoxSizer(wx.VERTICAL)
         self.hbox4 = wx.BoxSizer(wx.HORIZONTAL)
@@ -139,6 +145,7 @@ class Example(wx.Frame):
         self.vbox1.Add(self.vbox6, flag=wx.CENTER)
         self.hbox.Add(self.vbox1, flag=wx.RIGHT)
 
+        self.Bind(wx.EVT_LISTBOX, self.OnWordSuggest, self.wordsuggest)
         self.Bind(wx.EVT_MENU, self.OnNew, fileNew)
         self.Bind(wx.EVT_MENU, self.OnOpen, fileOpen) #works
         #self.Bind(wx.EVT_MENU, self.OnSave, fileSave)
@@ -154,6 +161,10 @@ class Example(wx.Frame):
         self.SetSize((1200, 700))
         self.SetTitle('Filipino Spelling Checker')
         self.Centre()
+
+    def OnWordSuggest(self, event):
+        self.selected = self.wordsuggest.GetStringSelection()
+        self.checktext.SetValue(self.selected)
 
     def OnTest(self, e):
         print "HelloWorld"

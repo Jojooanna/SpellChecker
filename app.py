@@ -38,8 +38,8 @@ class Example(wx.Frame):
         fileSaveAs = FileMenu.Append(wx.ID_SAVEAS, '&Save As', "Save File As")
         FileMenu.AppendSeparator()
 
-        dict = FileMenu.Append(wx.ITEM_NORMAL, '&Dict',"Dictionary")
-        FileMenu.AppendSeparator()
+        # dict = FileMenu.Append(wx.ITEM_NORMAL, '&Dict',"Dictionary")
+        # FileMenu.AppendSeparator()
 
         fileQuit = FileMenu.Append(wx.ID_EXIT, 'Quit\tCtrl+Q', 'Quit Program')
         # fileItem1 = NewMenu.Append(wx.ID_EXIT, 'New\tCtrl+F', 'Create New File')
@@ -155,7 +155,7 @@ class Example(wx.Frame):
         # self.Bind(wx.EVT_MENU, self.NewFile, fileItem1)
         self.Bind(wx.EVT_MENU, self.ZoomIn, ZoomIn)#works
         self.Bind(wx.EVT_MENU, self.ZoomIn, ZoomOut)#notworking
-        self.Bind(wx.EVT_MENU, self.OnDict, dict)
+        # self.Bind(wx.EVT_MENU, self.OnDict, dict)
 
         self.panel.SetSizer(self.hbox)
         self.SetSize((1200, 700))
@@ -169,21 +169,21 @@ class Example(wx.Frame):
     def OnTest(self, e):
         print "HelloWorld"
 
-    def OnDict(self, e):
-        app = wx.App()
-
-        frame = wx.Frame(None, -1, 'win.py')
-        frame.SetDimensions(0, 0, 200, 100)
-
-        # Create text input
-        dlg = wx.TextEntryDialog(frame, 'Enter some text', 'Text Entry')
-        dlg.SetValue("Dictionary Filename")
-        btn = wx.Button(frame, label="Modal Dialog", pos=(75,60))
-        btn.Bind(wx.EVT_BUTTON, self.OnOpen)
-
-        if dlg.ShowModal() == wx.ID_OK:
-            print('You entered: %s\n' % dlg.GetValue())
-        dlg.Destroy()
+    # def OnDict(self, e):
+    #     app = wx.App()
+    #
+    #     frame = wx.Frame(None, -1, 'win.py')
+    #     frame.SetDimensions(0, 0, 200, 100)
+    #
+    #     # Create text input
+    #     dlg = wx.TextEntryDialog(frame, 'Enter some text', 'Text Entry')
+    #     dlg.SetValue("Dictionary Filename")
+    #     btn = wx.Button(frame, label="Modal Dialog", pos=(75,60))
+    #     btn.Bind(wx.EVT_BUTTON, self.OnOpen)
+    #
+    #     if dlg.ShowModal() == wx.ID_OK:
+    #         print('You entered: %s\n' % dlg.GetValue())
+    #     dlg.Destroy()
 
     def OnButton(self, e):
         self.value = str(self.inputtext.GetValue())
@@ -219,7 +219,7 @@ class Example(wx.Frame):
         self.defaultsize = self.defaultstyle.GetFont().GetPointSize()
         print(self.defaultsize)
 
-        font1 = wx.Font(size, wx.MODERN, wx.NORMAL, wx.NORMAL, False, u'Consolas')
+        font1 = wx.Font(6, wx.MODERN, wx.NORMAL, wx.NORMAL, False, u'Consolas')
         self.inputtext.SetFont(font1)
 
     def ZoomOut(self, event):

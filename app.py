@@ -103,9 +103,9 @@ class Example(wx.Frame):
         self.notfoundmsg = wx.StaticText(self.panel, label="The word was not found.",size=(200,30))
         vbox4 = wx.BoxSizer(wx.VERTICAL)
         self.findnextbtn = wx.Button(self.panel, label="Find Next", size=(100,30))
-        self.findnextbtn.Bind(wx.EVT_BUTTON, self.OnTest)
+        self.findnextbtn.Bind(wx.EVT_BUTTON, self.Next)
         self.previousbtn = wx.Button(self.panel, label="Previous", size=(100,30))
-        self.previousbtn.Bind(wx.EVT_BUTTON, self.OnTest)
+        self.previousbtn.Bind(wx.EVT_BUTTON, self.Previous)
         vbox4.Add(self.findnextbtn, flag=wx.CENTER)
         vbox4.Add(self.previousbtn, flag=wx.CENTER)
         hbox2.Add(self.notfoundmsg, flag=wx.LEFT)
@@ -166,9 +166,21 @@ class Example(wx.Frame):
         checkindexNew = checkindexCurr + 1
         self.checktext.SetValue(self.wrong[checkindexNew])
 
+    def Next(self, e):
+        try:
+            checkindexCurr = self.wrong.index(self.checktext.GetValue())
+            checkindexNew = checkindexCurr + 1
+            self.checktext.SetValue(self.wrong[checkindexNew])
+        except IndexError:
+            wx.MessageBox("YEY NO MORE WRONG WORDS")
 
-        # self.checktext.SetValue(self.wrong[0])
-
+    def Previous(self, e):
+        try:
+            checkindexCurr = self.wrong.index(self.checktext.GetValue())
+            checkindexNew = checkindexCurr - 1
+            self.checktext.SetValue(self.wrong[checkindexNew])
+        except IndexError:
+            wx.MessageBox("YEY NO MORE WRONG WORDS")
     def OnDict(self, e):
         app = wx.App()
 

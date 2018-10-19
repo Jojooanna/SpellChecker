@@ -34,7 +34,8 @@ def spellingCheck(self, List):
             print i  # kung wala ang words e append sya sa wrong na list
     # print wrong
     print self.wrong
-    self.checktext.SetValue(self.wrong[0])
+    self.currentword = self.wrong[0]
+    self.originaltext.SetValue(self.currentword)
 
 
 def displayCommon(self):

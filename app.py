@@ -77,35 +77,48 @@ class Example(wx.Frame):
 
         self.vbox1 = wx.BoxSizer(wx.VERTICAL)
         self.vbox1.AddSpacer(45)
-        self.check = wx.Button(self.panel, size=(300,50), label="Check Spelling")
+        self.check = wx.Button(self.panel, size=(350,50), label="Check Spelling")
         self.check.SetBackgroundColour("dim grey")
         self.check.SetForegroundColour("white")
         self.check.Bind(wx.EVT_BUTTON, self.OnButton)
         self.vbox1.Add(self.check, 0,flag=wx.CENTER)
 
-        self.vbox1.AddSpacer(10)
+        self.vbox1.AddSpacer(20)
         self.vbox6 = wx.BoxSizer(wx.VERTICAL)
         #dapat ma-hide ang mga items sa vbox6 kung wa pa naclick ang "CheckSpelling" nga button
 
         self.hbox1 = wx.BoxSizer(wx.HORIZONTAL)
-        self.hbox1.AddSpacer(10)
-        self.checktext = wx.TextCtrl(self.panel,size=(200,30),)
+        self.hbox1.AddSpacer(20)
+        self.vbox8 = wx.BoxSizer(wx.VERTICAL)
+
+        self.originaltextlabel = wx.StaticText(self.panel, label="From:",size=(50,30))
+        self.checktextlabel = wx.StaticText(self.panel, label="To:",size=(50,30))
+        self.vbox8.Add(self.originaltextlabel, flag=wx.LEFT)
+        self.vbox8.Add(self.checktextlabel, flag=wx.LEFT)
+        self.hbox1.Add(self.vbox8, flag=wx.CENTER)
+
+        self.vbox9 = wx.BoxSizer(wx.VERTICAL)
+        self.originaltext = wx.TextCtrl(self.panel,size=(200,30))
+        self.checktext = wx.TextCtrl(self.panel,size=(200,30))
+        self.vbox9.Add(self.originaltext, flag=wx.CENTER)
+        self.vbox9.Add(self.checktext, flag=wx.CENTER)
+        self.hbox1.Add(self.vbox9, flag=wx.CENTER)
+
         self.vbox7 = wx.BoxSizer(wx.VERTICAL)
         self.changebtn = wx.Button(self.panel, label="Change", size=(100,30))
         #self.changebtn.Bind(wx.EVT_BUTTON, self.OnTest)
         self.changeallbtn = wx.Button(self.panel, label="Change All", size=(100,30))
         #self.changeallbtn.Bind(wx.EVT_BUTTON, self.OnTest)
 
-        self.hbox1.Add(self.checktext, flag=wx.LEFT)
         self.vbox7.Add(self.changebtn, flag=wx.RIGHT)
         self.vbox7.Add(self.changeallbtn, flag=wx.RIGHT)
         self.hbox1.Add(self.vbox7, flag=wx.CENTER)
         self.vbox6.Add(self.hbox1, flag=wx.CENTER)
 
-        self.vbox6.AddSpacer(10)
+        self.vbox6.AddSpacer(20)
 
         self.hbox2 = wx.BoxSizer(wx.HORIZONTAL)
-        self.hbox2.AddSpacer(10)
+        self.hbox2.AddSpacer(70)
         self.notfoundmsg = wx.StaticText(self.panel, label="The word was not found.",size=(200,30))
         self.vbox4 = wx.BoxSizer(wx.VERTICAL)
         self.findnextbtn = wx.Button(self.panel, label="Find Next", size=(100,30))
@@ -118,10 +131,10 @@ class Example(wx.Frame):
         self.hbox2.Add(self.notfoundmsg, flag=wx.LEFT)
         self.hbox2.Add(self.vbox4, flag=wx.RIGHT)
         self.vbox6.Add(self.hbox2, flag=wx.CENTER)
-        self.vbox6.AddSpacer(10)
+        self.vbox6.AddSpacer(20)
 
         self.hbox3 = wx.BoxSizer(wx.HORIZONTAL)
-        self.hbox3.AddSpacer(10)
+        self.hbox3.AddSpacer(60)
         self.vbox2 = wx.BoxSizer(wx.VERTICAL)
         words = ['word1', 'word2', 'word3', 'word4', 'word5', 'word6', 'word7']
         self.wordsuggest = wx.ListBox(self.panel, choices=words, style=wx.LB_HSCROLL,size=(200,100))
@@ -167,15 +180,16 @@ class Example(wx.Frame):
         self.Centre()
 
     def OnIgnore(self, event):
-        self.getword = self.checktext.GetValue()
-        self.wrong.remove(self.getword)
+        if wx.MessageBox("Remove word?", "Please confirm", wx.YES_NO) != wx.NO:
+            self.wrong.remove(self.originaltext.GetValue())
+            #maremoved na pero di pa sya munext
 
     def OnLearn(self, event):
-        input = inputWords(word=self.checktext.GetValue())
+        input = inputWords(word=self.originaltext.GetValue())
         session.add(input)
         session.commit()
 
-        self.wrong.remove(self.checktext.GetValue())
+        self.wrong.remove(self.originaltext.GetValue())
 
         wx.MessageBox("Word Added!")
 
@@ -188,19 +202,27 @@ class Example(wx.Frame):
         checkindexNew = checkindexCurr + 1
         self.checktext.SetValue(self.wrong[checkindexNew])
 
+    def Change(self, e):
+        self.selected = self.wordsuggest.GetStringSelection()
+        self.inputtext.SetValue(self.inputtext.GetValue().replace(self.currentword, self.selected))
+        # replace/update pod ang words sa wrong[]
+
     def Next(self, e):
         try:
-            checkindexCurr = self.wrong.index(self.checktext.GetValue())
+            checkindexCurr = self.wrong.index(self.currentword)
             checkindexNew = checkindexCurr + 1
-            self.checktext.SetValue(self.wrong[checkindexNew])
+            self.originaltext.SetValue(self.wrong[checkindexNew])
+            self.currentindex = self.wrong.index(self.originaltext.GetValue())
+            self.currentword = self.wrong[self.currentindex]
         except IndexError:
             wx.MessageBox("YEY NO MORE WRONG WORDS")
+            
 
     def Previous(self, e):
         try:
-            checkindexCurr = self.wrong.index(self.checktext.GetValue())
+            checkindexCurr = self.wrong.index(self.currentword)
             checkindexNew = checkindexCurr - 1
-            self.checktext.SetValue(self.wrong[checkindexNew])
+            self.originaltext.SetValue(self.wrong[checkindexNew])
         except IndexError:
             wx.MessageBox("YEY NO MORE WRONG WORDS")
 

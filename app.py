@@ -279,7 +279,6 @@ class Example(wx.Frame):
         if not words:
             wx.MessageBox("Please enter something for us to check your work!!")
         else:
-            controller
             controller.addCommon(self, words)
 
 

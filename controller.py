@@ -1,6 +1,7 @@
 from model import *
 from sqlalchemy import create_engine
 import wx
+from rules import *
 
 def connectToDatabase():
     """
@@ -36,7 +37,7 @@ def spellingCheck(self, List):
     print self.wrong
     self.currentword = self.wrong[0]
     self.originaltext.SetValue(self.currentword)
-
+    self.check.Bind(wx.EVT_FIND, self.OnHighlight)  # HIGHLIGHJUSEYO
 
 def displayCommon(self):
 
@@ -61,3 +62,6 @@ def deleteDictionary():
     for x in session.query(inputWords):
         session.delete(x)
         session.commit()
+
+def displaySuggestions():
+    print ("Hello World")

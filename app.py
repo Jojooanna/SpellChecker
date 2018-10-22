@@ -7,6 +7,7 @@ import datetime
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from model import *
+import rules
 import controller
 
 engine = create_engine('postgresql://postgres:jojo123@localhost:5432/postgres')
@@ -69,7 +70,7 @@ class Example(wx.Frame):
         self.vbox5 = wx.BoxSizer(wx.VERTICAL)
         self.vbox5.AddSpacer(15)
         self.filename = wx.StaticText(self.panel, style=wx.ALIGN_CENTER, label="Filename", size=(900,30))
-        self.inputtext = wx.TextCtrl(self.panel, size=(900, 600), style=wx.TE_MULTILINE)
+        self.inputtext = wx.TextCtrl(self.panel, size=(900, 600), style=wx.TE_MULTILINE|wx.TE_RICH2)
         self.vbox5.Add(self.filename, flag=wx.CENTER)
         self.vbox5.Add(self.inputtext, flag=wx.CENTER)
 
@@ -98,8 +99,8 @@ class Example(wx.Frame):
         self.hbox1.Add(self.vbox8, flag=wx.CENTER)
 
         self.vbox9 = wx.BoxSizer(wx.VERTICAL)
-        self.originaltext = wx.TextCtrl(self.panel,size=(200,30))
-        self.checktext = wx.TextCtrl(self.panel,size=(200,30))
+        self.originaltext = wx.TextCtrl(self.panel,size=(200,30), style=wx.TE_READONLY)
+        self.checktext = wx.TextCtrl(self.panel,size=(200,30),style=wx.TE_READONLY)
         self.vbox9.Add(self.originaltext, flag=wx.CENTER)
         self.vbox9.Add(self.checktext, flag=wx.CENTER)
         self.hbox1.Add(self.vbox9, flag=wx.CENTER)
@@ -178,6 +179,19 @@ class Example(wx.Frame):
         self.SetSize((1200, 700))
         self.SetTitle('Filipino Spelling Checker')
         self.Centre()
+
+    def OnHighlight(self, e):
+        self.findtext = self.originaltext.GetValue()
+        self.input = self.inputtext.GetValue()
+        self.position = self.input.find(self.findtext, self.position)
+
+        print ("target",self.position)
+
+        self.size = len(self.findtext)
+        self.inputtext.SetStyle(self.position, self.position+self.size,wx.TextAttr("black", "turquoise"))
+        #self.inputtext.GetValue().SetStyle(wx.TextAttr("black", "turquoise")).find(self.originaltext.GetValue())
+        #self.inputtext.SetStyle(start, end, wx.TextAttr("black", "turquoise"))
+        #self.inputtext.SetInsertionPoint(start)
 
     def OnIgnore(self, event):
         if wx.MessageBox("Remove word?", "Please confirm", wx.YES_NO) != wx.NO:
@@ -265,6 +279,7 @@ class Example(wx.Frame):
         if not words:
             wx.MessageBox("Please enter something for us to check your work!!")
         else:
+            controller
             controller.addCommon(self, words)
 
 

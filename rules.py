@@ -416,6 +416,7 @@ class meta:
 
 x = meta()
 
+
 path = 'dictionarytest.txt'
 with open(path) as fp:
     line = fp.readline()
@@ -460,19 +461,6 @@ with open(path) as fp:
                 session.commit()
 
         line = fp.readline()
-
-
-
-# dictionary = open("dictionarytest.txt", "r")
-#
-# if dictionary.mode == 'r':
-#     content = dictionary.read()
-#
-#     x = meta()
-#
-#     primary, secondary = x.process(content)
-#     print (primary, content)
-#     print (secondary, content)
 
 
 # dict = {"hell": [1, 2, 3], "ej": [1, 2], "TSK": ['hello', 'world']}

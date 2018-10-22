@@ -475,22 +475,34 @@ with open(path) as fp:
 #     print (secondary, content)
 
 
-# dict = {"hell": [1, 2, 3], "ej": [1, 2], "TSK": ['hello', 'world']}
-# # How to use metaphone algorithm
-# x = meta()
-# # to produce primary and secondary hash just use the following
-# word = raw_input('Enter a word: ')
-#
-# primary, secondary = x.process(word)
-# print primary
-# print secondary
+dict = {"HL": ['hala','halo', 'holo'], "JL": ['haja', 'hajo'], "TSK": ['hello', 'world'], "CHK":['choco', 'choko', 'chook']}
+# How to use metaphone algorithm
+x = meta()
+# to produce primary and secondary hash just use the following
+word = raw_input('Enter a word: ')
+
+primary, secondary = x.process(word)
+print primary
+print secondary
 
 
 # if primary in dict.keys():
-# 	dict[primary].append(word)
-
+#     dict[primary].append(word)
+#
 # list_name = primary
 # vars()[list_name] = []
 # print dict[primary]
 # print dict
 # print dict["hell"]
+
+words = []
+
+for x in dict[primary]:
+    words.append(x)
+
+if dict[secondary]:
+    for y in dict[secondary]:
+        words.append(y)
+
+print words
+

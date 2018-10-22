@@ -1,6 +1,7 @@
 from model import *
 from sqlalchemy import create_engine
 import wx
+# from rules import *
 
 def connectToDatabase():
     """
@@ -36,6 +37,18 @@ def spellingCheck(self, List):
     print self.wrong
     self.currentword = self.wrong[0]
     self.originaltext.SetValue(self.currentword)
+
+    # primary, secondary = x.process(self.currentword)
+    # suggestions = session.query(Words).filter(Words.code == primary)
+    # words = []
+    #
+    # for x.words in suggestions:
+    #     words.append(x.words)
+    #
+    # print primary, secondary
+    # print self.words
+
+
 
 
 def displayCommon(self):

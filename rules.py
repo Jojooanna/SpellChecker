@@ -6,7 +6,7 @@ def connectToDatabase():
     """
     Connect to our SQLite database and return a Session object
     """
-    engine = create_engine("postgresql://postgres:jojo123@localhost:5432/postgres")
+    engine = create_engine("postgresql://postgres:mvjunetwo@localhost:5432/spell")
     Session = sessionmaker(bind=engine)
     session = Session()
     return session
@@ -479,12 +479,12 @@ dict = {"HL": ['hala','halo', 'holo'], "JL": ['haja', 'hajo'], "TSK": ['hello', 
 # How to use metaphone algorithm
 x = meta()
 # to produce primary and secondary hash just use the following
-word = raw_input('Enter a word: ')
-
-primary, secondary = x.process(word)
-print primary
-print secondary
-
+# word = raw_input('Enter a word: ')
+#
+# primary, secondary = x.process(word)
+# print primary
+# print secondary
+#
 
 # if primary in dict.keys():
 #     dict[primary].append(word)
@@ -495,14 +495,23 @@ print secondary
 # print dict
 # print dict["hell"]
 
+# words = []
+#
+# for x in dict[primary]:
+#     words.append(x)
+#
+# if dict[secondary]:
+#     for y in dict[secondary]:
+#         words.append(y)
+#
+# print words
+
+primary, secondary = x.process(raw_input('Enter a word: '))
+suggestions = session.query(Words).filter(Words.code == primary)
 words = []
 
-for x in dict[primary]:
-    words.append(x)
+for x.words in suggestions:
+    words.append(x.words)
 
-if dict[secondary]:
-    for y in dict[secondary]:
-        words.append(y)
-
+print primary, secondary
 print words
-

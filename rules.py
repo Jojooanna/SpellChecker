@@ -479,9 +479,9 @@ dict = {"HL": ['hala','halo', 'holo'], "JL": ['haja', 'hajo'], "TSK": ['hello', 
 # How to use metaphone algorithm
 x = meta()
 # to produce primary and secondary hash just use the following
-# word = raw_input('Enter a word: ')
+word = raw_input('Enter a word: ')
 #
-# primary, secondary = x.process(word)
+primary, secondary = x.process(word)
 # print primary
 # print secondary
 #
@@ -495,23 +495,23 @@ x = meta()
 # print dict
 # print dict["hell"]
 
-# words = []
-#
-# for x in dict[primary]:
-#     words.append(x)
-#
-# if dict[secondary]:
-#     for y in dict[secondary]:
-#         words.append(y)
-#
-# print words
-
-primary, secondary = x.process(raw_input('Enter a word: '))
-suggestions = session.query(Words).filter(Words.code == primary)
 words = []
 
-for x.words in suggestions:
-    words.append(x.words)
+for x in dict[primary]:
+    words.append(x)
 
-print primary, secondary
+if dict[secondary]:
+    for y in dict[secondary]:
+        words.append(y)
+
 print words
+
+# primary, secondary = x.process(raw_input('Enter a word: '))
+# suggestions = session.query(Words).filter(Words.code == primary)
+# words = []
+#
+# for x.words in suggestions:
+#     words.append(x.words)
+#
+# print primary, secondary
+# print words

@@ -51,6 +51,7 @@ def spellingCheck(self, List):
 
 
 
+
 def displayCommon(self):
 
     panel = wx.Panel(self)

@@ -417,8 +417,10 @@ class meta:
 
 x = meta()
 
+# di na ma-save ug balik ang mga words nga naa na sa db
+
 path = 'dictionarytest.txt'
-with open(path) as fp:
+with io.open(path) as fp:
     line = fp.readline()
 
     while line:
@@ -431,103 +433,44 @@ with open(path) as fp:
                 session.add(dict)
                 session.commit()
             else:
-                data.words = list(data.words)
-                data.words.append(line.strip())
-                session.merge(data)
-                session.commit()
+                for i in data.words:
+                    if i == line.strip():
+                        pass
+                    else:
+                        data.words = list(data.words)
+                        data.words.append(line.strip())
+                        session.merge(data)
+                        session.commit()
         else:
             dataPri = session.query(Words).filter(Words.code == primary).first()
             if dataPri is None:
-                #print("{}: {}".format(primary, line.strip()))
                 dict = Words(code=primary, words=[line.strip()])
                 session.add(dict)
                 session.commit()
             else:
-                dataPri.words = list(dataPri.words)
-                dataPri.words.append(line.strip())
-                session.merge(dataPri)
-                session.commit()
+                for i in dataPri.words:
+                    if i == line.strip():
+                        pass
+                    else:
+                        dataPri.words = list(dataPri.words)
+                        dataPri.words.append(line.strip())
+                        session.merge(dataPri)
+                        session.commit()
 
             dataSec = session.query(Words).filter(Words.code == secondary).first()
             if dataSec is None:
-                #print("{}: {}".format(primary, line.strip()))
                 dict = Words(code=secondary, words=[line.strip()])
                 session.add(dict)
                 session.commit()
             else:
-                dataSec.words = list(dataSec.words)
-                dataSec.words.append(line.strip())
-                session.merge(dataSec)
-                session.commit()
-
-
-#DUGAY KAAYO MU-RUN KUNG KANI HUHUH
-# di na ma-save ug balik ang mga words nga naa na sa db
-
-# path = 'dictionarytest.txt'
-# with io.open(path) as fp:
-#     line = fp.readline()
-#
-#     while line:
-#         primary, secondary = x.process(line.strip())
-#         if primary == secondary:
-#             #print("{}: {}".format(primary, line.strip()))
-#             data = session.query(Words).filter(Words.code == primary).first()
-#             if data is None:
-#                 for i in data.words:
-#                     if i == line.strip():
-#                         pass
-#                     else:
-#                         dict = Words(code=primary, words=[line.strip()])
-#                         session.add(dict)
-#                         session.commit()
-#             else:
-#                 for i in data.words:
-#                     if i == line.strip():
-#                         pass
-#                     else:
-#                         data.words = list(data.words)
-#                         data.words.append(line.strip())
-#                         session.merge(data)
-#                         session.commit()
-#         else:
-#             dataPri = session.query(Words).filter(Words.code == primary).first()
-#             if dataPri is None:
-#                 for i in dataPri.words:
-#                     if i == line.strip():
-#                         pass
-#                     else:
-#                         dict = Words(code=primary, words=[line.strip()])
-#                         session.add(dict)
-#                         session.commit()
-#             else:
-#                 for i in dataPri.words:
-#                     if i == line.strip():
-#                         pass
-#                     else:
-#                         dataPri.words = list(dataPri.words)
-#                         dataPri.words.append(line.strip())
-#                         session.merge(dataPri)
-#                         session.commit()
-#
-#             dataSec = session.query(Words).filter(Words.code == secondary).first()
-#             if dataSec is None:
-#                 for i in dataSec.words:
-#                     if i == line.strip():
-#                         pass
-#                     else:
-#                         dict = Words(code=secondary, words=[line.strip()])
-#                         session.add(dict)
-#                         session.commit()
-#             else:
-#                 for i in dataSec.words:
-#                     if i == line.strip():
-#                         pass
-#                     else:
-#                         dataSec.words = list(dataSec.words)
-#                         dataSec.words.append(line.strip())
-#                         session.merge(dataSec)
-#                         session.commit()
+                for i in dataSec.words:
+                    if i == line.strip():
+                        pass
+                    else:
+                        dataSec.words = list(dataSec.words)
+                        dataSec.words.append(line.strip())
+                        session.merge(dataSec)
+                        session.commit()
 
 # dict = {"hell": [1, 2, 3], "ej": [1, 2], "TSK": ['hello', 'world']}
 # # How to use metaphone algorithm

@@ -7,7 +7,6 @@ import datetime
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from model import *
-import rules
 import controller
 
 engine = create_engine('postgresql://postgres:jojo123@localhost:5432/postgres')

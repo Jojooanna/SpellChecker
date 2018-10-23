@@ -1,7 +1,7 @@
 from model import *
 from sqlalchemy import create_engine
 import wx
-from rules import *
+# from rules import *
 from model import *
 
 def connectToDatabase():

@@ -39,6 +39,16 @@ def spellingCheck(self, List):
     self.originaltext.SetValue(self.currentword)
     self.check.Bind(wx.EVT_FIND, self.OnHighlight)  # HIGHLIGHJUSEYO
 
+    # primary, secondary = x.process(self.currentword)
+    # suggestions = session.query(Words).filter(Words.code == primary)
+    # words = []
+    #
+    # for x.words in suggestions:
+    #     words.append(x.words)
+    #
+    # print primary, secondary
+    # print self.words
+
 def displayCommon(self):
 
     panel = wx.Panel(self)

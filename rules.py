@@ -459,8 +459,8 @@ with open(path) as fp:
                 dataSec.words.append(line.strip())
                 session.merge(dataSec)
                 session.commit()
-
-        line = fp.readline()y
+        #
+        # line = fp.readline()
 
 # dict = {"hell": [1, 2, 3], "ej": [1, 2], "TSK": ['hello', 'world']}
 # # How to use metaphone algorithm
@@ -483,7 +483,6 @@ with open(path) as fp:
 #     print (primary, content)
 #     print (secondary, content)
 
-
 # dict = {"HL": ['hala','halo', 'holo'], "JL": ['haja', 'hajo'], "TSK": ['hello', 'world'], "CHK":['choco', 'choko', 'chook']}
 # # How to use metaphone algorithm
 # x = meta()
@@ -493,7 +492,6 @@ with open(path) as fp:
 # primary, secondary = x.process(word)
 # print primary
 # print secondary
-
 
 # if primary in dict.keys():
 #     dict[primary].append(word)
@@ -517,3 +515,12 @@ with open(path) as fp:
 
 
 
+# primary, secondary = x.process(raw_input('Enter a word: '))
+# suggestions = session.query(Words).filter(Words.code == primary)
+# words = []
+#
+# for x.words in suggestions:
+#     words.append(x.words)
+#
+# print primary, secondary
+# print words

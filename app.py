@@ -203,6 +203,9 @@ class Example(wx.Frame):
             wx.MessageBox("Please enter something for us to check your work!!")
         else:
             controller.addCommon(self, words)
+            controller.suggestionslist = []
+            self.suggestions = []
+            controller.displaySuggestions(self, self.currentword)
             for i in controller.suggestionslist:
                 self.suggestions.append(i)
                 self.wordsuggest1 = wx.ListBox(self.panel, choices=self.suggestions, style=wx.LB_HSCROLL,
@@ -317,10 +320,13 @@ class Example(wx.Frame):
             wx.MessageBox("Please enter something for us to check your work!!")
         else:
             controller.addCommon(self, words)
+            controller.suggestionslist = []
+            self.suggestions = []
+            controller.displaySuggestions(self, self.currentword)
             for i in controller.suggestionslist:
                 self.suggestions.append(i)
-        self.wordsuggest.Set(self.suggestions)
-        self.Refresh()
+            self.wordsuggest.Set(self.suggestions)
+            self.Refresh()
         # self.notfoundmsg.Hide()
 
     def closeButton(self, event):

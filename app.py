@@ -105,10 +105,10 @@ class Example(wx.Frame):
         self.hbox1.Add(self.vbox9, flag=wx.CENTER)
 
         self.vbox7 = wx.BoxSizer(wx.VERTICAL)
-        self.changebtn = wx.Button(self.panel, label="Change", size=(100, 30))
-        # self.changebtn.Bind(wx.EVT_BUTTON, self.OnTest)
-        self.changeallbtn = wx.Button(self.panel, label="Change All", size=(100, 30))
-        # self.changeallbtn.Bind(wx.EVT_BUTTON, self.OnTest)
+        self.changebtn = wx.Button(self.panel, label="Change", size=(100,30))
+        self.changebtn.Bind(wx.EVT_BUTTON, self.Change)
+        self.changeallbtn = wx.Button(self.panel, label="Change All", size=(100,30))
+        #self.changeallbtn.Bind(wx.EVT_BUTTON, self.OnTest)
 
         self.vbox7.Add(self.changebtn, flag=wx.RIGHT)
         self.vbox7.Add(self.changeallbtn, flag=wx.RIGHT)
@@ -237,7 +237,8 @@ class Example(wx.Frame):
         wx.MessageBox("Word Added!")
 
     def OnWordSuggest(self, event):
-        print "Hello World"
+        self.selected = self.wordsuggest.GetStringSelection()
+        self.checktext.SetValue(self.selected)
 
     def OnTest(self, e):
         checkindexCurr = self.wrong.index(self.checktext.GetValue())
@@ -247,6 +248,7 @@ class Example(wx.Frame):
     def Change(self, e):
         self.selected = self.wordsuggest.GetStringSelection()
         self.inputtext.SetValue(self.inputtext.GetValue().replace(self.currentword, self.selected))
+        print 'hoy'
         # replace/update pod ang words sa wrong[]
 
     def Next(self, e):
@@ -256,6 +258,14 @@ class Example(wx.Frame):
             self.originaltext.SetValue(self.wrong[checkindexNew])
             self.currentindex = self.wrong.index(self.originaltext.GetValue())
             self.currentword = self.wrong[self.currentindex]
+            controller.suggestionslist = []
+            self.suggestions = []
+            controller.displaySuggestions(self, self.currentword)
+            for i in controller.suggestionslist:
+                self.suggestions.append(i)
+            self.wordsuggest.Set(self.suggestions)
+            self.Refresh()
+
         except IndexError:
             wx.MessageBox("YEY NO MORE WRONG WORDS")
 
@@ -282,6 +292,36 @@ class Example(wx.Frame):
         if dlg.ShowModal() == wx.ID_OK:
             print('You entered: %s\n' % dlg.GetValue())
         dlg.Destroy()
+
+    def OnButton(self, e):
+        self.value = str(self.inputtext.GetValue())
+        self.value2 = self.value.split()
+        words = self.value2
+        print (words) # list and words?
+        List = []
+        for i in words:
+            if i in List:
+                continue
+            else:
+                List.append(i)
+        print (List)
+        # count = 0
+        # for i in List: #for phoenics and lev.
+        #     count = 0
+        #     for j in i:
+        #         count = count + 1
+        #     print count
+        # self.word.SetLabel(self.inputtext)
+
+        if not words:
+            wx.MessageBox("Please enter something for us to check your work!!")
+        else:
+            controller.addCommon(self, words)
+            for i in controller.suggestionslist:
+                self.suggestions.append(i)
+        self.wordsuggest.Set(self.suggestions)
+        self.Refresh()
+        # self.notfoundmsg.Hide()
 
     def closeButton(self, event):
         print "Button pressed."

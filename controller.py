@@ -33,15 +33,18 @@ def spellingCheck(self, List):
         data = session.query(inputWords).filter(inputWords.word == i).first()
         if data is None:
             self.wrong.append(i)
-            displaySuggestions(self, i)
         else:
             print i  # kung wala ang words e append sya sa wrong na list
     # print wrong
     print self.wrong
-    self.currentword = self.wrong[0]
-    self.originaltext.SetValue(self.currentword)
-    self.check.Bind(wx.EVT_FIND, self.OnHighlight)  # HIGHLIGHJUSEYO
-
+    if (self.wrong == []):
+        wx.MessageBox("YEY NO MORE WRONG WORDS")
+    else:
+        self.currentword = self.wrong[0]
+        self.originaltext.SetValue(self.currentword)
+        self.check.Bind(wx.EVT_FIND, self.OnHighlight)  # HIGHLIGHJUSEYO
+        displaySuggestions(self, self.currentword)
+        displaySuggestions(self, self.currentword)
     # primary, secondary = x.process(self.currentword)
     # suggestions = session.query(Words).filter(Words.code == primary)
     # words = []

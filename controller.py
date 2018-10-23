@@ -2,6 +2,7 @@ from model import *
 from sqlalchemy import create_engine
 import wx
 from rules import *
+from model import *
 
 def connectToDatabase():
     """
@@ -31,6 +32,7 @@ def spellingCheck(self, List):
         data = session.query(inputWords).filter(inputWords.word == i).first()
         if data is None:
             self.wrong.append(i)
+            #displaySuggestions(self, data)
         else:
             print i  # kung wala ang words e append sya sa wrong na list
     # print wrong
@@ -48,6 +50,23 @@ def spellingCheck(self, List):
     #
     # print primary, secondary
     # print self.words
+
+# def displaySuggestions(self, input):
+#     priCode, secCode = x.process(input)
+#     data = session.query(Words).filter(Words.code == priCode).first()
+#     if data is None:
+#         print ("No suggestions found.")
+#     else:
+#         for i in range(data.words):
+#             print (i, "is", data.words[i])
+#
+#     data2 = session.query(Words).filter(Words.code == secCode).first()
+#     if data2 is None:
+#         pass
+#     else:
+#         for i in range(data2.words):
+#             print (i, "is", data2.words[i])
+
 
 def displayCommon(self):
 
@@ -73,5 +92,4 @@ def deleteDictionary():
         session.delete(x)
         session.commit()
 
-def displaySuggestions():
-    print ("Hello World")
+

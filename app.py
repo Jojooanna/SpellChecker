@@ -382,7 +382,6 @@ class Modal(wx.Frame):
         print "Button pressed."
 
 
-
 def main():
 
     app = wx.App()

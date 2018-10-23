@@ -1,8 +1,9 @@
-from model import *
 from sqlalchemy import create_engine
 import wx
 from rules import *
 from model import *
+
+suggestionslist =[]
 
 def connectToDatabase():
     """
@@ -58,14 +59,20 @@ def displaySuggestions(self, input):
         print ("No suggestions found.")
     else:
         for i in data.words:
-            print (i)
+            if i in suggestionslist:
+                pass
+            else:
+                suggestionslist.append(i)
 
     data2 = session.query(Words).filter(Words.code == secCode).first()
     if data2 is None:
         print ("No suggestions found")
     else:
         for i in data2.words:
-            print (i)
+            if i in suggestionslist:
+                pass
+            else:
+                suggestionslist.append(i)
 
 
 def displayCommon(self):

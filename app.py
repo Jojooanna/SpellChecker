@@ -136,8 +136,8 @@ class Example(wx.Frame):
         self.hbox3 = wx.BoxSizer(wx.HORIZONTAL)
         self.hbox3.AddSpacer(60)
         self.vbox2 = wx.BoxSizer(wx.VERTICAL)
-        words = ['word1', 'word2', 'word3', 'word4', 'word5', 'word6', 'word7']
-        self.wordsuggest = wx.ListBox(self.panel, choices=words, style=wx.LB_HSCROLL,size=(200,100))
+        self.suggestions = []
+        self.wordsuggest = wx.ListBox(self.panel, choices=self.suggestions, style=wx.LB_HSCROLL,size=(200,100))
         self.vbox2.Add(self.wordsuggest, flag=wx.CENTER)
 
         self.vbox3 = wx.BoxSizer(wx.VERTICAL)
@@ -207,8 +207,7 @@ class Example(wx.Frame):
         wx.MessageBox("Word Added!")
 
     def OnWordSuggest(self, event):
-        self.selected = self.wordsuggest.GetStringSelection()
-        self.checktext.SetValue(self.selected)
+        print "Hello World"
 
     def OnTest(self, e):
         checkindexCurr = self.wrong.index(self.checktext.GetValue())
@@ -279,7 +278,10 @@ class Example(wx.Frame):
             wx.MessageBox("Please enter something for us to check your work!!")
         else:
             controller.addCommon(self, words)
-
+            for i in controller.suggestionslist:
+                self.suggestions.append(i)
+                self.wordsuggest1 = wx.ListBox(self.panel, choices=self.suggestions, style=wx.LB_HSCROLL,
+                                              size=(200, 100))
 
     def closeButton(self, event):
         print "Button pressed."

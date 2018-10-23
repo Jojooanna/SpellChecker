@@ -428,36 +428,40 @@ start = timeit.default_timer()
 
 path = 'dictionarytest.txt'
 with io.open(path) as fp:
-    line = fp.readline()
+    line = fp.read().splitlines()
+    print line
 
-    while line:
-        primary, secondary = x.process(line.strip())
+    for i in line:
+        primary, secondary = x.process(i)
+        print primary
+        print secondary
         if primary == secondary:
-            #print("{}: {}".format(primary, line.strip()))
+            #print("{}: {}".format(primary, i))
             data = session.query(Words).filter(Words.code == primary).first()
             if data is None:
-                dict = Words(code=primary, words=[line.strip()])
+                dict = Words(code=primary, words=[i])
                 session.add(dict)
                 session.commit()
             else:
-                if line.strip() in data.words:
-                    print ("prim",line.strip())
+                if i in data.words:
+                    print ("prim",i)
+                    # print "hi"
                     # if i == line.strip():
                     #     pass
                     # else:
                     #     data.words = list(data.words)
-                    #     data.words.append(line.strip())
+                    #     data.words.append(i)
                     #     session.merge(data)
                     #     session.commit()
         else:
             dataPri = session.query(Words).filter(Words.code == primary).first()
             if dataPri is None:
-                dict = Words(code=primary, words=[line.strip()])
+                dict = Words(code=primary, words=[i])
                 session.add(dict)
                 session.commit()
             else:
-                if line.strip() in dataPri.words:
-                    print ("priboth", line.strip())
+                if i in dataPri.words:
+                    print ("priboth", i)
                     # if i == line.strip():
                     #     pass
                     # else:
@@ -468,12 +472,12 @@ with io.open(path) as fp:
 
             dataSec = session.query(Words).filter(Words.code == secondary).first()
             if dataSec is None:
-                dict = Words(code=secondary, words=[line.strip()])
+                dict = Words(code=secondary, words=[i])
                 session.add(dict)
                 session.commit()
             else:
-                if line.strip() in dataSec.words:
-                    print ("secboth", line.strip())
+                if i in dataSec.words:
+                    print ("secboth", i)
                     # if i == line.strip():
                     #     pass
                     # else:

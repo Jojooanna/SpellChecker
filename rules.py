@@ -417,10 +417,13 @@ class meta:
         return primary, secondary
 
 x = meta()
-
-# dugay kaayong runtime GRABE
-# di na ma-save ug balik ang mga words nga naa na sa db
-
+# primary, secondary = x.process("nakakapagpabagabag")
+# print ("Primary: ", primary)
+# print ("Secondary: ", secondary)
+#
+# # dugay kaayong runtime GRABE
+# # di na ma-save ug balik ang mga words nga naa na sa db
+#
 # start = timeit.default_timer()
 #
 # path = 'dictionarytest.txt'

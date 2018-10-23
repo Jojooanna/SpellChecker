@@ -32,7 +32,7 @@ def spellingCheck(self, List):
         data = session.query(inputWords).filter(inputWords.word == i).first()
         if data is None:
             self.wrong.append(i)
-            displaySuggestions(self, data)
+            displaySuggestions(self, i)
         else:
             print i  # kung wala ang words e append sya sa wrong na list
     # print wrong
@@ -57,15 +57,15 @@ def displaySuggestions(self, input):
     if data is None:
         print ("No suggestions found.")
     else:
-        for i in range(data.words):
-            print (i, "is", data.words[i])
+        for i in data.words:
+            print (i)
 
     data2 = session.query(Words).filter(Words.code == secCode).first()
     if data2 is None:
         print ("No suggestions found")
     else:
-        for i in range(data2.words):
-            print (i, "is", data2.words[i])
+        for i in data2.words:
+            print (i)
 
 
 def displayCommon(self):

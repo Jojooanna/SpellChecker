@@ -10,6 +10,7 @@ from model import *
 import controller
 
 engine = create_engine('postgresql://postgres:jojo123@localhost:5432/postgres')
+checkindexNew = 0
 
 Session = sessionmaker(bind=engine)
 session = Session()
@@ -124,8 +125,8 @@ class Example(wx.Frame):
         self.findnextbtn = wx.Button(self.panel, label="Find Next", size=(100, 30))
         self.findnextbtn.Bind(wx.EVT_BUTTON, self.Next)
         self.previousbtn = wx.Button(self.panel, label="Previous", size=(100, 30))
-
         self.previousbtn.Bind(wx.EVT_BUTTON, self.Previous)
+
         self.vbox4.Add(self.findnextbtn, flag=wx.CENTER)
         self.vbox4.Add(self.previousbtn, flag=wx.CENTER)
         self.hbox2.Add(self.notfoundmsg, flag=wx.LEFT)
@@ -225,6 +226,7 @@ class Example(wx.Frame):
     def OnIgnore(self, event):
         if wx.MessageBox("Remove word?", "Please confirm", wx.YES_NO) != wx.NO:
             self.wrong.remove(self.originaltext.GetValue())
+            self.Next(self)
             # maremoved na pero di pa sya munext
 
     def OnLearn(self, event):
@@ -251,16 +253,17 @@ class Example(wx.Frame):
         print 'hoy'
         # replace/update pod ang words sa wrong[]
 
+
     def Next(self, e):
         try:
             checkindexCurr = self.wrong.index(self.currentword)
             checkindexNew = checkindexCurr + 1
             self.originaltext.SetValue(self.wrong[checkindexNew])
-            self.currentindex = self.wrong.index(self.originaltext.GetValue())
-            self.currentword = self.wrong[self.currentindex]
+            currentindex = self.wrong.index(self.originaltext.GetValue())
+            currentword = self.wrong[currentindex]
             controller.suggestionslist = []
             self.suggestions = []
-            controller.displaySuggestions(self, self.currentword)
+            controller.displaySuggestions(self, currentword)
             for i in controller.suggestionslist:
                 self.suggestions.append(i)
             self.wordsuggest.Set(self.suggestions)
@@ -274,6 +277,15 @@ class Example(wx.Frame):
             checkindexCurr = self.wrong.index(self.currentword)
             checkindexNew = checkindexCurr - 1
             self.originaltext.SetValue(self.wrong[checkindexNew])
+            currentindex = self.wrong.index(self.originaltext.GetValue())
+            currentword = self.wrong[currentindex]
+            controller.suggestionslist = []
+            self.suggestions = []
+            controller.displaySuggestions(self, currentword)
+            for i in controller.suggestionslist:
+                self.suggestions.append(i)
+            self.wordsuggest.Set(self.suggestions)
+            self.Refresh()
         except IndexError:
             wx.MessageBox("YEY NO MORE WRONG WORDS")
 

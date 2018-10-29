@@ -25,7 +25,6 @@ class Example(wx.Frame):
         self.InitUI()
 
     def InitUI(self):
-
         self.panel = wx.Panel(self)
 
         menubar = wx.MenuBar()

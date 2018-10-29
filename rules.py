@@ -15,6 +15,8 @@ def connectToDatabase():
 
 session = connectToDatabase()
 
+start = timeit.default_timer()
+
 class meta:
     length = 0
 
@@ -424,9 +426,7 @@ x = meta()
 # dugay kaayong runtime GRABE
 # di na ma-save ug balik ang mga words nga naa na sa db
 
-start = timeit.default_timer()
-
-path = 'dictionarytest.txt'
+path = 'dictionary.txt'
 with io.open(path) as fp:
     line = fp.read().splitlines()
 
@@ -444,7 +444,6 @@ with io.open(path) as fp:
                 session.commit()
             else:
                 if i in data.words:
-                    print ("prim", i)
                     pass
                 else:
                     data.words = list(data.words)
@@ -459,7 +458,6 @@ with io.open(path) as fp:
                 session.commit()
             else:
                 if i in dataPri.words:
-                    print ("priboth", i)
                     pass
                 else:
                     dataPri.words = list(dataPri.words)
@@ -474,7 +472,6 @@ with io.open(path) as fp:
                 session.commit()
             else:
                 if i in dataSec.words:
-                    print ("secboth", i)
                     pass
                 else:
                     dataSec.words = list(dataSec.words)

@@ -43,8 +43,7 @@ def spellingCheck(self, List):
         self.currentword = self.wrong[0]
         self.originaltext.SetValue(self.currentword)
         self.check.Bind(wx.EVT_FIND, self.OnHighlight)  # HIGHLIGHJUSEYO
-        displaySuggestions(self, self.currentword)
-        displaySuggestions(self, self.currentword)
+        # displaySuggestions(self, self.currentword)
     # primary, secondary = x.process(self.currentword)
     # suggestions = session.query(Words).filter(Words.code == primary)
     # words = []

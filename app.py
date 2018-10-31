@@ -175,7 +175,7 @@ class Example(wx.Frame):
         # self.Bind(wx.EVT_MENU, self.OnDict, dict)
 
         self.panel.SetSizer(self.hbox)
-        self.SetSize((1200, 700))
+        self.SetSize((1400, 700))
         self.SetTitle('Filipino Spelling Checker')
         self.Centre()
 
@@ -278,18 +278,21 @@ class Example(wx.Frame):
         try:
             checkindexCurr = self.wrong.index(self.currentword)
             checkindexNew = checkindexCurr - 1
-            self.originaltext.SetValue(self.wrong[checkindexNew])
-            currentindex = self.wrong.index(self.originaltext.GetValue())
-            currentword = self.wrong[currentindex]
-            controller.suggestionslist = []
-            self.suggestions = []
-            controller.displaySuggestions(self, currentword)
-            for i in controller.suggestionslist:
-                self.suggestions.append(i)
-            self.wordsuggest.Set(self.suggestions)
-            self.Refresh()
+            if (checkindexNew == -1):
+                wx.MessageBox("There's no previous wrong word")
+            else:
+                self.originaltext.SetValue(self.wrong[checkindexNew])
+                self.currentindex = self.wrong.index(self.originaltext.GetValue())
+                self.currentword = self.wrong[self.currentindex]
+                controller.suggestionslist = []
+                self.suggestions = []
+                controller.displaySuggestions(self, self.currentword)
+                for i in controller.suggestionslist:
+                    self.suggestions.append(i)
+                self.wordsuggest.Set(self.suggestions)
+                self.Refresh()
         except IndexError:
-            wx.MessageBox("YEY NO MORE WRONG WORDS")
+            wx.MessageBox("There's no previous word")
 
     def OnDict(self, e):
         app = wx.App()

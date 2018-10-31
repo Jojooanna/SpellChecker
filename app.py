@@ -251,9 +251,11 @@ class Example(wx.Frame):
 
     def Change(self, e):
         self.selected = self.wordsuggest.GetStringSelection()
-        self.inputtext.SetValue(self.inputtext.GetValue().replace(self.currentword, self.selected))
-        print 'hoy'
-        # replace/update pod ang words sa wrong[]
+        if self.selected == "":
+            wx.MessageBox("We can't change something into nothing")
+        else:
+            self.inputtext.SetValue(self.inputtext.GetValue().replace(self.currentword, self.selected))
+            # replace/update pod ang words sa wrong[]
 
 
     def Next(self, e):

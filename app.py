@@ -119,7 +119,7 @@ class Example(wx.Frame):
 
         self.hbox2 = wx.BoxSizer(wx.HORIZONTAL)
         self.hbox2.AddSpacer(70)
-        self.notfoundmsg = wx.StaticText(self.panel, label="The word was not found.", size=(200, 30))
+        self.notfoundmsg = wx.StaticText(self.panel, label=" ", size=(200, 30))
         self.vbox4 = wx.BoxSizer(wx.VERTICAL)
         self.findnextbtn = wx.Button(self.panel, label="Find Next", size=(100, 30))
         self.findnextbtn.Bind(wx.EVT_BUTTON, self.Next)
@@ -261,11 +261,11 @@ class Example(wx.Frame):
             checkindexCurr = self.wrong.index(self.currentword)
             checkindexNew = checkindexCurr + 1
             self.originaltext.SetValue(self.wrong[checkindexNew])
-            currentindex = self.wrong.index(self.originaltext.GetValue())
-            currentword = self.wrong[currentindex]
+            self.currentindex = self.wrong.index(self.originaltext.GetValue())
+            self.currentword = self.wrong[self.currentindex]
             controller.suggestionslist = []
             self.suggestions = []
-            controller.displaySuggestions(self, currentword)
+            controller.displaySuggestions(self, self.currentword)
             for i in controller.suggestionslist:
                 self.suggestions.append(i)
             self.wordsuggest.Set(self.suggestions)

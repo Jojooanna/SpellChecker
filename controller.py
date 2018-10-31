@@ -58,8 +58,9 @@ def displaySuggestions(self, input):
     priCode, secCode = x.process(input)
     data = session.query(Words).filter(Words.code == priCode).first()
     if data is None:
-        print ("No suggestions found.")
+        self.notfoundmsg.SetLabel("No suggestions found")
     else:
+        self.notfoundmsg.SetLabel("These are the suggestion")
         for i in data.words:
             if i in suggestionslist:
                 pass
@@ -68,8 +69,9 @@ def displaySuggestions(self, input):
 
     data2 = session.query(Words).filter(Words.code == secCode).first()
     if data2 is None:
-        print ("No suggestions found")
+        self.notfoundmsg.SetLabel("No suggestions found")
     else:
+        self.notfoundmsg.SetLabel("These are the suggestion")
         for i in data2.words:
             if i in suggestionslist:
                 pass

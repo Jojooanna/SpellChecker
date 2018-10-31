@@ -426,7 +426,7 @@ x = meta()
 # dugay kaayong runtime GRABE
 # di na ma-save ug balik ang mga words nga naa na sa db
 
-path = 'dictionary.txt'
+path = 'dictionarytest.txt'
 with io.open(path) as fp:
     line = fp.read().splitlines()
 

@@ -257,18 +257,22 @@ class Example(wx.Frame):
             self.inputtext.SetValue(self.inputtext.GetValue().replace(self.currentword, self.selected))
             self.checkindexCurr = self.wrong.index(self.currentword)
             self.wrong.remove(self.currentword)  # self.wrong.pop(self.checkindexCurr)
-            print (self.checkindexCurr)
-            self.originaltext.SetValue(self.wrong[self.checkindexCurr])
-            print (self.wrong)
             self.currentword = self.wrong[self.checkindexCurr]
-            controller.suggestionslist = []
-            self.suggestions = []
-            controller.displaySuggestions(self, self.currentword)
-            for i in controller.suggestionslist:
-                self.suggestions.append(i)
-            self.wordsuggest.Set(self.suggestions)
-            self.Refresh()
-            #       dapat pa ba ma clear ang selected after ma change?
+            try:
+                self.originaltext.SetValue(self.wrong[self.checkindexCurr]) #ma change ang original word sa nxt wrong words
+                print (self.wrong)
+                self.currentword = self.wrong[self.checkindexCurr]
+                controller.suggestionslist = []
+                self.suggestions = []
+                controller.displaySuggestions(self, self.currentword)
+                for i in controller.suggestionslist:
+                    self.suggestions.append(i)
+                self.wordsuggest.Set(self.suggestions)
+
+                self.Refresh()
+                #       dapat pa ba ma clear ang selected after ma change?
+            except IndexError:
+                wx.MessageBox("This is the last word")
 
     def Next(self, e):
         try:
@@ -289,7 +293,6 @@ class Example(wx.Frame):
             wx.MessageBox("YEY NO MORE WRONG WORDS")
 
     def Previous(self, e):
-        print "lol "
         try:
             self.checkindexCurr = self.wrong.index(self.currentword)
             self.checkindexNew = self.checkindexCurr - 1

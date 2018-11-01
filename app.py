@@ -227,8 +227,18 @@ class Example(wx.Frame):
 
     def OnIgnore(self, event):
         if wx.MessageBox("Remove word?", "Please confirm", wx.YES_NO) != wx.NO:
+            self.checkindexCurr = self.wrong.index(self.currentword)
             self.wrong.remove(self.originaltext.GetValue())
-            self.Next(self)
+            self.originaltext.SetValue(self.wrong[self.checkindexCurr])  # ma change ang original word sa nxt wrong words
+            self.currentword = self.wrong[self.checkindexCurr]
+            controller.suggestionslist = []
+            self.suggestions = []
+            controller.displaySuggestions(self, self.currentword)
+            for i in controller.suggestionslist:
+                self.suggestions.append(i)
+            self.wordsuggest.Set(self.suggestions)
+
+            self.Refresh()
             # maremoved na pero di pa sya munext
 
     def OnLearn(self, event):
@@ -255,13 +265,15 @@ class Example(wx.Frame):
             wx.MessageBox("We can't change something into nothing")
         else:
             self.inputtext.SetValue(self.inputtext.GetValue().replace(self.currentword, self.selected))
-            self.checkindexCurr = self.wrong.index(self.currentword)
-            self.wrong.remove(self.currentword)  # self.wrong.pop(self.checkindexCurr)
-            self.currentword = self.wrong[self.checkindexCurr]
+
             try:
+                self.checkindexCurr = self.wrong.index(self.currentword)
+                self.wrong.remove(self.currentword)  # self.wrong.pop(self.checkindexCurr)
                 self.originaltext.SetValue(self.wrong[self.checkindexCurr]) #ma change ang original word sa nxt wrong words
-                print (self.wrong)
                 self.currentword = self.wrong[self.checkindexCurr]
+                # print (self.currentword)
+                # print (self.checkindexCurr)
+                # print (self.wrong)
                 controller.suggestionslist = []
                 self.suggestions = []
                 controller.displaySuggestions(self, self.currentword)
@@ -272,7 +284,8 @@ class Example(wx.Frame):
                 self.Refresh()
                 #       dapat pa ba ma clear ang selected after ma change?
             except IndexError:
-                wx.MessageBox("This is the last word")
+                wx.MessageBox("No more wrong words")
+                # eclear pa dapat ang display suggestions
 
     def Next(self, e):
         try:

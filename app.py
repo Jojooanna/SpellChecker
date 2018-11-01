@@ -255,14 +255,26 @@ class Example(wx.Frame):
             wx.MessageBox("We can't change something into nothing")
         else:
             self.inputtext.SetValue(self.inputtext.GetValue().replace(self.currentword, self.selected))
-            # replace/update pod ang words sa wrong[]
-
+            self.checkindexCurr = self.wrong.index(self.currentword)
+            self.wrong.remove(self.currentword)  # self.wrong.pop(self.checkindexCurr)
+            print (self.checkindexCurr)
+            self.originaltext.SetValue(self.wrong[self.checkindexCurr])
+            print (self.wrong)
+            self.currentword = self.wrong[self.checkindexCurr]
+            controller.suggestionslist = []
+            self.suggestions = []
+            controller.displaySuggestions(self, self.currentword)
+            for i in controller.suggestionslist:
+                self.suggestions.append(i)
+            self.wordsuggest.Set(self.suggestions)
+            self.Refresh()
+            #       dapat pa ba ma clear ang selected after ma change?
 
     def Next(self, e):
         try:
-            checkindexCurr = self.wrong.index(self.currentword)
-            checkindexNew = checkindexCurr + 1
-            self.originaltext.SetValue(self.wrong[checkindexNew])
+            self.checkindexCurr = self.wrong.index(self.currentword)
+            self.checkindexNew = self.checkindexCurr + 1
+            self.originaltext.SetValue(self.wrong[self.checkindexNew])
             self.currentindex = self.wrong.index(self.originaltext.GetValue())
             self.currentword = self.wrong[self.currentindex]
             controller.suggestionslist = []
@@ -277,13 +289,14 @@ class Example(wx.Frame):
             wx.MessageBox("YEY NO MORE WRONG WORDS")
 
     def Previous(self, e):
+        print "lol "
         try:
-            checkindexCurr = self.wrong.index(self.currentword)
-            checkindexNew = checkindexCurr - 1
-            if (checkindexNew == -1):
+            self.checkindexCurr = self.wrong.index(self.currentword)
+            self.checkindexNew = self.checkindexCurr - 1
+            if (self.checkindexNew == -1):
                 wx.MessageBox("There's no previous wrong word")
             else:
-                self.originaltext.SetValue(self.wrong[checkindexNew])
+                self.originaltext.SetValue(self.wrong[self.checkindexNew])
                 self.currentindex = self.wrong.index(self.originaltext.GetValue())
                 self.currentword = self.wrong[self.currentindex]
                 controller.suggestionslist = []

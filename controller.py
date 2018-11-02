@@ -2,6 +2,8 @@ from sqlalchemy import create_engine
 import wx
 from rules import *
 from model import *
+# -*- encoding: utf-8 -*-
+# encoding: utf-8
 
 suggestionslist =[]
 
@@ -13,6 +15,12 @@ def connectToDatabase():
     Session = sessionmaker(bind=engine)
     session = Session()
     return session
+
+# tiwasunon pa hehe
+# def ForceToUnicode(text):
+#     value2 = text.split()
+#     "If text is unicode, it is returned as is. If it's str, convert it to Unicode using UTF-8 encoding"
+#     return value2 if isinstance(value2, unicode) else value2.decode('utf8')
 
 def addCommon(self, List):
 
@@ -58,8 +66,9 @@ def displaySuggestions(self, input):
     priCode, secCode = x.process(input)
     data = session.query(Words).filter(Words.code == priCode).first()
     if data is None:
-        print ("No suggestions found.")
+        self.notfoundmsg.SetLabel("No suggestions found")
     else:
+        self.notfoundmsg.SetLabel("These are the suggestion")
         for i in data.words:
             if i in suggestionslist:
                 pass
@@ -68,8 +77,9 @@ def displaySuggestions(self, input):
 
     data2 = session.query(Words).filter(Words.code == secCode).first()
     if data2 is None:
-        print ("No suggestions found")
+        self.notfoundmsg.SetLabel("No suggestions found")
     else:
+        self.notfoundmsg.SetLabel("These are the suggestion")
         for i in data2.words:
             if i in suggestionslist:
                 pass

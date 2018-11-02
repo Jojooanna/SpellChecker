@@ -79,62 +79,62 @@ class meta:
                     current += 1
                     continue
                 elif (self.sub(word, current, 2, ["UA"])):
-                    primary += "W"
+                    primary += ""
                     secondary += "W"
                     current += 2
                     continue
                 elif (self.sub(word, current, 2, ["UE"])):
-                    primary += "W"
+                    primary += ""
                     secondary += "W"
                     current += 2
                     continue
                 elif (self.sub(word, current, 2, ["UI"])):
-                    primary += "W"
+                    primary += ""
                     secondary += "W"
                     current += 2
                     continue
                 elif (self.sub(word, current, 2, ["OA"])):
-                    primary += "W"
+                    primary += ""
                     secondary += "W"
                     current += 2
                     continue
                 elif (self.sub(word, current, 2, ["AU"])):
-                    primary += "W"
+                    primary += ""
                     secondary += "W"
                     current += 2
                     continue
                 elif (self.sub(word, current, 2, ["OU"])):
-                    primary += "W"
+                    primary += ""
                     secondary += "W"
                     current += 2
                     continue
                 elif (self.sub(word, current, 2, ["AO"])):
-                    primary += "W"
+                    primary += ""
                     secondary += "W"
                     current += 2
                     continue
                 elif (self.sub(word, current, 2, ["IA"])):
-                    primary += "Y"
+                    primary += ""
                     secondary += "Y"
                     current += 2
                     continue
                 elif (self.sub(word, current, 2, ["IE"])):
-                    primary += "Y"
+                    primary += ""
                     secondary += "Y"
                     current += 2
                     continue
                 elif (self.sub(word, current, 2, ["IO"])):
-                    primary += "Y"
+                    primary += ""
                     secondary += "Y"
                     current += 2
                     continue
                 elif (self.sub(word, current, 2, ["IU"])):
-                    primary += "Y"
+                    primary += ""
                     secondary += "Y"
                     current += 2
                     continue
                 elif (self.sub(word, current, 2, ["EA"])):
-                    primary += "Y"
+                    primary += ""
                     secondary += "Y"
                     current += 2
                     continue
@@ -240,19 +240,20 @@ class meta:
 
             elif (symbol == "L"):
                 if (self.sub(word, current + 1, 1, ["L"])):
+                    primary += "L"
+                    secondary += "L"
                     current += 1
-                else:
-                    current += 1
-                primary += "L"
-                secondary += "L"
-                continue
-                if ((self.sub(word, current + 1, 1, ["LY"])) or (self.sub(word, current + 1, 1, ["Y"]))):
+                    continue
+                elif ((self.sub(word, current + 1, 1, ["LY"])) or (self.sub(word, current + 1, 1, ["Y"]))):
+                    primary += "L"
+                    secondary += "L"
                     current += 2
+                    continue
                 else:
+                    primary += "L"
+                    secondary += "L"
                     current += 1
-                primary += "L"
-                secondary += "L"
-                continue
+                    continue
 
             elif (symbol == "M"):
                 if (self.sub(word, current + 1, 1, ["M"])):
@@ -274,6 +275,7 @@ class meta:
                     current += 1
                 continue
 
+            #what if ichange lang natong NG to any ascii symbol para ma-return ang primary ug secondary
             elif (symbol == "NG"):
                 if (self.sub(word, current + 1, 2, ["NG"])):
                     current += 2
@@ -401,12 +403,12 @@ class meta:
                     current += 1
                 continue
             elif (symbol == "Z"):
-                if (self.sub(word, current + 1, 1, ["S"])):
+                if (self.sub(word, current+1, 1, ["S"])):
                     primary += "Z"
                     secondary += "S"
                     current += 1
                     continue
-                if (self.sub(word, current + 1, 1, ['Z'])):
+                elif (self.sub(word, current+1, 1, ['Z'])):
                     primary += "Z"
                     secondary += "S"
                     current += 1
@@ -424,9 +426,9 @@ x = meta()
 # primary, secondary = x.process("nakakapagpabagabag")
 # print ("Primary: ", primary)
 # print ("Secondary: ", secondary)
-#
-# dugay kaayong runtime GRABE
-# di na ma-save ug balik ang mga words nga naa na sa db
+
+# ***********************************************************
+# Dapat naa paniy condition
 
 # path = 'dictionary.txt'
 # with io.open(path) as fp:

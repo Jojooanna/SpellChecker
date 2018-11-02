@@ -6,6 +6,8 @@ import string
 import datetime
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
+# -*- encoding: utf-8 -*-
+# encoding: utf-8
 from model import *
 import controller
 
@@ -119,7 +121,7 @@ class Example(wx.Frame):
 
         self.hbox2 = wx.BoxSizer(wx.HORIZONTAL)
         self.hbox2.AddSpacer(70)
-        self.notfoundmsg = wx.StaticText(self.panel, label="The word was not found.", size=(200, 30))
+        self.notfoundmsg = wx.StaticText(self.panel, label=" ", size=(200, 30))
         self.vbox4 = wx.BoxSizer(wx.VERTICAL)
         self.findnextbtn = wx.Button(self.panel, label="Find Next", size=(100, 30))
         self.findnextbtn.Bind(wx.EVT_BUTTON, self.Next)
@@ -175,7 +177,7 @@ class Example(wx.Frame):
         # self.Bind(wx.EVT_MENU, self.OnDict, dict)
 
         self.panel.SetSizer(self.hbox)
-        self.SetSize((1200, 700))
+        self.SetSize((1400, 700))
         self.SetTitle('Filipino Spelling Checker')
         self.Centre()
 
@@ -191,8 +193,18 @@ class Example(wx.Frame):
 
     def OnIgnore(self, event):
         if wx.MessageBox("Remove word?", "Please confirm", wx.YES_NO) != wx.NO:
+            self.checkindexCurr = self.wrong.index(self.currentword)
             self.wrong.remove(self.originaltext.GetValue())
-            self.Next(self)
+            self.originaltext.SetValue(self.wrong[self.checkindexCurr])  # ma change ang original word sa nxt wrong words
+            self.currentword = self.wrong[self.checkindexCurr]
+            controller.suggestionslist = []
+            self.suggestions = []
+            controller.displaySuggestions(self, self.currentword)
+            for i in controller.suggestionslist:
+                self.suggestions.append(i)
+            self.wordsuggest.Set(self.suggestions)
+
+            self.Refresh()
             # maremoved na pero di pa sya munext
 
     def OnLearn(self, event):
@@ -215,47 +227,70 @@ class Example(wx.Frame):
 
     def Change(self, e):
         self.selected = self.wordsuggest.GetStringSelection()
-        self.inputtext.SetValue(self.inputtext.GetValue().replace(self.currentword, self.selected))
-        if self.inputtext.IsModified() == 1:
-            print 'hoy'
-        # replace/update pod ang words sa wrong[]
+        if self.selected == "":
+            wx.MessageBox("We can't change something into nothing")
+        else:
+            self.inputtext.SetValue(self.inputtext.GetValue().replace(self.currentword, self.selected))
 
+            try:
+                self.checkindexCurr = self.wrong.index(self.currentword)
+                self.wrong.remove(self.currentword)  # self.wrong.pop(self.checkindexCurr)
+                self.originaltext.SetValue(self.wrong[self.checkindexCurr]) #ma change ang original word sa nxt wrong words
+                self.currentword = self.wrong[self.checkindexCurr]
+                # print (self.currentword)
+                # print (self.checkindexCurr)
+                # print (self.wrong)
+                controller.suggestionslist = []
+                self.suggestions = []
+                controller.displaySuggestions(self, self.currentword)
+                for i in controller.suggestionslist:
+                    self.suggestions.append(i)
+                self.wordsuggest.Set(self.suggestions)
+
+                self.Refresh()
+                #       dapat pa ba ma clear ang selected after ma change?
+            except IndexError:
+                wx.MessageBox("No more wrong words")
+                # eclear pa dapat ang display suggestions
 
     def Next(self, e):
         try:
-            checkindexCurr = self.wrong.index(self.currentword)
-            checkindexNew = checkindexCurr + 1
-            self.originaltext.SetValue(self.wrong[checkindexNew])
-            currentindex = self.wrong.index(self.originaltext.GetValue())
-            currentword = self.wrong[currentindex]
+            self.checkindexCurr = self.wrong.index(self.currentword)
+            self.checkindexNew = self.checkindexCurr + 1
+            self.originaltext.SetValue(self.wrong[self.checkindexNew])
+            self.currentindex = self.wrong.index(self.originaltext.GetValue())
+            self.currentword = self.wrong[self.currentindex]
             controller.suggestionslist = []
             self.suggestions = []
-            controller.displaySuggestions(self, currentword)
+            controller.displaySuggestions(self, self.currentword)
             for i in controller.suggestionslist:
                 self.suggestions.append(i)
             self.wordsuggest.Set(self.suggestions)
-            self.Refresh()
-
         except IndexError:
-            self.findnextbtn.Disable()
+            #self.findnextbtn.Disable()
             wx.MessageBox("YEY NO MORE WRONG WORDS")
 
     def Previous(self, e):
         try:
-            checkindexCurr = self.wrong.index(self.currentword)
-            checkindexNew = checkindexCurr - 1
-            self.originaltext.SetValue(self.wrong[checkindexNew])
-            currentindex = self.wrong.index(self.originaltext.GetValue())
-            currentword = self.wrong[currentindex]
-            controller.suggestionslist = []
-            self.suggestions = []
-            controller.displaySuggestions(self, currentword)
-            for i in controller.suggestionslist:
-                self.suggestions.append(i)
-            self.wordsuggest.Set(self.suggestions)
-            self.Refresh()
+            self.checkindexCurr = self.wrong.index(self.currentword)
+            self.checkindexNew = self.checkindexCurr - 1
+            if (self.checkindexNew == -1):
+                #self.previousbtn.Disable()
+                wx.MessageBox("There's no previous wrong word")
+            else:
+                #self.previousbtn.Enable()
+                self.originaltext.SetValue(self.wrong[self.checkindexNew])
+                self.currentindex = self.wrong.index(self.originaltext.GetValue())
+                self.currentword = self.wrong[self.currentindex]
+                controller.suggestionslist = []
+                self.suggestions = []
+                controller.displaySuggestions(self, self.currentword)
+                for i in controller.suggestionslist:
+                    self.suggestions.append(i)
+                self.wordsuggest.Set(self.suggestions)
+                self.Refresh()
         except IndexError:
-            wx.MessageBox("YEY NO MORE WRONG WORDS")
+            wx.MessageBox("There's no previous word")
 
     def OnDict(self, e):
         app = wx.App()
@@ -273,6 +308,7 @@ class Example(wx.Frame):
             print('You entered: %s\n' % dlg.GetValue())
         dlg.Destroy()
 
+
     def OnSpellCheck(self, e):
         self.value = str(self.inputtext.GetValue())
         self.value2 = self.value.split()
@@ -281,7 +317,8 @@ class Example(wx.Frame):
         List = []
         for i in words:
             #returns the position of the manually selected word
-            print (self.inputtext.GetSelection())
+            #para unta sa pag-highlight
+            #print (self.inputtext.GetSelection())
             if i in List:
                 continue
             else:

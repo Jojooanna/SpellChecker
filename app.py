@@ -34,7 +34,7 @@ class Example(wx.Frame):
         fileOpen = FileMenu.Append(wx.ID_OPEN, '&Open', "Open File")
         FileMenu.AppendSeparator()
 
-        fileSave = FileMenu.Append(wx.ID_SAVE, '&Save', "Save File")
+        self.fileSave = FileMenu.Append(wx.ID_SAVE, '&Save', "Save File")
         fileSaveAs = FileMenu.Append(wx.ID_SAVEAS, '&Save As', "Save File As")
         FileMenu.AppendSeparator()
 
@@ -80,7 +80,7 @@ class Example(wx.Frame):
         self.check = wx.Button(self.panel, size=(350, 50), label="Check Spelling")
         self.check.SetBackgroundColour("dim grey")
         self.check.SetForegroundColour("white")
-        self.check.Bind(wx.EVT_BUTTON, self.OnButton)
+        self.check.Bind(wx.EVT_BUTTON, self.OnSpellCheck)
         self.vbox1.Add(self.check, 0, flag=wx.CENTER)
 
         self.vbox1.AddSpacer(20)
@@ -179,39 +179,6 @@ class Example(wx.Frame):
         self.SetTitle('Filipino Spelling Checker')
         self.Centre()
 
-    def OnButton(self, e):
-        self.value = str(self.inputtext.GetValue())
-        self.value2 = self.value.split()
-        words = self.value2
-        print (words)  # list and words?
-        List = []
-        for i in words:
-            if i in List:
-                continue
-            else:
-                List.append(i)
-        print (List)
-        # count = 0
-        # for i in List: #for phoenics and lev.
-        #     count = 0
-        #     for j in i:
-        #         count = count + 1
-        #     print count
-        # self.word.SetLabel(self.inputtext)
-
-        if not words:
-            wx.MessageBox("Please enter something for us to check your work!!")
-        else:
-            controller.addCommon(self, words)
-            controller.suggestionslist = []
-            self.suggestions = []
-            controller.displaySuggestions(self, self.currentword)
-            for i in controller.suggestionslist:
-                self.suggestions.append(i)
-                self.wordsuggest1 = wx.ListBox(self.panel, choices=self.suggestions, style=wx.LB_HSCROLL,
-                                               size=(200, 100))
-
-
     def OnHighlight(self, e):
         self.findtext = self.originaltext.GetValue()
         self.input = self.inputtext.GetValue()
@@ -221,9 +188,6 @@ class Example(wx.Frame):
 
         self.size = len(self.findtext)
         self.inputtext.SetStyle(self.position, self.position + self.size, wx.TextAttr("black", "turquoise"))
-        # self.inputtext.GetValue().SetStyle(wx.TextAttr("black", "turquoise")).find(self.originaltext.GetValue())
-        # self.inputtext.SetStyle(start, end, wx.TextAttr("black", "turquoise"))
-        # self.inputtext.SetInsertionPoint(start)
 
     def OnIgnore(self, event):
         if wx.MessageBox("Remove word?", "Please confirm", wx.YES_NO) != wx.NO:
@@ -252,7 +216,8 @@ class Example(wx.Frame):
     def Change(self, e):
         self.selected = self.wordsuggest.GetStringSelection()
         self.inputtext.SetValue(self.inputtext.GetValue().replace(self.currentword, self.selected))
-        print 'hoy'
+        if self.inputtext.IsModified() == 1:
+            print 'hoy'
         # replace/update pod ang words sa wrong[]
 
 
@@ -272,6 +237,7 @@ class Example(wx.Frame):
             self.Refresh()
 
         except IndexError:
+            self.findnextbtn.Disable()
             wx.MessageBox("YEY NO MORE WRONG WORDS")
 
     def Previous(self, e):
@@ -307,13 +273,15 @@ class Example(wx.Frame):
             print('You entered: %s\n' % dlg.GetValue())
         dlg.Destroy()
 
-    def OnButton(self, e):
+    def OnSpellCheck(self, e):
         self.value = str(self.inputtext.GetValue())
         self.value2 = self.value.split()
         words = self.value2
         print (words) # list and words?
         List = []
         for i in words:
+            #returns the position of the manually selected word
+            print (self.inputtext.GetSelection())
             if i in List:
                 continue
             else:
@@ -344,7 +312,7 @@ class Example(wx.Frame):
         print "Button pressed."
 
     def ZoomIn(self, event):
-        self.defaultstyle = self.inputtext.GetPointSize()
+        #self.defaultstyle = self.inputtext.GetPointSize()
         self.defaultsize = self.defaultstyle.GetFont().GetPointSize()
         print(self.defaultsize)
 
@@ -434,9 +402,6 @@ class Modal(wx.Frame):
         if dlg.ShowModal() == wx.ID_OK:
             print('You entered: %s\n' % dlg.GetValue())
         dlg.Destroy()
-
-    def onButton(event):
-        print "Button pressed."
 
 
 def main():

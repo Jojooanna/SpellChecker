@@ -429,8 +429,8 @@ class Example(wx.Frame):
             pathname = fileDialog.GetPath()
             try:
                 with open(pathname, 'w') as file:
-                    self.inputtext.SaveFile()
-                    self.doSaveData(file)
+                    file.write(self.inputtext.GetValue())
+                    file.close()
             except IOError:
                 wx.LogError("Cannot save current data in file '%s'." % pathname)
 

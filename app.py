@@ -10,6 +10,7 @@ from sqlalchemy.orm import sessionmaker
 # encoding: utf-8
 from model import *
 import controller
+import rules
 
 engine = create_engine('postgresql://postgres:jojo123@localhost:5432/postgres')
 checkindexNew = 0
@@ -40,29 +41,24 @@ class Example(wx.Frame):
         fileSaveAs = FileMenu.Append(wx.ID_SAVEAS, '&Save As', "Save File As")
         FileMenu.AppendSeparator()
 
-        # dict = FileMenu.Append(wx.ITEM_NORMAL, '&Dict',"Dictionary")
-        # FileMenu.AppendSeparator()
-
         fileQuit = FileMenu.Append(wx.ID_EXIT, 'Quit\tCtrl+Q', 'Quit Program')
-        # fileItem1 = NewMenu.Append(wx.ID_EXIT, 'New\tCtrl+F', 'Create New File')
-
-        ViewMenu = wx.Menu()
-
-        ZoomIn = ViewMenu.Append(wx.ITEM_NORMAL, '&Zoom In', "Zoom In")
-        ZoomOut = ViewMenu.Append(wx.ITEM_NORMAL, '&Zoom Out', "Zoom Out")
-
-        ViewMenu.Append(wx.ITEM_NORMAL, '&Normal')
-        ViewMenu.AppendSeparator()
-
-        ViewMenu.Append(wx.ITEM_NORMAL, '&Full Screen')
-
-        HelpMenu = wx.Menu()
-        help = HelpMenu.Append(wx.ID_ABOUT, '&Help')
 
         menubar.Append(FileMenu, '&File')
-        menubar.Append(ViewMenu, '&View')
-        menubar.Append(HelpMenu, '&Help')
         self.SetMenuBar(menubar)
+
+        # **********************************************************
+        # Not important items -- and di sad muwork SO di apilon haha
+        # ViewMenu = wx.Menu()
+        # ZoomIn = ViewMenu.Append(wx.ITEM_NORMAL, '&Zoom In', "Zoom In")
+        # ZoomOut = ViewMenu.Append(wx.ITEM_NORMAL, '&Zoom Out', "Zoom Out")
+        # ViewMenu.Append(wx.ITEM_NORMAL, '&Normal')
+        # ViewMenu.AppendSeparator()
+        # ViewMenu.Append(wx.ITEM_NORMAL, '&Full Screen')
+        # HelpMenu = wx.Menu()
+        # help = HelpMenu.Append(wx.ID_ABOUT, '&Help')
+        # menubar.Append(ViewMenu, '&View')
+        # menubar.Append(HelpMenu, '&Help')
+        # **********************************************************
 
         self.hbox = wx.BoxSizer(wx.HORIZONTAL)
 
@@ -87,7 +83,6 @@ class Example(wx.Frame):
 
         self.vbox1.AddSpacer(20)
         self.vbox6 = wx.BoxSizer(wx.VERTICAL)
-        # dapat ma-hide ang mga items sa vbox6 kung wa pa naclick ang "CheckSpelling" nga button
 
         self.hbox1 = wx.BoxSizer(wx.HORIZONTAL)
         self.hbox1.AddSpacer(20)
@@ -139,7 +134,7 @@ class Example(wx.Frame):
         self.hbox3.AddSpacer(60)
         self.vbox2 = wx.BoxSizer(wx.VERTICAL)
         self.suggestions = []
-        self.wordsuggest = wx.ListBox(self.panel, choices=self.suggestions, style=wx.LB_HSCROLL, size=(200, 100))
+        self.wordsuggest = wx.ListBox(self.panel, choices=self.suggestions, style=wx.LB_HSCROLL, size=(200, 200))
         self.vbox2.Add(self.wordsuggest, flag=wx.CENTER)
 
         self.vbox3 = wx.BoxSizer(wx.VERTICAL)
@@ -169,17 +164,26 @@ class Example(wx.Frame):
         self.Bind(wx.EVT_MENU, self.OnOpen, fileOpen)  # works
         # self.Bind(wx.EVT_MENU, self.OnSave, fileSave)
         self.Bind(wx.EVT_MENU, self.OnSaveAs, fileSaveAs)  # works(.txt)
-        self.Bind(wx.EVT_MENU, self.OnAbout, help)  # kuwang
         self.Bind(wx.EVT_MENU, self.OnQuit, fileQuit)  # works
-        # self.Bind(wx.EVT_MENU, self.NewFile, fileItem1)
-        self.Bind(wx.EVT_MENU, self.ZoomIn, ZoomIn)  # works
-        self.Bind(wx.EVT_MENU, self.ZoomIn, ZoomOut)  # notworking
-        # self.Bind(wx.EVT_MENU, self.OnDict, dict)
+
+        # **********************************************************
+        # Not important items -- and di sad muwork SO di apilon haha
+        # self.Bind(wx.EVT_MENU, self.ZoomIn, ZoomIn)  # works
+        # self.Bind(wx.EVT_MENU, self.ZoomIn, ZoomOut)  # notworking
+        # self.Bind(wx.EVT_MENU, self.OnAbout, help)  # kuwang
+        # # self.Bind(wx.EVT_MENU, self.OnDict, dict)
+        # **********************************************************
 
         self.panel.SetSizer(self.hbox)
         self.SetSize((1400, 700))
         self.SetTitle('Filipino Spelling Checker')
         self.Centre()
+
+    def OnHide(self, event):
+        self.vbox1.Hide(self.vbox6)
+
+    def OnShow(self, event):
+        self.vbox1.Show(self.vbox6)
 
     def OnHighlight(self, e):
         self.findtext = self.originaltext.GetValue()
@@ -205,16 +209,32 @@ class Example(wx.Frame):
             self.wordsuggest.Set(self.suggestions)
 
             self.Refresh()
-            # maremoved na pero di pa sya munext
 
     def OnLearn(self, event):
         input = inputWords(word=self.originaltext.GetValue())
-        session.add(input)
-        session.commit()
+        result = session.query(inputWords).filter(inputWords.word == input).first()
+        if result is None:
+            session.add(input)
+            session.commit()
 
-        self.wrong.remove(self.originaltext.GetValue())
-
+            rules.OnConvert(self.originaltext.GetValue())
+            if not self.word:
+                wx.MessageBox("No more words.")
+            else:
+                self.checkindexCurr = self.wrong.index(self.currentword)
+                self.wrong.remove(self.originaltext.GetValue())
+                self.originaltext.SetValue(self.wrong[self.checkindexCurr])
+                self.currentword = self.wrong[self.checkindexCurr]
+                controller.suggestionslist = []
+                self.suggestions = []
+                controller.displaySuggestions(self, self.currentword)
+                for i in controller.suggestionslist:
+                    self.suggestions.append(i)
+                self.wordsuggest.Set(self.suggestions)
+        else:
+            print ("End of array.")
         wx.MessageBox("Word Added!")
+        self.Refresh()
 
     def OnWordSuggest(self, event):
         self.selected = self.wordsuggest.GetStringSelection()
@@ -268,7 +288,7 @@ class Example(wx.Frame):
             self.wordsuggest.Set(self.suggestions)
         except IndexError:
             #self.findnextbtn.Disable()
-            wx.MessageBox("YEY NO MORE WRONG WORDS")
+            wx.MessageBox("No more words.")
 
     def Previous(self, e):
         try:
@@ -276,7 +296,7 @@ class Example(wx.Frame):
             self.checkindexNew = self.checkindexCurr - 1
             if (self.checkindexNew == -1):
                 #self.previousbtn.Disable()
-                wx.MessageBox("There's no previous wrong word")
+                wx.MessageBox("No previous word.")
             else:
                 #self.previousbtn.Enable()
                 self.originaltext.SetValue(self.wrong[self.checkindexNew])
@@ -361,17 +381,6 @@ class Example(wx.Frame):
     def closeButton(self, event):
         print "Button pressed."
 
-    def ZoomIn(self, event):
-        #self.defaultstyle = self.inputtext.GetPointSize()
-        self.defaultsize = self.defaultstyle.GetFont().GetPointSize()
-        print(self.defaultsize)
-
-        font1 = wx.Font(6, wx.MODERN, wx.NORMAL, wx.NORMAL, False, u'Consolas')
-        self.inputtext.SetFont(font1)
-
-    def ZoomOut(self, event):
-        self.inputtext.SetSize(self.inputtext.MaxSize())
-
     def OnNew(self, event):
         self.inputtext.Clear()
         font2 = wx.Font(12, wx.DEFAULT, wx.NORMAL, wx.NORMAL, False, u'Consolas')
@@ -435,8 +444,21 @@ class Example(wx.Frame):
             self.Close()
             return
 
-    def OnAbout(self, event):
-        self.aboutme.ShowModal()
+    # ******************************************************************
+    # def ZoomIn(self, event):
+    #     #self.defaultstyle = self.inputtext.GetPointSize()
+    #     self.defaultsize = self.defaultstyle.GetFont().GetPointSize()
+    #     print(self.defaultsize)
+    #
+    #     font1 = wx.Font(6, wx.MODERN, wx.NORMAL, wx.NORMAL, False, u'Consolas')
+    #     self.inputtext.SetFont(font1)
+    #
+    # def ZoomOut(self, event):
+    #     self.inputtext.SetSize(self.inputtext.MaxSize())
+    #
+    # def OnAbout(self, event):
+    #     self.aboutme.ShowModal()
+    # ******************************************************************
 
 
 class Modal(wx.Frame):

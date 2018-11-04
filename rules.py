@@ -432,61 +432,61 @@ x = meta()
 
 # path = 'dictionary.txt'
 # with io.open(path) as fp:
-#     line = fp.read().splitlines()
-#
-#     for i in line:
-#         primary, secondary = x.process(i)
-#         print primary
-#         print secondary
-#
-#         if primary == secondary:
-#             #print("{}: {}".format(primary, i))
-#             data = session.query(Words).filter(Words.code == primary).first()
-#             if data is None:
-#                 dict = Words(code=primary, words=[i])
-#                 session.add(dict)
-#                 session.commit()
-#             else:
-#                 if i in data.words:
-#                     pass
-#                 else:
-#                     data.words = list(data.words)
-#                     data.words.append(i)
-#                     session.merge(data)
-#                     session.commit()
-#         else:
-#             dataPri = session.query(Words).filter(Words.code == primary).first()
-#             if dataPri is None:
-#                 dict = Words(code=primary, words=[i])
-#                 session.add(dict)
-#                 session.commit()
-#             else:
-#                 if i in dataPri.words:
-#                     pass
-#                 else:
-#                     dataPri.words = list(dataPri.words)
-#                     dataPri.words.append(i)
-#                     session.merge(dataPri)
-#                     session.commit()
-#
-#             dataSec = session.query(Words).filter(Words.code == secondary).first()
-#             if dataSec is None:
-#                 dict = Words(code=secondary, words=[i])
-#                 session.add(dict)
-#                 session.commit()
-#             else:
-#                 if i in dataSec.words:
-#                     pass
-#                 else:
-#                     dataSec.words = list(dataSec.words)
-#                     dataSec.words.append(i)
-#                     session.merge(dataSec)
-#                     session.commit()
+#   line = fp.read().splitlines()
+#   for i in line:
+
+def OnConvert(i):
+    primary, secondary = x.process(i)
+
+    if primary == secondary:
+        # print("{}: {}".format(primary, i))
+        data = session.query(Words).filter(Words.code == primary).first()
+        if data is None:
+            dict = Words(code=primary, words=[i])
+            session.add(dict)
+            session.commit()
+        else:
+            if i in data.words:
+                pass
+            else:
+                data.words = list(data.words)
+                data.words.append(i)
+                session.merge(data)
+                session.commit()
+    else:
+        dataPri = session.query(Words).filter(Words.code == primary).first()
+        if dataPri is None:
+            dict = Words(code=primary, words=[i])
+            session.add(dict)
+            session.commit()
+        else:
+            if i in dataPri.words:
+                pass
+            else:
+                dataPri.words = list(dataPri.words)
+                dataPri.words.append(i)
+                session.merge(dataPri)
+                session.commit()
+
+        dataSec = session.query(Words).filter(Words.code == secondary).first()
+        if dataSec is None:
+            dict = Words(code=secondary, words=[i])
+            session.add(dict)
+            session.commit()
+        else:
+            if i in dataSec.words:
+                pass
+            else:
+                dataSec.words = list(dataSec.words)
+                dataSec.words.append(i)
+                session.merge(dataSec)
+                session.commit()
 #
 # stop = timeit.default_timer()
 #
 # print('Time: ', stop - start)
 
+# *******************************************************************
 # dict = {"hell": [1, 2, 3], "ej": [1, 2], "TSK": ['hello', 'world']}
 # # How to use metaphone algorithm
 # x = meta()

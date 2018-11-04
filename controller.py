@@ -17,10 +17,9 @@ def connectToDatabase():
     return session
 
 # tiwasunon pa hehe
-# def ForceToUnicode(text):
-#     value2 = text.split()
-#     "If text is unicode, it is returned as is. If it's str, convert it to Unicode using UTF-8 encoding"
-#     return value2 if isinstance(value2, unicode) else value2.decode('utf8')
+def ForceToUnicode(text):
+    "If text is unicode, it is returned as is. If it's str, convert it to Unicode using UTF-8 encoding"
+    return text if isinstance(text, unicode) else text.decode('utf8')
 
 def addCommon(self, List):
 
@@ -38,11 +37,12 @@ def spellingCheck(self, List):
     session = connectToDatabase()
     self.wrong = []
     for i in List:
-        data = session.query(inputWords).filter(inputWords.word == i).first()
+        converted = ForceToUnicode(i)
+        data = session.query(inputWords).filter(inputWords.word == converted).first()
         if data is None:
-            self.wrong.append(i)
+            self.wrong.append(converted)
         else:
-            print i  # kung wala ang words e append sya sa wrong na list
+            print converted  # kung wala ang words e append sya sa wrong na list
     # print wrong
     print self.wrong
     if (self.wrong == []):

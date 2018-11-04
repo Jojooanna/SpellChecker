@@ -310,27 +310,16 @@ class Example(wx.Frame):
 
 
     def OnSpellCheck(self, e):
-        self.value = str(self.inputtext.GetValue())
-        self.value2 = self.value.split()
-        words = self.value2
-        print (words) # list and words?
+        self.value = self.inputtext.GetValue()
+        words = self.value.split()
         List = []
         for i in words:
-            #returns the position of the manually selected word
-            #para unta sa pag-highlight
-            #print (self.inputtext.GetSelection())
-            if i in List:
+            result = controller.ForceToUnicode(i)
+            if result in List:
                 continue
             else:
                 List.append(i)
-        print (List)
-        # count = 0
-        # for i in List: #for phoenics and lev.
-        #     count = 0
-        #     for j in i:
-        #         count = count + 1
-        #     print count
-        # self.word.SetLabel(self.inputtext)
+        print List
 
         if not words:
             wx.MessageBox("Please enter something for us to check your work!!")
@@ -343,6 +332,30 @@ class Example(wx.Frame):
                 self.suggestions.append(i)
             self.wordsuggest.Set(self.suggestions)
             self.Refresh()
+
+        # self.value = str(self.inputtext.GetValue())
+        # self.value2 = self.value.split()
+        # words = self.value2
+        # print (words) # list and words?
+        # List = []
+        # for i in words:
+        #     #returns the position of the manually selected word
+        #     #para unta sa pag-highlight
+        #     #print (self.inputtext.GetSelection())
+        #     if i in List:
+        #         continue
+        #     else:
+        #         List.append(i)
+        # print (List)
+
+        # count = 0
+        # for i in List: #for phoenics and lev.
+        #     count = 0
+        #     for j in i:
+        #         count = count + 1
+        #     print count
+        # self.word.SetLabel(self.inputtext)
+
         # self.notfoundmsg.Hide()
 
     def closeButton(self, event):

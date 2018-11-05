@@ -48,7 +48,8 @@ def spellingCheck(self, List):
     if (self.wrong == []):
         wx.MessageBox("YEY NO MORE WRONG WORDS")
     else:
-        self.currentword = self.wrong[0]
+        self.checkindexCurr = 0
+        self.currentword = self.wrong[self.checkindexCurr]
         self.originaltext.SetValue(self.currentword)
         self.check.Bind(wx.EVT_FIND, self.OnHighlight)  # HIGHLIGHJUSEYO
         # displaySuggestions(self, self.currentword)

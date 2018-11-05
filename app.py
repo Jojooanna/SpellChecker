@@ -275,11 +275,11 @@ class Example(wx.Frame):
 
     def Next(self, e):
         try:
-            self.checkindexCurr = self.wrong.index(self.currentword)
-            self.checkindexNew = self.checkindexCurr + 1
-            self.originaltext.SetValue(self.wrong[self.checkindexNew])
-            self.currentindex = self.wrong.index(self.originaltext.GetValue())
-            self.currentword = self.wrong[self.currentindex]
+            self.checkindexCurr = self.checkindexCurr + 1
+            print self.wrong[self.checkindexCurr]
+            print self.checkindexCurr
+            self.originaltext.SetValue(self.wrong[self.checkindexCurr])
+            self.currentword = self.wrong[self.checkindexCurr]
             controller.suggestionslist = []
             self.suggestions = []
             controller.displaySuggestions(self, self.currentword)
@@ -292,16 +292,16 @@ class Example(wx.Frame):
 
     def Previous(self, e):
         try:
-            self.checkindexCurr = self.wrong.index(self.currentword)
-            self.checkindexNew = self.checkindexCurr - 1
-            if (self.checkindexNew == -1):
+            self.checkindexCurr = self.checkindexCurr - 1
+            if (self.checkindexCurr == -1):
                 #self.previousbtn.Disable()
                 wx.MessageBox("No previous word.")
             else:
                 #self.previousbtn.Enable()
-                self.originaltext.SetValue(self.wrong[self.checkindexNew])
-                self.currentindex = self.wrong.index(self.originaltext.GetValue())
-                self.currentword = self.wrong[self.currentindex]
+                self.originaltext.SetValue(self.wrong[self.checkindexCurr])
+                self.currentword = self.wrong[self.checkindexCurr]
+                print self.wrong[self.checkindexCurr]
+                print self.checkindexCurr
                 controller.suggestionslist = []
                 self.suggestions = []
                 controller.displaySuggestions(self, self.currentword)

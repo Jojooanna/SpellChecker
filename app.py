@@ -37,7 +37,7 @@ class Example(wx.Frame):
         fileOpen = FileMenu.Append(wx.ID_OPEN, '&Open', "Open File")
         FileMenu.AppendSeparator()
 
-        self.fileSave = FileMenu.Append(wx.ID_SAVE, '&Save', "Save File")
+        fileSave = FileMenu.Append(wx.ID_SAVE, '&Save', "Save File")
         fileSaveAs = FileMenu.Append(wx.ID_SAVEAS, '&Save As', "Save File As")
         FileMenu.AppendSeparator()
 
@@ -162,7 +162,7 @@ class Example(wx.Frame):
         self.Bind(wx.EVT_LISTBOX, self.OnWordSuggest, self.wordsuggest)
         self.Bind(wx.EVT_MENU, self.OnNew, fileNew)
         self.Bind(wx.EVT_MENU, self.OnOpen, fileOpen)  # works
-        # self.Bind(wx.EVT_MENU, self.OnSave, fileSave)
+        self.Bind(wx.EVT_MENU, self.OnSave, fileSave)
         self.Bind(wx.EVT_MENU, self.OnSaveAs, fileSaveAs)  # works(.txt)
         self.Bind(wx.EVT_MENU, self.OnQuit, fileQuit)  # works
 
@@ -408,34 +408,35 @@ class Example(wx.Frame):
         if dialog.ShowModal() == wx.ID_CANCEL:
             return
 
-        path = dialog.GetPath()
-
-        if os.path.exists(path):
-            with open(path) as fileobject:
+        self.pathname = dialog.GetPath()
+        if os.path.exists(self.pathname):
+            with open(self.pathname) as fileobject:
                 for line in fileobject:
                     print "%s" % dialog.GetPath()
+                    print "%s" % dialog.GetFilename()
                     self.inputtext.WriteText(line)
 
     def OnSaveAs(self, event):
         self.inputtext.SaveFile()
         dialog = wx.FileDialog(self, "Save txt file", wildcard="Save Files (*.txt) | *.txt | All Files (*.*)|*.*",
                                style=wx.FD_SAVE | wx.FD_OVERWRITE_PROMPT)
+
         with dialog as fileDialog:
 
             if fileDialog.ShowModal() == wx.ID_CANCEL:
                 return  # the user changed their mind
 
             # save the current contents in the file
-            pathname = fileDialog.GetPath()
+            self.pathname = fileDialog.GetPath()
             try:
-                with open(pathname, 'w') as file:
+                with open(self.pathname, 'w') as file:
                     file.write(self.inputtext.GetValue())
                     file.close()
             except IOError:
                 wx.LogError("Cannot save current data in file '%s'." % pathname)
 
-    def dosave(self, event):
-        savefile = open(self.filename, 'w')
+    def OnSave(self, event):
+        savefile = open(self.pathname, 'w')
         savefile.write(self.inputtext.GetValue())
         savefile.close()
 

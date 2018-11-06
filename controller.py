@@ -3,6 +3,7 @@ import wx
 from rules import *
 from model import *
 from sqlalchemy import func
+import re
 # -*- encoding: utf-8 -*-
 # encoding: utf-8
 
@@ -33,13 +34,13 @@ def addCommon(self, List):
     # displayWords(self)
 
     for i in List:
-        input = session.query(Common).filter(Common.words == i).first()
+        result = re.sub(r'[^A-Z a-z]', "", i)
+        input = session.query(Common).filter(Common.words == result).first()
         if input is None:
             result = Common(words=i)
             session.add(result)
         else:
             print ("Common Word Already Added.")
-
     spellingCheck(self, List)
 
 def spellingCheck(self, List):
@@ -47,17 +48,19 @@ def spellingCheck(self, List):
     self.wrong = []
     for i in List:
         converted = ForceToUnicode(i)
-        data = session.query(inputWords).filter(func.lower(inputWords.word) == converted).first()
+        result = re.sub(r"[^A-Z-'a-z]", "", converted)
+        data = session.query(inputWords).filter(func.lower(inputWords.word) == result).first()
         if data is None:
-            self.wrong.append(converted)
+            self.wrong.append(result)
         else:
-            print converted  # kung wala ang words e append sya sa wrong na list
+            return  # kung wala ang words e append sya sa wrong na list
     # print wrong
     print self.wrong
     if (self.wrong == []):
         wx.MessageBox("YEY NO MORE WRONG WORDS")
     else:
-        self.currentword = self.wrong[0]
+        self.checkindexCurr = 0
+        self.currentword = self.wrong[self.checkindexCurr]
         self.originaltext.SetValue(self.currentword)
         self.check.Bind(wx.EVT_FIND, self.OnHighlight)  # HIGHLIGHJUSEYO
         # displaySuggestions(self, self.currentword)
@@ -101,9 +104,7 @@ def displayCommon(self):
     # vbox2.Add(wordsuggest, flag=wx.CENTER)
 
 def deleteDictionary():
-
     # funtion to delete all common words
-
     session = connectToDatabase()
     for x in session.query(inputWords):
         session.delete(x)

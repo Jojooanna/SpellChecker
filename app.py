@@ -37,7 +37,7 @@ class Example(wx.Frame):
         fileOpen = FileMenu.Append(wx.ID_OPEN, '&Open', "Open File")
         FileMenu.AppendSeparator()
 
-        self.fileSave = FileMenu.Append(wx.ID_SAVE, '&Save', "Save File")
+        fileSave = FileMenu.Append(wx.ID_SAVE, '&Save', "Save File")
         fileSaveAs = FileMenu.Append(wx.ID_SAVEAS, '&Save As', "Save File As")
         FileMenu.AppendSeparator()
 
@@ -134,7 +134,7 @@ class Example(wx.Frame):
         self.hbox3.AddSpacer(60)
         self.vbox2 = wx.BoxSizer(wx.VERTICAL)
         self.suggestions = []
-        self.wordsuggest = wx.ListBox(self.panel, choices=self.suggestions, style=wx.LB_HSCROLL, size=(200, 200))
+        self.wordsuggest = wx.ListBox(self.panel, choices=self.suggestions, style=wx.LB_HSCROLL, size=(200, 205))
         self.vbox2.Add(self.wordsuggest, flag=wx.CENTER)
 
         self.vbox3 = wx.BoxSizer(wx.VERTICAL)
@@ -162,7 +162,7 @@ class Example(wx.Frame):
         self.Bind(wx.EVT_LISTBOX, self.OnWordSuggest, self.wordsuggest)
         self.Bind(wx.EVT_MENU, self.OnNew, fileNew)
         self.Bind(wx.EVT_MENU, self.OnOpen, fileOpen)  # works
-        # self.Bind(wx.EVT_MENU, self.OnSave, fileSave)
+        self.Bind(wx.EVT_MENU, self.OnSave, fileSave)
         self.Bind(wx.EVT_MENU, self.OnSaveAs, fileSaveAs)  # works(.txt)
         self.Bind(wx.EVT_MENU, self.OnQuit, fileQuit)  # works
 
@@ -257,9 +257,6 @@ class Example(wx.Frame):
                 self.wrong.remove(self.currentword)  # self.wrong.pop(self.checkindexCurr)
                 self.originaltext.SetValue(self.wrong[self.checkindexCurr]) #ma change ang original word sa nxt wrong words
                 self.currentword = self.wrong[self.checkindexCurr]
-                # print (self.currentword)
-                # print (self.checkindexCurr)
-                # print (self.wrong)
                 controller.suggestionslist = []
                 self.suggestions = []
                 controller.displaySuggestions(self, self.currentword)
@@ -275,11 +272,10 @@ class Example(wx.Frame):
 
     def Next(self, e):
         try:
-            self.checkindexCurr = self.wrong.index(self.currentword)
-            self.checkindexNew = self.checkindexCurr + 1
-            self.originaltext.SetValue(self.wrong[self.checkindexNew])
-            self.currentindex = self.wrong.index(self.originaltext.GetValue())
-            self.currentword = self.wrong[self.currentindex]
+            self.checkindexCurr = self.checkindexCurr + 1
+            print self.wrong[self.checkindexCurr]
+            self.originaltext.SetValue(self.wrong[self.checkindexCurr])
+            self.currentword = self.wrong[self.checkindexCurr]
             controller.suggestionslist = []
             self.suggestions = []
             controller.displaySuggestions(self, self.currentword)
@@ -287,21 +283,20 @@ class Example(wx.Frame):
                 self.suggestions.append(i)
             self.wordsuggest.Set(self.suggestions)
         except IndexError:
-            #self.findnextbtn.Disable()
+            # self.findnextbtn.Disable()
             wx.MessageBox("No more words.")
 
     def Previous(self, e):
         try:
-            self.checkindexCurr = self.wrong.index(self.currentword)
-            self.checkindexNew = self.checkindexCurr - 1
-            if (self.checkindexNew == -1):
+            self.checkindexCurr = self.checkindexCurr - 1
+            if (self.checkindexCurr == -1):
                 #self.previousbtn.Disable()
                 wx.MessageBox("No previous word.")
             else:
                 #self.previousbtn.Enable()
-                self.originaltext.SetValue(self.wrong[self.checkindexNew])
-                self.currentindex = self.wrong.index(self.originaltext.GetValue())
-                self.currentword = self.wrong[self.currentindex]
+                self.originaltext.SetValue(self.wrong[self.checkindexCurr])
+                self.currentword = self.wrong[self.checkindexCurr]
+                print self.wrong[self.checkindexCurr]
                 controller.suggestionslist = []
                 self.suggestions = []
                 controller.displaySuggestions(self, self.currentword)
@@ -355,7 +350,7 @@ class Example(wx.Frame):
 
         # self.value = str(self.inputtext.GetValue())
         # self.value2 = self.value.split()
-        # words = self.value2
+        # words = self.value2self.cu
         # print (words) # list and words?
         # List = []
         # for i in words:
@@ -383,10 +378,11 @@ class Example(wx.Frame):
 
     def OnNew(self, event):
         self.inputtext.Clear()
+        self.filename.SetLabel("")
         font2 = wx.Font(12, wx.DEFAULT, wx.NORMAL, wx.NORMAL, False, u'Consolas')
         self.inputtext.SetFont(font2)
         with wx.FileDialog(self, "Save txt file", wildcard="TXT files (*.txt)|*.txt",
-                           style=wx.CREATE | wx.FD_OVERWRITE_PROMPT) as fileDialog:
+                           style=wx.SAVE | wx.FD_OVERWRITE_PROMPT) as fileDialog:
 
             if fileDialog.ShowModal() == wx.ID_CANCEL:
                 return  # the user changed their mind
@@ -394,8 +390,9 @@ class Example(wx.Frame):
             # save the current contents in the file
             pathname = fileDialog.GetPath()
             try:
-                with open(pathname, 'w') as file:
-                    self.doSaveData(file)
+                with open(self.pathname, 'w') as file:
+                    file.write(self.inputtext.GetValue())
+                    file.close()
             except IOError:
                 wx.LogError("Cannot save current data in file '%s'." % pathname)
 
@@ -408,36 +405,52 @@ class Example(wx.Frame):
         if dialog.ShowModal() == wx.ID_CANCEL:
             return
 
-        path = dialog.GetPath()
-
-        if os.path.exists(path):
-            with open(path) as fileobject:
+        self.pathname = dialog.GetPath()
+        if os.path.exists(self.pathname):
+            with open(self.pathname) as fileobject:
                 for line in fileobject:
                     print "%s" % dialog.GetPath()
+                    print "%s" % dialog.GetFilename()
                     self.inputtext.WriteText(line)
+                    self.filename.SetLabel(dialog.GetFilename())
 
     def OnSaveAs(self, event):
         self.inputtext.SaveFile()
         dialog = wx.FileDialog(self, "Save txt file", wildcard="Save Files (*.txt) | *.txt | All Files (*.*)|*.*",
                                style=wx.FD_SAVE | wx.FD_OVERWRITE_PROMPT)
-        with dialog as fileDialog:
 
-            if fileDialog.ShowModal() == wx.ID_CANCEL:
-                return  # the user changed their mind
+        if dialog.ShowModal() == wx.ID_CANCEL:
+            return  # the user changed their mind
 
-            # save the current contents in the file
-            pathname = fileDialog.GetPath()
+        # save the current contents in the file
+        self.pathname = dialog.GetPath()
+        try:
+            with open(self.pathname, 'w') as file:
+                file.write(self.inputtext.GetValue())
+                file.close()
+        except IOError:
+            wx.LogError("Cannot save current data in file '%s'." % self.pathname)
+
+    def OnSave(self, event):
+        if self.filename.GetLabel() == "":
+            dialog = wx.FileDialog(self, "Save txt file", wildcard="Save Files (*.txt) | *.txt | All Files (*.*)|*.*",
+                                   style=wx.FD_SAVE | wx.FD_OVERWRITE_PROMPT)
+
+            if dialog.ShowModal() == wx.ID_CANCEL:
+                return
+
+            self.pathname = dialog.GetPath()
             try:
-                with open(pathname, 'w') as file:
-                    self.inputtext.SaveFile()
-                    self.doSaveData(file)
+                with open(self.pathname, 'w') as file:
+                    file.write(self.inputtext.GetValue())
+                    file.close()
             except IOError:
-                wx.LogError("Cannot save current data in file '%s'." % pathname)
-
-    def dosave(self, event):
-        savefile = open(self.filename, 'w')
-        savefile.write(self.inputtext.GetValue())
-        savefile.close()
+                wx.LogError("Cannot save current data in file '%s'." % self.pathname)
+        else:
+            savefile = open(self.pathname, 'w')
+            savefile.write(self.inputtext.GetValue())
+            savefile.close()
+            wx.MessageBox("File is saved successfully.")
 
     def OnQuit(self, event):
         if wx.MessageBox("Exit SpellChecker?", "Please confirm", wx.YES_NO) != wx.NO:

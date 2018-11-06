@@ -66,7 +66,7 @@ class Example(wx.Frame):
 
         self.vbox5 = wx.BoxSizer(wx.VERTICAL)
         self.vbox5.AddSpacer(15)
-        self.filename = wx.StaticText(self.panel, style=wx.ALIGN_CENTER, label="Filename", size=(900, 30))
+        self.filename = wx.StaticText(self.panel, style=wx.ALIGN_CENTER, label="", size=(900, 30))
         self.inputtext = wx.TextCtrl(self.panel, size=(900, 600), style=wx.TE_MULTILINE | wx.TE_RICH2)
         self.vbox5.Add(self.filename, flag=wx.CENTER)
         self.vbox5.Add(self.inputtext, flag=wx.CENTER)

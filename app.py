@@ -134,7 +134,9 @@ class Example(wx.Frame):
         self.hbox3.AddSpacer(60)
         self.vbox2 = wx.BoxSizer(wx.VERTICAL)
         self.suggestions = []
-        self.wordsuggest = wx.ListBox(self.panel, choices=self.suggestions, style=wx.LB_HSCROLL, size=(200, 200))
+        self.wordsuggest = wx.ListBox(self.panel, choices=self.suggestions, style=wx.LB_HSCROLL, size=(200, 100))
+        self.wordsuggest.SetScrollPos(wx.HORIZONTAL, self.wordsuggest.GetScrollRange(wx.HORIZONTAL))
+
         self.vbox2.Add(self.wordsuggest, flag=wx.CENTER)
 
         self.vbox3 = wx.BoxSizer(wx.VERTICAL)
@@ -179,6 +181,12 @@ class Example(wx.Frame):
         self.SetTitle('Filipino Spelling Checker')
         self.Centre()
 
+        self.changebtn.Disable()
+        self.findnextbtn.Disable()
+        self.previousbtn.Disable()
+        self.ignorebtn.Disable()
+        self.learnbtn.Disable()
+
     def OnHide(self, event):
         self.vbox1.Hide(self.vbox6)
 
@@ -212,29 +220,30 @@ class Example(wx.Frame):
 
     def OnLearn(self, event):
         input = inputWords(word=self.originaltext.GetValue())
-        result = session.query(inputWords).filter(inputWords.word == input).first()
-        if result is None:
-            session.add(input)
-            session.commit()
+        if input is None:
+            result = session.query(inputWords).filter(inputWords.word == input).first()
+            if result is None:
+                session.add(input)
+                session.commit()
 
-            rules.OnConvert(self.originaltext.GetValue())
-            if not self.word:
-                wx.MessageBox("No more words.")
+                rules.OnConvert(self.originaltext.GetValue())
+                if not self.word:
+                    wx.MessageBox("No more words.")
+                else:
+                    self.checkindexCurr = self.wrong.index(self.currentword)
+                    self.wrong.remove(self.originaltext.GetValue())
+                    self.originaltext.SetValue(self.wrong[self.checkindexCurr])
+                    self.currentword = self.wrong[self.checkindexCurr]
+                    controller.suggestionslist = []
+                    self.suggestions = []
+                    controller.displaySuggestions(self, self.currentword)
+                    for i in controller.suggestionslist:
+                        self.suggestions.append(i)
+                    self.wordsuggest.Set(self.suggestions)
             else:
-                self.checkindexCurr = self.wrong.index(self.currentword)
-                self.wrong.remove(self.originaltext.GetValue())
-                self.originaltext.SetValue(self.wrong[self.checkindexCurr])
-                self.currentword = self.wrong[self.checkindexCurr]
-                controller.suggestionslist = []
-                self.suggestions = []
-                controller.displaySuggestions(self, self.currentword)
-                for i in controller.suggestionslist:
-                    self.suggestions.append(i)
-                self.wordsuggest.Set(self.suggestions)
-        else:
-            print ("End of array.")
-        wx.MessageBox("Word Added!")
-        self.Refresh()
+                print ("End of array.")
+            wx.MessageBox("Word Added!")
+            self.Refresh()
 
     def OnWordSuggest(self, event):
         self.selected = self.wordsuggest.GetStringSelection()
@@ -275,6 +284,7 @@ class Example(wx.Frame):
 
     def Next(self, e):
         try:
+            self.previousbtn.Enable()
             self.checkindexCurr = self.checkindexCurr + 1
             print self.wrong[self.checkindexCurr]
             print self.checkindexCurr
@@ -286,29 +296,31 @@ class Example(wx.Frame):
             for i in controller.suggestionslist:
                 self.suggestions.append(i)
             self.wordsuggest.Set(self.suggestions)
+            if (self.checkindexCurr == len(self.wrong)-1):
+                self.findnextbtn.Disable()
         except IndexError:
             #self.findnextbtn.Disable()
             wx.MessageBox("No more words.")
 
     def Previous(self, e):
         try:
+            self.findnextbtn.Enable()
             self.checkindexCurr = self.checkindexCurr - 1
-            if (self.checkindexCurr == -1):
-                #self.previousbtn.Disable()
-                wx.MessageBox("No previous word.")
-            else:
-                #self.previousbtn.Enable()
-                self.originaltext.SetValue(self.wrong[self.checkindexCurr])
-                self.currentword = self.wrong[self.checkindexCurr]
-                print self.wrong[self.checkindexCurr]
-                print self.checkindexCurr
-                controller.suggestionslist = []
-                self.suggestions = []
-                controller.displaySuggestions(self, self.currentword)
-                for i in controller.suggestionslist:
-                    self.suggestions.append(i)
-                self.wordsuggest.Set(self.suggestions)
-                self.Refresh()
+            self.previousbtn.Enable()
+            self.originaltext.SetValue(self.wrong[self.checkindexCurr])
+            self.currentword = self.wrong[self.checkindexCurr]
+            print self.wrong[self.checkindexCurr]
+            print self.checkindexCurr
+            controller.suggestionslist = []
+            self.suggestions = []
+            controller.displaySuggestions(self, self.currentword)
+            for i in controller.suggestionslist:
+                self.suggestions.append(i)
+            self.wordsuggest.Set(self.suggestions)
+            self.Refresh()
+            if (self.checkindexCurr == 0):
+                    self.previousbtn.Disable()
+
         except IndexError:
             wx.MessageBox("There's no previous word")
 
@@ -377,6 +389,16 @@ class Example(wx.Frame):
         # self.word.SetLabel(self.inputtext)
 
         # self.notfoundmsg.Hide()
+
+
+        self.changebtn.Enable()
+        self.findnextbtn.Enable()
+        self.previousbtn.Enable()
+        self.ignorebtn.Enable()
+        self.learnbtn.Enable()
+
+        if (self.checkindexCurr == 0):
+            self.previousbtn.Disable()
 
     def closeButton(self, event):
         print "Button pressed."

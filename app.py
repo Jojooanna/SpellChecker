@@ -20,7 +20,6 @@ session = Session()
 
 
 class Example(wx.Frame):
-
     def __init__(self, *args, **kwargs):
         super(Example, self).__init__(*args, **kwargs)
 
@@ -456,7 +455,7 @@ class Example(wx.Frame):
                     file.write(self.inputtext.GetValue())
                     file.close()
             except IOError:
-                wx.LogError("Cannot save current data in file '%s'." % pathname)
+                wx.LogError("Cannot save current data in file '%s'." % self.pathname)
 
     def OnSave(self, event):
         savefile = open(self.pathname, 'w')

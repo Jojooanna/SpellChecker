@@ -15,16 +15,18 @@ class Words(Base):
     words = db.Column(pg.ARRAY(db.String), nullable=False)
 
     def __init__(self, code, words):
-        self.code =code
+        self.code = code
         self.words = words
 
 class Common(Base):
     __tablename__ = 'common'
 
     wordid = Column(Integer, primary_key=True)
-    words = Column(String)
+    code = db.Column(db.String, nullable=False)
+    words = db.Column(pg.ARRAY(db.String), nullable=False)
 
-    def __init__(self, words):
+    def __init__(self, code, words):
+        self.code = code
         self.words = words
 
     # def _

@@ -36,7 +36,7 @@ def addCommon(self, List):
     # spellingCheck(self, List)
 
     for i in List:
-        result = re.sub(r'[^A-Z a-z]', "", i)
+        result = re.sub(r'[^A-Za-z !?@#$%^&*_=+]', "", i)
         input = session.query(Common).filter(Common.words == result).first()
         if input is None:
             result1 = Common(words=result)
@@ -45,13 +45,16 @@ def addCommon(self, List):
             print ("Common Word Already Added.")
     spellingCheck(self, List)
 
+    for i in List:
+        OnConvert(i)
+
 
 def spellingCheck(self, List):
     session = connectToDatabase()
     self.wrong = []
     for i in List:
         converted = ForceToUnicode(i)
-        result = re.sub(r"[^A-Z-'a-z]", "", converted)
+        result = re.sub(r"[^A-Za-z !?@#$%^&*_=+]", "", converted)
         data = session.query(inputWords).filter(func.lower(inputWords.word) == result).first()
         if data is None:
             self.wrong.append(result)

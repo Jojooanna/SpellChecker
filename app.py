@@ -134,8 +134,10 @@ class Example(wx.Frame):
         self.vbox2 = wx.BoxSizer(wx.VERTICAL)
         self.suggestions = []
         self.wordsuggest = wx.ListBox(self.panel, choices=self.suggestions, style=wx.LB_HSCROLL, size=(200, 100))
+        self.wordsuggest2 = wx.ComboBox(self.panel, value="suggestions", choices=self.suggestions, size=(200, 100))
 
         self.vbox2.Add(self.wordsuggest, flag=wx.CENTER)
+        self.vbox2.Add(self.wordsuggest2, flag=wx.CENTER)
 
         self.vbox3 = wx.BoxSizer(wx.VERTICAL)
         self.hbox4 = wx.BoxSizer(wx.HORIZONTAL)
@@ -160,6 +162,7 @@ class Example(wx.Frame):
         self.hbox.Add(self.vbox1, flag=wx.RIGHT)
 
         self.Bind(wx.EVT_LISTBOX, self.OnWordSuggest, self.wordsuggest)
+        self.Bind(wx.EVT_COMBOBOX, self.OnWordSuggest, self.wordsuggest)
         self.Bind(wx.EVT_MENU, self.OnNew, fileNew)
         self.Bind(wx.EVT_MENU, self.OnOpen, fileOpen)  # works
         self.Bind(wx.EVT_MENU, self.OnSave, fileSave)
@@ -213,6 +216,7 @@ class Example(wx.Frame):
             for i in controller.suggestionslist:
                 self.suggestions.append(i)
             self.wordsuggest.Set(self.suggestions)
+            self.wordsuggest2.Set(self.suggestions)
 
             self.Refresh()
 
@@ -238,6 +242,7 @@ class Example(wx.Frame):
                     for i in controller.suggestionslist:
                         self.suggestions.append(i)
                     self.wordsuggest.Set(self.suggestions)
+                    self.wordsuggest2.Set(self.suggestions)
             else:
                 print ("End of array.")
             wx.MessageBox("Word Added!")
@@ -274,6 +279,7 @@ class Example(wx.Frame):
                 for i in controller.suggestionslist:
                     self.suggestions.append(i)
                 self.wordsuggest.Set(self.suggestions)
+                self.wordsuggest2.Set(self.suggestions)
 
                 self.Refresh()
                 #       dapat pa ba ma clear ang selected after ma change?
@@ -296,6 +302,7 @@ class Example(wx.Frame):
             for i in controller.suggestionslist:
                 self.suggestions.append(i)
             self.wordsuggest.Set(self.suggestions)
+            self.wordsuggest2.Set(self.suggestions)
             if (self.checkindexCurr == len(self.wrong)-1):
                 self.findnextbtn.Disable()
         except IndexError:
@@ -318,6 +325,7 @@ class Example(wx.Frame):
             for i in controller.suggestionslist:
                 self.suggestions.append(i)
             self.wordsuggest.Set(self.suggestions)
+            self.wordsuggest2.Set(self.suggestions)
             self.Refresh()
             if (self.checkindexCurr == 0):
                     self.previousbtn.Disable()
@@ -364,6 +372,7 @@ class Example(wx.Frame):
             for i in controller.suggestionslist:
                 self.suggestions.append(i)
             self.wordsuggest.Set(self.suggestions)
+            self.wordsuggest2.Set(self.suggestions)
             self.Refresh()
 
         # self.value = str(self.inputtext.GetValue())

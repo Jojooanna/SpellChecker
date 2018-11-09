@@ -96,7 +96,6 @@ class Example(wx.Frame):
 
         self.vbox9 = wx.BoxSizer(wx.VERTICAL)
         self.originaltext = wx.TextCtrl(self.panel, size=(200, 30), style=wx.TE_READONLY)
-        self.vbox9.Add(self.originaltext, flag=wx.CENTER)
         # self.checktext = wx.TextCtrl(self.panel, size=(200, 30), style=wx.TE_READONLY)
         self.suggestions = []
         self.checktext2 = wx.ComboBox(self.panel, value="suggestions", choices=self.suggestions, size=(200, 50))

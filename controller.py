@@ -3,6 +3,7 @@ import wx
 from rules import *
 from model import *
 import re
+import numpy as np
 from sqlalchemy import func
 # -*- encoding: utf-8 -*-
 # encoding: utf-8
@@ -37,16 +38,35 @@ def addCommon(self, List):
 
     for i in List:
         result = re.sub(r'[^A-Za-z !?@#$%^&*_=+]', "", i)
-        input = session.query(Common).filter(Common.words == result).first()
-        if input is None:
-            result1 = Common(words=result)
-            session.add(result1)
-        else:
-            print ("Common Word Already Added.")
-    spellingCheck(self, List)
+        priCode, secCode = x.process(result)
+        if priCode == secCode:
+            data = session.query(Common).filter(Common.code == priCode).first()
+            if data is None:
+                spellingCheck(self, List)
+                dict = Words(code=priCode, words=[result])
+                session.add(dict)
+                session.commit()
+            else:
+                print ("Common Word Already Added.")
+        else: 
+            data1 = session.query(Common).filter(Common.code == priCode).first()
+            data2 = session.query(Common).filter(Common.code == secCode).first()
 
-    for i in List:
-        OnConvert(i)
+            if data1 is None:
+                spellingCheck(self, List)
+                dict1 = Words(code=priCode, words=[result])
+                session.add(dict1)
+                session.commit()
+            elif data2 is None:
+                spellingCheck(self, List)
+                dict2 = Words(code=secCode, words=[result])
+                session.add(dict2)
+                session.commit()
+            else:
+                print ("Common Word Already Added.")
+
+    # for i in List:
+    #     OnConvert(i)
 
 
 def spellingCheck(self, List):
@@ -99,6 +119,7 @@ def displaySuggestions(self, input):
     else:
         self.notfoundmsg.SetLabel("These are the suggestion")
         for i in data2.words:
+            print ("LEVENSHTEIN RESULT:", levenshtein(input,i))
             if i in suggestionslist:
                 pass
             else:
@@ -128,4 +149,30 @@ def deleteDictionary():
     for x in session.query(inputWords):
         session.delete(x)
         session.commit()
+
+def levenshtein(frominput, fromdict):  
+    input = len(frominput) + 1
+    dict = len(fromdict) + 1
+    matrix = np.zeros ((input, dict))
+    for x in xrange(input):
+        matrix [x, 0] = x
+    for y in xrange(dict):
+        matrix [0, y] = y
+
+    for x in xrange(1, input):
+        for y in xrange(1, dict):
+            if frominput[x-1] == fromdict[y-1]:
+                matrix [x,y] = min(
+                    matrix[x-1, y] + 1,
+                    matrix[x-1, y-1],
+                    matrix[x, y-1] + 1
+                )
+            else:
+                matrix [x,y] = min(
+                    matrix[x-1,y] + 1,
+                    matrix[x-1,y-1] + 1,
+                    matrix[x,y-1] + 1
+                )
+    distance = int(matrix[input-1,dict-1])
+    return distance
 

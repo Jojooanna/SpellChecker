@@ -372,7 +372,7 @@ class Example(wx.Frame):
         if not words:
             wx.MessageBox("Please enter something for us to check your work!!")
         else:
-            controller.addCommon(self, words)
+            controller.addCommon(self, List)
             controller.suggestionslist = []
             self.suggestions = []
             controller.displaySuggestions(self, self.currentword)

@@ -95,12 +95,10 @@ class Example(wx.Frame):
 
         self.vbox9 = wx.BoxSizer(wx.VERTICAL)
         self.originaltext = wx.TextCtrl(self.panel, size=(200, 30), style=wx.TE_READONLY)
-        # self.checktext = wx.TextCtrl(self.panel, size=(200, 30), style=wx.TE_READONLY)
         self.suggestions = []
-        self.checktext2 = wx.ComboBox(self.panel, value="suggestions", choices=self.suggestions, size=(200, 50))
-        self.vbox9.Add(self.originaltext, flag=wx.CENTER | wx.BOTTOM | wx.TOP, border=10)
-        # self.vbox9.Add(self.checktext, flag=wx.CENTER)
-        self.vbox9.Add(self.checktext2, flag=wx.CENTER)
+        self.checktext = wx.ComboBox(self.panel, value="", choices=self.suggestions, size=(200, 30))
+        self.vbox9.Add(self.originaltext, flag=wx.CENTER)
+        self.vbox9.Add(self.checktext, flag=wx.CENTER)
         self.hbox1.Add(self.vbox9, flag=wx.CENTER)
 
 
@@ -137,10 +135,8 @@ class Example(wx.Frame):
         self.hbox3.AddSpacer(60)
         self.vbox2 = wx.BoxSizer(wx.VERTICAL)
         self.wordsuggest = wx.ListBox(self.panel, choices=self.suggestions, style=wx.LB_HSCROLL, size=(200, 100))
-        self.wordsuggest2 = wx.ComboBox(self.panel, value="suggestions", choices=self.suggestions, size=(200, 100))
 
         self.vbox2.Add(self.wordsuggest, flag=wx.CENTER)
-        self.vbox2.Add(self.wordsuggest2, flag=wx.CENTER)
 
         self.vbox3 = wx.BoxSizer(wx.VERTICAL)
         self.hbox4 = wx.BoxSizer(wx.HORIZONTAL)
@@ -185,7 +181,9 @@ class Example(wx.Frame):
         self.SetTitle('Filipino Spelling Checker')
         self.Centre()
 
+        self.checktext.Disable()
         self.changebtn.Disable()
+        self.changeallbtn.Disable()
         self.findnextbtn.Disable()
         self.previousbtn.Disable()
         self.ignorebtn.Disable()
@@ -219,8 +217,7 @@ class Example(wx.Frame):
             for i in controller.suggestionslist:
                 self.suggestions.append(i)
             self.wordsuggest.Set(self.suggestions)
-            self.wordsuggest2.Set(self.suggestions)
-            self.checktext2.Set(self.suggestions)
+            self.checktext.Set(self.suggestions)
 
             self.Refresh()
 
@@ -246,16 +243,14 @@ class Example(wx.Frame):
                     for i in controller.suggestionslist:
                         self.suggestions.append(i)
                     self.wordsuggest.Set(self.suggestions)
-                    self.wordsuggest2.Set(self.suggestions)
-                    self.checktext2.Set(self.suggestions)
+                    self.checktext.Set(self.suggestions)
             else:
                 print ("End of array.")
             wx.MessageBox("Word Added!")
             self.Refresh()
 
     def OnWordSuggest(self, event):
-        self.selected = self.checktext2.GetStringSelection()
-        self.checktext.SetValue(self.selected)
+        self.checktext.SetValue(self.checktext.GetStringSelection())
 
     def OnTest(self, e):
         checkindexCurr = self.wrong.index(self.checktext.GetValue())
@@ -263,14 +258,14 @@ class Example(wx.Frame):
         self.checktext.SetValue(self.wrong[checkindexNew])
 
     def Change(self, e):
-        self.selected = self.checktext2.GetStringSelection()
+        self.selected = self.checktext.GetStringSelection()
         if self.selected == "":
             wx.MessageBox("We can't change something into nothing")
         else:
             self.inputtext.SetValue(self.inputtext.GetValue().replace(self.currentword, self.selected))
 
             try:
-                self.checktext2.Clear()
+                self.checktext.Clear()
                 self.checkindexCurr = self.wrong.index(self.currentword)
                 self.wrong.remove(self.currentword)  # self.wrong.pop(self.checkindexCurr)
                 self.originaltext.SetValue(self.wrong[self.checkindexCurr]) #ma change ang original word sa nxt wrong words
@@ -284,8 +279,7 @@ class Example(wx.Frame):
                 for i in controller.suggestionslist:
                     self.suggestions.append(i)
                 self.wordsuggest.Set(self.suggestions)
-                self.wordsuggest2.Set(self.suggestions)
-                self.checktext2.Set(self.suggestions)
+                self.checktext.Set(self.suggestions)
 
                 self.Refresh()
                 #       dapat pa ba ma clear ang selected after ma change?
@@ -296,7 +290,7 @@ class Example(wx.Frame):
     def Next(self, e):
         try:
             self.previousbtn.Enable()
-            self.checktext2.Clear()
+            self.checktext.Clear()
             self.checkindexCurr = self.checkindexCurr + 1
             # print self.wrong[self.checkindexCurr]
             # print self.checkindexCurr
@@ -318,7 +312,7 @@ class Example(wx.Frame):
     def Previous(self, e):
         try:
             self.findnextbtn.Enable()
-            self.checktext2.Clear()
+            self.checktext.Clear()
             self.checkindexCurr = self.checkindexCurr - 1
             self.previousbtn.Enable()
             self.originaltext.SetValue(self.wrong[self.checkindexCurr])
@@ -331,8 +325,7 @@ class Example(wx.Frame):
             for i in controller.suggestionslist:
                 self.suggestions.append(i)
             self.wordsuggest.Set(self.suggestions)
-            self.wordsuggest2.Set(self.suggestions)
-            self.checktext2.Set(self.suggestions)
+            self.checktext.Set(self.suggestions)
             self.Refresh()
             if (self.checkindexCurr == 0):
                     self.previousbtn.Disable()
@@ -379,9 +372,19 @@ class Example(wx.Frame):
             for i in controller.suggestionslist:
                 self.suggestions.append(i)
             self.wordsuggest.Set(self.suggestions)
-            self.wordsuggest2.Set(self.suggestions)
-            self.checktext2.Set(self.suggestions)
+            self.checktext.Set(self.suggestions)
             self.Refresh()
+
+        self.checktext.Enable()
+        self.changebtn.Enable()
+        self.changeallbtn.Enable()
+        self.findnextbtn.Enable()
+        self.previousbtn.Enable()
+        self.ignorebtn.Enable()
+        self.learnbtn.Enable()
+
+        if (self.checkindexCurr == 0):
+            self.previousbtn.Disable()
 
         # self.value = str(self.inputtext.GetValue())
         # self.value2 = self.value.split()
@@ -407,16 +410,6 @@ class Example(wx.Frame):
         # self.word.SetLabel(self.inputtext)
 
         # self.notfoundmsg.Hide()
-
-
-        self.changebtn.Enable()
-        self.findnextbtn.Enable()
-        self.previousbtn.Enable()
-        self.ignorebtn.Enable()
-        self.learnbtn.Enable()
-
-        if (self.checkindexCurr == 0):
-            self.previousbtn.Disable()
 
     def closeButton(self, event):
         print "Button pressed."

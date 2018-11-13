@@ -136,7 +136,7 @@ def displayCommon(self):
     words = []
     for x in session.query(Common):
         for i in x.words:
-            print i # ma print tanan words sa common words [u'he]
+            print ("Common Words: ", i) # ma print tanan words sa common words [u'he]
             words.append(i)
     wordsuggest = wx.ListBox(self.panel, choices=words, size=(200, 250), style=wx.LB_HSCROLL)
     # vbox2.Add(wordsuggest, flag=wx.CENTER)

@@ -302,7 +302,6 @@ class Example(wx.Frame):
             for i in controller.suggestionslist:
                 self.suggestions.append(i)
             self.wordsuggest.Set(self.suggestions)
-            self.wordsuggest2.Set(self.suggestions)
             if (self.checkindexCurr == len(self.wrong)-1):
                 self.findnextbtn.Disable()
         except IndexError:
@@ -365,7 +364,7 @@ class Example(wx.Frame):
         if not words:
             wx.MessageBox("Please enter something for us to check your work!!")
         else:
-            controller.addCommon(self, List)
+            controller.spellingCheck(self, List)
             controller.suggestionslist = []
             self.suggestions = []
             controller.displaySuggestions(self, self.currentword)

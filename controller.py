@@ -24,50 +24,6 @@ def ForceToUnicode(text):
     "If text is unicode, it is returned as is. If it's str, convert it to Unicode using UTF-8 encoding"
     return text if isinstance(text, unicode) else text.decode('utf8')
 
-def addCommon(self, List):
-
-    #/ save common words to database
-    # -echeck pa data kung naa na ba sya na common words before sya mag add
-    # session = connectToDatabase()
-    # words = Common(List)
-    # session.add(words)
-    # session.commit()
-    # print("common words added!")
-    # # displayWords(self)
-    # spellingCheck(self, List)
-
-    for i in List:
-        result = re.sub(r'[^A-Za-z !?@#$%^&*_=+]', "", i)
-        priCode, secCode = x.process(result)
-        if priCode == secCode:
-            data = session.query(Common).filter(Common.code == priCode).first()
-            if data is None:
-                spellingCheck(self, List)
-                dict = Words(code=priCode, words=[result])
-                session.add(dict)
-                session.commit()
-            else:
-                print ("Common Word Already Added.")
-        else: 
-            data1 = session.query(Common).filter(Common.code == priCode).first()
-            data2 = session.query(Common).filter(Common.code == secCode).first()
-
-            if data1 is None:
-                spellingCheck(self, List)
-                dict1 = Words(code=priCode, words=[result])
-                session.add(dict1)
-                session.commit()
-            elif data2 is None:
-                spellingCheck(self, List)
-                dict2 = Words(code=secCode, words=[result])
-                session.add(dict2)
-                session.commit()
-            else:
-                print ("Common Word Already Added.")
-
-    # for i in List:
-    #     OnConvert(i)
-
 
 def spellingCheck(self, List):
     session = connectToDatabase()
@@ -79,16 +35,17 @@ def spellingCheck(self, List):
         if data is None:
             self.wrong.append(result)
         else:
-            print result  # kung wala ang words e append sya sa wrong na list
+            print ("spellingCheck results:", result)  # kung wala ang words e append sya sa wrong na list
     # print wrong
-    print self.wrong
+    print ("Misspelled words:", self.wrong)
+    addCommon(self, self.wrong) 
     if (self.wrong == []):
         wx.MessageBox("YEY NO MORE WRONG WORDS")
     else:
         self.checkindexCurr = 0
         self.currentword = self.wrong[self.checkindexCurr]
         self.originaltext.SetValue(self.currentword)
-        self.check.Bind(wx.EVT_FIND, self.OnHighlight)  # HIGHLIGHJUSEYO
+        self.check.Bind(wx.EVT_FIND, self.OnHighlight)  # HIGHLIGHTJUSEYO
         # displaySuggestions(self, self.currentword)
     # primary, secondary = x.process(self.currentword)
     # suggestions = session.query(Words).filter(Words.code == primary)
@@ -100,6 +57,37 @@ def spellingCheck(self, List):
     # print primary, secondary
     # print self.words
 
+
+def addCommon(self, List):
+    for i in List:
+        result = re.sub(r'[^A-Za-z !?@#$%^&*_=+]', "", i)
+        priCode, secCode = x.process(result)
+        if priCode == secCode:
+            data = session.query(Common).filter(Common.code == priCode).first()
+            if data is None:
+                dict = Common(code=priCode, words=[result])
+                session.add(dict)
+                session.commit()
+                print ("WrongCommon:", data)
+            else:
+                print ("Common Misspelled Word Already Added.")
+        else: 
+            data1 = session.query(Common).filter(Common.code == priCode).first()
+            data2 = session.query(Common).filter(Common.code == secCode).first()
+
+            if data1 is None:
+                dict1 = Common(code=priCode, words=[result])
+                session.add(dict1)
+                session.commit()
+                print ("WrongCommon:", data)
+            elif data2 is None:
+                dict2 = Common(code=secCode, words=[result])
+                session.add(dict2)
+                session.commit()
+                print ("WrongCommon:", data)
+            else:
+                print ("Common Misspelled Word Already Added.")
+
 def displaySuggestions(self, input):
     priCode, secCode = x.process(input)
     data = session.query(Words).filter(Words.code == priCode).first()
@@ -108,6 +96,7 @@ def displaySuggestions(self, input):
     else:
         self.notfoundmsg.SetLabel("These are the suggestion")
         for i in data.words:
+            print ("LEVENSHTEIN RESULT:", levenshtein(input,i))
             if i in suggestionslist:
                 pass
             else:
@@ -136,7 +125,7 @@ def displayCommon(self):
     words = []
     for x in session.query(Common):
         for i in x.words:
-            print ("Common Words: ", i) # ma print tanan words sa common words [u'he]
+            print ("Common Words: ", i) # ma print tanan words sa common words
             words.append(i)
     wordsuggest = wx.ListBox(self.panel, choices=words, size=(200, 250), style=wx.LB_HSCROLL)
     # vbox2.Add(wordsuggest, flag=wx.CENTER)

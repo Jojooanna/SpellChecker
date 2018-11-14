@@ -92,33 +92,45 @@ def addCommon(self, List):
 def displaySuggestions(self, input):
     priCode, secCode = x.process(input)
     distance = []
-    data = session.query(Words).filter(Words.code == priCode).first()
-    if data is None:
-        self.notfoundmsg.SetLabel("No suggestions found")
+    if priCode == secCode:
+        data = session.query(Words).filter(Words.code == priCode).first()
+        if data is None:
+            self.notfoundmsg.SetLabel("No suggestions found")
+        else:
+            self.notfoundmsg.SetLabel("These are the suggestion")
+            for i in data.words:
+                print ("LEVENSHTEIN RESULT:", levenshtein(input,i))
+                sortSuggestions(levenshtein(input,i), i)
+                if i in suggestionslist:
+                    pass
+                else:
+                    suggestionslist.append(i)
     else:
-        self.notfoundmsg.SetLabel("These are the suggestion")
-        for i in data.words:
-            print ("LEVENSHTEIN RESULT:", levenshtein(input,i))
-            sortSuggestions(levenshtein(input,i), i)
-            if i in suggestionslist:
-                pass
-            else:
-                suggestionslist.append(i)
+        data = session.query(Words).filter(Words.code == priCode).first()
+        if data is None:
+            self.notfoundmsg.SetLabel("No suggestions found")
+        else:
+            self.notfoundmsg.SetLabel("These are the suggestion")
+            for i in data.words:
+                print ("LEVENSHTEIN RESULT:", levenshtein(input,i))
+                sortSuggestions(levenshtein(input,i), i)
+                if i in suggestionslist:
+                    pass
+                else:
+                    suggestionslist.append(i)
 
-    data2 = session.query(Words).filter(Words.code == secCode).first()
-    if data2 is None:
-        self.notfoundmsg.SetLabel("No suggestions found")
-    else:
-        self.notfoundmsg.SetLabel("These are the suggestion")
-        for i in data2.words:
-            print ("LEVENSHTEIN RESULT:", levenshtein(input,i))
-            sortSuggestions(levenshtein(input,i), i)
-            if i in suggestionslist:
-                pass
-            else:
-                suggestionslist.append(i)
-
-    print ("Distance at displaySuggestions:", distance)
+        data2 = session.query(Words).filter(Words.code == secCode).first()
+        if data2 is None:
+            self.notfoundmsg.SetLabel("No suggestions found")
+        else:
+            self.notfoundmsg.SetLabel("These are the suggestion")
+            for i in data2.words:
+                print ("LEVENSHTEIN RESULT:", levenshtein(input,i))
+                sortSuggestions(levenshtein(input,i), i)
+                if i in suggestionslist:
+                    pass
+                else:
+                    suggestionslist.append(i)
 
 def displayCommon(self):
     panel = wx.Panel(self)
@@ -170,7 +182,7 @@ def levenshtein(frominput, fromdict):
 def sortSuggestions(distanceinput, suggList):
     print ("suggList: ", suggList)
     if distanceinput in sortedDictionary:
-        if suggest not in sortedDictionary.values():
+        if suggList not in sortedDictionary.values():
             sortedDictionary[distanceinput].append(suggList)
             print ("Values", sortedDictionary.get(distanceinput))
         else:

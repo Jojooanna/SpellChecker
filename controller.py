@@ -9,6 +9,7 @@ from sqlalchemy import func
 # encoding: utf-8
 
 suggestionslist =[]
+sortedDictionary = dict()
 
 def connectToDatabase():
     """
@@ -90,6 +91,7 @@ def addCommon(self, List):
 
 def displaySuggestions(self, input):
     priCode, secCode = x.process(input)
+    distance = []
     data = session.query(Words).filter(Words.code == priCode).first()
     if data is None:
         self.notfoundmsg.SetLabel("No suggestions found")
@@ -97,6 +99,7 @@ def displaySuggestions(self, input):
         self.notfoundmsg.SetLabel("These are the suggestion")
         for i in data.words:
             print ("LEVENSHTEIN RESULT:", levenshtein(input,i))
+            sortSuggestions(levenshtein(input,i), i)
             if i in suggestionslist:
                 pass
             else:
@@ -109,16 +112,16 @@ def displaySuggestions(self, input):
         self.notfoundmsg.SetLabel("These are the suggestion")
         for i in data2.words:
             print ("LEVENSHTEIN RESULT:", levenshtein(input,i))
+            sortSuggestions(levenshtein(input,i), i)
             if i in suggestionslist:
                 pass
             else:
                 suggestionslist.append(i)
 
+    print ("Distance at displaySuggestions:", distance)
 
 def displayCommon(self):
-
     panel = wx.Panel(self)
-
     session = connectToDatabase()
     # display all data in words table
 
@@ -128,7 +131,6 @@ def displayCommon(self):
             print ("Common Words: ", i) # ma print tanan words sa common words
             words.append(i)
     wordsuggest = wx.ListBox(self.panel, choices=words, size=(200, 250), style=wx.LB_HSCROLL)
-    # vbox2.Add(wordsuggest, flag=wx.CENTER)
 
 def deleteDictionary():
 
@@ -164,4 +166,21 @@ def levenshtein(frominput, fromdict):
                 )
     distance = int(matrix[input-1,dict-1])
     return distance
+
+def sortSuggestions(distanceinput, suggList):
+    print ("suggList: ", suggList)
+    if distanceinput in sortedDictionary:
+        if suggest not in sortedDictionary.values():
+            sortedDictionary[distanceinput].append(suggList)
+            print ("Values", sortedDictionary.get(distanceinput))
+        else:
+            print ("Appended Values", sortedDictionary.get(distanceinput))
+    else:
+        sortedDictionary[distanceinput] = [suggList]
+        print ("New Values", sortedDictionary.get(distanceinput))
+
+    print ("Sorted Suggestions List", sortedDictionary)
+
+
+
 

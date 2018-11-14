@@ -213,6 +213,7 @@ class Example(wx.Frame):
             self.currentword = self.wrong[self.checkindexCurr]
             controller.suggestionslist = []
             self.suggestions = []
+            controller.sortedDictionary = dict()
             controller.displaySuggestions(self, self.currentword)
             for i in controller.suggestionslist:
                 self.suggestions.append(i)
@@ -239,6 +240,7 @@ class Example(wx.Frame):
                     self.currentword = self.wrong[self.checkindexCurr]
                     controller.suggestionslist = []
                     self.suggestions = []
+                    controller.sortedDictionary = dict()
                     controller.displaySuggestions(self, self.currentword)
                     for i in controller.suggestionslist:
                         self.suggestions.append(i)

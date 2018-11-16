@@ -135,8 +135,9 @@ class Example(wx.Frame):
         self.hbox3.AddSpacer(60)
         self.vbox2 = wx.BoxSizer(wx.VERTICAL)
         self.wordsuggest = wx.ListBox(self.panel, choices=self.suggestions, style=wx.LB_HSCROLL, size=(200, 100))
+        self.levSuggest = wx.ListBox(self.panel, choices=self.suggestionsLev, style=wx.LB_HSCROLL, size=(200, 100))
 
-        self.vbox2.Add(self.wordsuggest, flag=wx.CENTER)
+        self.vbox2.Add(self.levSuggest, flag=wx.CENTER)
 
         self.vbox3 = wx.BoxSizer(wx.VERTICAL)
         self.hbox4 = wx.BoxSizer(wx.HORIZONTAL)
@@ -160,8 +161,8 @@ class Example(wx.Frame):
         self.vbox1.Add(self.vbox6, flag=wx.CENTER)
         self.hbox.Add(self.vbox1, flag=wx.RIGHT)
 
-        self.Bind(wx.EVT_LISTBOX, self.OnWordSuggest, self.wordsuggest)
-        self.Bind(wx.EVT_COMBOBOX, self.OnWordSuggest, self.wordsuggest)
+        self.Bind(wx.EVT_LISTBOX, self.OnLevSuggest, self.levSuggest)
+        self.Bind(wx.EVT_COMBOBOX, self.OnWordSuggest, self.checktext)
         self.Bind(wx.EVT_MENU, self.OnNew, fileNew)
         self.Bind(wx.EVT_MENU, self.OnOpen, fileOpen)  # works
         self.Bind(wx.EVT_MENU, self.OnSave, fileSave)
@@ -196,6 +197,7 @@ class Example(wx.Frame):
         self.vbox1.Show(self.vbox6)
 
     def OnHighlight(self, e):
+
         self.findtext = self.originaltext.GetValue()
         self.input = self.inputtext.GetValue()
         self.position = self.input.find(self.findtext, self.position)
@@ -203,6 +205,7 @@ class Example(wx.Frame):
         print ("target", self.position)
 
         self.size = len(self.findtext)
+
         self.inputtext.SetStyle(self.position, self.position + self.size, wx.TextAttr("black", "turquoise"))
 
     def OnIgnore(self, event):
@@ -217,7 +220,7 @@ class Example(wx.Frame):
             controller.displaySuggestions(self, self.currentword)
             for i in controller.suggestionslist:
                 self.suggestions.append(i)
-            self.wordsuggest.Set(self.suggestions)
+            self.levSuggest.Set(self.suggestionsLev)
             self.checktext.Set(self.suggestions)
 
             self.Refresh()
@@ -244,7 +247,7 @@ class Example(wx.Frame):
                     controller.displaySuggestions(self, self.currentword)
                     for i in controller.suggestionslist:
                         self.suggestions.append(i)
-                    self.wordsuggest.Set(self.suggestions)
+                    self.levSuggest.Set(self.suggestionsLev)
                     self.checktext.Set(self.suggestions)
             else:
                 print ("End of array.")
@@ -253,6 +256,9 @@ class Example(wx.Frame):
 
     def OnWordSuggest(self, event):
         self.checktext.SetValue(self.checktext.GetStringSelection())
+
+    def OnLevSuggest(self, event):
+        pass
 
     def OnTest(self, e):
         checkindexCurr = self.wrong.index(self.checktext.GetValue())
@@ -280,7 +286,7 @@ class Example(wx.Frame):
                 controller.displaySuggestions(self, self.currentword)
                 for i in controller.suggestionslist:
                     self.suggestions.append(i)
-                self.wordsuggest.Set(self.suggestions)
+                self.levSuggest.Set(self.suggestionsLev)
                 self.checktext.Set(self.suggestions)
 
                 self.Refresh()
@@ -299,11 +305,22 @@ class Example(wx.Frame):
             self.originaltext.SetValue(self.wrong[self.checkindexCurr])
             self.currentword = self.wrong[self.checkindexCurr]
             controller.suggestionslist = []
+            controller.sortedDictionary = dict()
             self.suggestions = []
+            self.suggestionsLev = []
             controller.displaySuggestions(self, self.currentword)
+        
             for i in controller.suggestionslist:
                 self.suggestions.append(i)
-            self.wordsuggest.Set(self.suggestions)
+            self.checktext.Set(self.suggestions)
+        
+            for k in controller.sortedDictionary.values():
+                for j in k:
+                    if j in self.suggestionsLev:
+                        pass
+                    else:
+                        self.suggestionsLev.append(j)
+            self.levSuggest.Set(self.suggestionsLev)
             if (self.checkindexCurr == len(self.wrong)-1):
                 self.findnextbtn.Disable()
         except IndexError:
@@ -321,12 +338,23 @@ class Example(wx.Frame):
             # print self.wrong[self.checkindexCurr]
             # print self.checkindexCurr
             controller.suggestionslist = []
+            controller.sortedDictionary = dict()
             self.suggestions = []
+            self.suggestionsLev = []
             controller.displaySuggestions(self, self.currentword)
+        
             for i in controller.suggestionslist:
                 self.suggestions.append(i)
-            self.wordsuggest.Set(self.suggestions)
             self.checktext.Set(self.suggestions)
+        
+            for k in controller.sortedDictionary.values():
+                for j in k:
+                    if j in self.suggestionsLev:
+                        pass
+                    else:
+                        self.suggestionsLev.append(j)
+
+            self.levSuggest.Set(self.suggestionsLev)
             self.Refresh()
             if (self.checkindexCurr == 0):
                     self.previousbtn.Disable()
@@ -368,14 +396,22 @@ class Example(wx.Frame):
         else:
             controller.spellingCheck(self, List)
             controller.suggestionslist = []
+            controller.sortedDictionary = dict()
             self.suggestions = []
+            self.suggestionsLev = []
             controller.displaySuggestions(self, self.currentword)
+        
             for i in controller.suggestionslist:
                 self.suggestions.append(i)
-            self.wordsuggest.Set(self.suggestions)
             self.checktext.Set(self.suggestions)
+        
+            for k in controller.sortedDictionary.values():
+                for j in k:
+                    self.suggestionsLev.append(j)
+            self.levSuggest.Set(self.suggestionsLev)
+        
             self.Refresh()
-
+        
         self.checktext.Enable()
         self.changebtn.Enable()
         self.changeallbtn.Enable()

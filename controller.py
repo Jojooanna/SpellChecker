@@ -97,7 +97,7 @@ def displaySuggestions(self, input):
         if data is None:
             self.notfoundmsg.SetLabel("No suggestions found")
         else:
-            self.notfoundmsg.SetLabel("These are the suggestion")
+            self.notfoundmsg.SetLabel("These are the suggestion base \n by levenshtein")
             for i in data.words:
                 print ("LEVENSHTEIN RESULT:", levenshtein(input,i))
                 sortSuggestions(levenshtein(input,i), i)
@@ -110,7 +110,8 @@ def displaySuggestions(self, input):
         if data is None:
             self.notfoundmsg.SetLabel("No suggestions found")
         else:
-            self.notfoundmsg.SetLabel("These are the suggestion")
+            self.notfoundmsg.SetLabel("These are the suggestion base \n by levenshtein")
+
             for i in data.words:
                 print ("LEVENSHTEIN RESULT:", levenshtein(input,i))
                 sortSuggestions(levenshtein(input,i), i)
@@ -123,7 +124,7 @@ def displaySuggestions(self, input):
         if data2 is None:
             self.notfoundmsg.SetLabel("No suggestions found")
         else:
-            self.notfoundmsg.SetLabel("These are the suggestion")
+            self.notfoundmsg.SetLabel("These are the suggestion \n by levenshtein")
             for i in data2.words:
                 print ("LEVENSHTEIN RESULT:", levenshtein(input,i))
                 sortSuggestions(levenshtein(input,i), i)
@@ -180,6 +181,7 @@ def levenshtein(frominput, fromdict):
     return distance
 
 def sortSuggestions(distanceinput, suggList):
+
     print ("suggList: ", suggList)
     if distanceinput in sortedDictionary:
         if suggList not in sortedDictionary.values():
@@ -192,7 +194,6 @@ def sortSuggestions(distanceinput, suggList):
         print ("New Values", sortedDictionary.get(distanceinput))
 
     print ("Sorted Suggestions List", sortedDictionary)
-
 
 
 

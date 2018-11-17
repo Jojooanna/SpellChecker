@@ -4,6 +4,7 @@ import pymysql
 import re
 import string
 import datetime
+import json
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 # -*- encoding: utf-8 -*-
@@ -66,9 +67,13 @@ class Example(wx.Frame):
         self.vbox5 = wx.BoxSizer(wx.VERTICAL)
         self.vbox5.AddSpacer(15)
         self.filename = wx.StaticText(self.panel, style=wx.ALIGN_CENTER, label="", size=(900, 30))
-        self.inputtext = wx.TextCtrl(self.panel, size=(900, 600), style=wx.TE_MULTILINE | wx.TE_RICH2)
+        self.inputtext = wx.TextCtrl(self.panel, size=(900, 450), style=wx.TE_MULTILINE | wx.TE_RICH2)
+        self.misspellinglabel = wx.StaticText(self.panel, label="Misspelled Words", size=(900, 30))
+        self.misspellings = wx.TextCtrl(self.panel, size=(900, 120), style=wx.TE_READONLY | wx.TE_RICH2 | wx.TE_MULTILINE)
         self.vbox5.Add(self.filename, flag=wx.CENTER)
         self.vbox5.Add(self.inputtext, flag=wx.CENTER)
+        self.vbox5.Add(self.misspellinglabel, 0, wx.ALL, 10)
+        self.vbox5.Add(self.misspellings, flag=wx.CENTER)
 
         self.hbox.Add(self.vbox5, flag=wx.LEFT)
 
@@ -135,8 +140,13 @@ class Example(wx.Frame):
         self.hbox3.AddSpacer(60)
         self.vbox2 = wx.BoxSizer(wx.VERTICAL)
         self.wordsuggest = wx.ListBox(self.panel, choices=self.suggestions, style=wx.LB_HSCROLL, size=(200, 100))
-
+        self.sortedlabel = wx.StaticText(self.panel, label="Levenshtein Results:", size=(200, 30))
+        self.sortedSuggestions = ()
+        self.wordsuggestSorted = wx.ListBox(self.panel, choices=self.sortedSuggestions, style=wx.LB_HSCROLL, size=(200, 100))
         self.vbox2.Add(self.wordsuggest, flag=wx.CENTER)
+        self.vbox2.AddSpacer(20)
+        self.vbox2.Add(self.sortedlabel, 0, wx.ALL, 0)
+        self.vbox2.Add(self.wordsuggestSorted, flag=wx.CENTER)
 
         self.vbox3 = wx.BoxSizer(wx.VERTICAL)
         self.hbox4 = wx.BoxSizer(wx.HORIZONTAL)
@@ -214,11 +224,14 @@ class Example(wx.Frame):
             controller.suggestionslist = []
             self.suggestions = []
             controller.sortedDictionary = dict()
+            self.sortedSuggestions = ()
             controller.displaySuggestions(self, self.currentword)
             for i in controller.suggestionslist:
                 self.suggestions.append(i)
+            # for i in controller.sortedDictionary.
             self.wordsuggest.Set(self.suggestions)
             self.checktext.Set(self.suggestions)
+            self.checktext.SetLabel(self.suggestions[0])
 
             self.Refresh()
 
@@ -246,6 +259,7 @@ class Example(wx.Frame):
                         self.suggestions.append(i)
                     self.wordsuggest.Set(self.suggestions)
                     self.checktext.Set(self.suggestions)
+                    self.checktext.SetLabel(self.suggestions[0])
             else:
                 print ("End of array.")
             wx.MessageBox("Word Added!")
@@ -253,11 +267,13 @@ class Example(wx.Frame):
 
     def OnWordSuggest(self, event):
         self.checktext.SetValue(self.checktext.GetStringSelection())
+        self.checktext.SetLabel(self.checktext.GetStringSelection())
 
     def OnTest(self, e):
         checkindexCurr = self.wrong.index(self.checktext.GetValue())
         checkindexNew = checkindexCurr + 1
         self.checktext.SetValue(self.wrong[checkindexNew])
+        self.checktext.SetLabel(wrong[checkindexNew])
 
     def Change(self, e):
         self.selected = self.checktext.GetStringSelection()
@@ -282,6 +298,7 @@ class Example(wx.Frame):
                     self.suggestions.append(i)
                 self.wordsuggest.Set(self.suggestions)
                 self.checktext.Set(self.suggestions)
+                self.checktext.SetLabel(self.suggestions[0])
 
                 self.Refresh()
                 #       dapat pa ba ma clear ang selected after ma change?
@@ -300,10 +317,13 @@ class Example(wx.Frame):
             self.currentword = self.wrong[self.checkindexCurr]
             controller.suggestionslist = []
             self.suggestions = []
+            controller.sortedDictionary = dict()
             controller.displaySuggestions(self, self.currentword)
             for i in controller.suggestionslist:
                 self.suggestions.append(i)
             self.wordsuggest.Set(self.suggestions)
+            self.checktext.Set(self.suggestions)
+            self.checktext.SetLabel(self.suggestions[0])
             if (self.checkindexCurr == len(self.wrong)-1):
                 self.findnextbtn.Disable()
         except IndexError:
@@ -322,11 +342,13 @@ class Example(wx.Frame):
             # print self.checkindexCurr
             controller.suggestionslist = []
             self.suggestions = []
+            controller.sortedDictionary = dict()
             controller.displaySuggestions(self, self.currentword)
             for i in controller.suggestionslist:
                 self.suggestions.append(i)
             self.wordsuggest.Set(self.suggestions)
             self.checktext.Set(self.suggestions)
+            self.checktext.SetLabel(self.suggestions[0])
             self.Refresh()
             if (self.checkindexCurr == 0):
                     self.previousbtn.Disable()
@@ -374,6 +396,12 @@ class Example(wx.Frame):
                 self.suggestions.append(i)
             self.wordsuggest.Set(self.suggestions)
             self.checktext.Set(self.suggestions)
+            self.checktext.SetLabel("Hello")
+            # ----------- dapat dili unicode
+            misspelled = []
+            for i in self.wrong:
+                misspelled.append(controller.ForceToUnicode(i))
+            self.misspellings.SetValue(json.dumps(misspelled))
             self.Refresh()
 
         self.checktext.Enable()
@@ -417,6 +445,7 @@ class Example(wx.Frame):
 
     def OnNew(self, event):
         self.inputtext.Clear()
+        self.misspellings.Clear()
         font2 = wx.Font(12, wx.DEFAULT, wx.NORMAL, wx.NORMAL, False, u'Consolas')
         self.inputtext.SetFont(font2)
         with wx.FileDialog(self, "Save txt file", wildcard="TXT files (*.txt)|*.txt",
@@ -435,6 +464,7 @@ class Example(wx.Frame):
 
     def OnOpen(self, event):
         self.inputtext.Clear()
+        self.misspellings.Clear()
         wildcard = "TXT files (*.txt)|*.txt"
         dialog = wx.FileDialog(self, "Open", wildcard=wildcard,
                                style=wx.FD_OPEN | wx.FD_FILE_MUST_EXIST)

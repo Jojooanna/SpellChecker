@@ -61,7 +61,8 @@ def spellingCheck(self, List):
 
 def addCommon(self, List):
     for i in List:
-        result = re.sub(r'[^A-Za-z !?@#$%^&*_=+]', "", i)
+        converted = ForceToUnicode(i)
+        result = re.sub(r'[^A-Za-z !?@#$%^&*_=+]', "", converted)
         priCode, secCode = x.process(result)
         if priCode == secCode:
             data = session.query(Common).filter(Common.code == priCode).first()
@@ -190,7 +191,8 @@ def sortSuggestions(distanceinput, suggList):
     else:
         sortedDictionary[distanceinput] = [suggList]
         print ("New Values", sortedDictionary.get(distanceinput))
-
+    for j in sortedDictionary.values():
+        print ("Check Individual Values:", j)
     print ("Sorted Suggestions List", sortedDictionary)
 
 

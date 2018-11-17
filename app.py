@@ -62,7 +62,7 @@ class Example(wx.Frame):
 
         self.hbox = wx.BoxSizer(wx.HORIZONTAL)
 
-        self.hbox.AddSpacer(10)
+        # self.hbox.AddSpacer(5)
 
         self.vbox5 = wx.BoxSizer(wx.VERTICAL)
         self.vbox5.AddSpacer(15)
@@ -139,18 +139,18 @@ class Example(wx.Frame):
         self.hbox3 = wx.BoxSizer(wx.HORIZONTAL)
         self.hbox3.AddSpacer(60)
         self.vbox2 = wx.BoxSizer(wx.VERTICAL)
+        self.wordLabel = wx.StaticText(self.panel, label="Non-sorted Results:", size=(200, 30))
         self.wordsuggest = wx.ListBox(self.panel, choices=self.suggestions, style=wx.LB_HSCROLL, size=(200, 100))
-        self.sortedlabel = wx.StaticText(self.panel, label="Levenshtein Results:", size=(200, 30))
-        self.sortedSuggestions = ()
-        self.wordsuggestSorted = wx.ListBox(self.panel, choices=self.sortedSuggestions, style=wx.LB_HSCROLL, size=(200, 100))
+        self.levLabel = wx.StaticText(self.panel, label="Levenshtein Results:", size=(200, 30))
+        self.suggestionsLev = []
+        self.levSuggest = wx.ListBox(self.panel, choices=self.suggestionsLev, style=wx.LB_HSCROLL, size=(200, 100))
+        self.vbox2.Add(self.wordLabel, 0, wx.ALL, 0)
         self.vbox2.Add(self.wordsuggest, flag=wx.CENTER)
         self.vbox2.AddSpacer(20)
-        self.vbox2.Add(self.sortedlabel, 0, wx.ALL, 0)
-        self.vbox2.Add(self.wordsuggestSorted, flag=wx.CENTER)
+        self.vbox2.Add(self.levLabel, 0, wx.ALL, 0)
+        self.vbox2.Add(self.levSuggest, flag=wx.CENTER)
 
         self.vbox3 = wx.BoxSizer(wx.VERTICAL)
-        self.hbox4 = wx.BoxSizer(wx.HORIZONTAL)
-        self.hbox5 = wx.BoxSizer(wx.HORIZONTAL)
 
         self.ignorebtn = wx.Button(self.panel, label="Ignore", size=(100, 30))
         self.ignorebtn.Bind(wx.EVT_BUTTON, self.OnIgnore)
@@ -158,10 +158,9 @@ class Example(wx.Frame):
         self.learnbtn = wx.Button(self.panel, label="Learn", size=(100, 30))
         self.learnbtn.Bind(wx.EVT_BUTTON, self.OnLearn)
 
-        self.hbox4.Add(self.ignorebtn, flag=wx.CENTER)
-        self.hbox5.Add(self.learnbtn, flag=wx.CENTER)
-        self.vbox3.Add(self.hbox4, flag=wx.CENTER)
-        self.vbox3.Add(self.hbox5, flag=wx.CENTER)
+        self.vbox3.AddSpacer(30)
+        self.vbox3.Add(self.ignorebtn, flag=wx.CENTER)
+        self.vbox3.Add(self.learnbtn, flag=wx.CENTER)
 
         self.hbox3.Add(self.vbox2, flag=wx.LEFT)
         self.hbox3.Add(self.vbox3, flag=wx.RIGHT)
@@ -170,8 +169,8 @@ class Example(wx.Frame):
         self.vbox1.Add(self.vbox6, flag=wx.CENTER)
         self.hbox.Add(self.vbox1, flag=wx.RIGHT)
 
-        self.Bind(wx.EVT_LISTBOX, self.OnWordSuggest, self.wordsuggest)
-        self.Bind(wx.EVT_COMBOBOX, self.OnWordSuggest, self.wordsuggest)
+        self.Bind(wx.EVT_LISTBOX, self.OnLevSuggest, self.levSuggest)
+        self.Bind(wx.EVT_COMBOBOX, self.OnWordSuggest, self.checktext)
         self.Bind(wx.EVT_MENU, self.OnNew, fileNew)
         self.Bind(wx.EVT_MENU, self.OnOpen, fileOpen)  # works
         self.Bind(wx.EVT_MENU, self.OnSave, fileSave)
@@ -206,6 +205,7 @@ class Example(wx.Frame):
         self.vbox1.Show(self.vbox6)
 
     def OnHighlight(self, e):
+
         self.findtext = self.originaltext.GetValue()
         self.input = self.inputtext.GetValue()
         self.position = self.input.find(self.findtext, self.position)
@@ -213,6 +213,7 @@ class Example(wx.Frame):
         print ("target", self.position)
 
         self.size = len(self.findtext)
+
         self.inputtext.SetStyle(self.position, self.position + self.size, wx.TextAttr("black", "turquoise"))
 
     def OnIgnore(self, event):
@@ -224,12 +225,12 @@ class Example(wx.Frame):
             controller.suggestionslist = []
             self.suggestions = []
             controller.sortedDictionary = dict()
-            self.sortedSuggestions = ()
             controller.displaySuggestions(self, self.currentword)
             for i in controller.suggestionslist:
                 self.suggestions.append(i)
             # for i in controller.sortedDictionary.
             self.wordsuggest.Set(self.suggestions)
+            self.levSuggest.Set(self.suggestionsLev)
             self.checktext.Set(self.suggestions)
             self.checktext.SetLabel(self.suggestions[0])
 
@@ -258,6 +259,7 @@ class Example(wx.Frame):
                     for i in controller.suggestionslist:
                         self.suggestions.append(i)
                     self.wordsuggest.Set(self.suggestions)
+                    self.levSuggest.Set(self.suggestionsLev)
                     self.checktext.Set(self.suggestions)
                     self.checktext.SetLabel(self.suggestions[0])
             else:
@@ -268,6 +270,9 @@ class Example(wx.Frame):
     def OnWordSuggest(self, event):
         self.checktext.SetValue(self.checktext.GetStringSelection())
         self.checktext.SetLabel(self.checktext.GetStringSelection())
+
+    def OnLevSuggest(self, event):
+        pass
 
     def OnTest(self, e):
         checkindexCurr = self.wrong.index(self.checktext.GetValue())
@@ -297,6 +302,7 @@ class Example(wx.Frame):
                 for i in controller.suggestionslist:
                     self.suggestions.append(i)
                 self.wordsuggest.Set(self.suggestions)
+                self.levSuggest.Set(self.suggestionsLev)
                 self.checktext.Set(self.suggestions)
                 self.checktext.SetLabel(self.suggestions[0])
 
@@ -316,14 +322,22 @@ class Example(wx.Frame):
             self.originaltext.SetValue(self.wrong[self.checkindexCurr])
             self.currentword = self.wrong[self.checkindexCurr]
             controller.suggestionslist = []
-            self.suggestions = []
             controller.sortedDictionary = dict()
-            controller.displaySuggestions(self, self.currentword)
+            self.suggestions = []
+            controller.sortedDictionary = dict()        
             for i in controller.suggestionslist:
                 self.suggestions.append(i)
+
             self.wordsuggest.Set(self.suggestions)
             self.checktext.Set(self.suggestions)
-            self.checktext.SetLabel(self.suggestions[0])
+            self.checktext.SetLabel(self.suggestions[0])        
+            for k in controller.sortedDictionary.values():
+                for j in k:
+                    if j in self.suggestionsLev:
+                        pass
+                    else:
+                        self.suggestionsLev.append(j)
+            self.levSuggest.Set(self.suggestionsLev)
             if (self.checkindexCurr == len(self.wrong)-1):
                 self.findnextbtn.Disable()
         except IndexError:
@@ -341,14 +355,25 @@ class Example(wx.Frame):
             # print self.wrong[self.checkindexCurr]
             # print self.checkindexCurr
             controller.suggestionslist = []
-            self.suggestions = []
             controller.sortedDictionary = dict()
+            self.suggestions = []
+            self.suggestionsLev = []
             controller.displaySuggestions(self, self.currentword)
+        
             for i in controller.suggestionslist:
                 self.suggestions.append(i)
             self.wordsuggest.Set(self.suggestions)
             self.checktext.Set(self.suggestions)
             self.checktext.SetLabel(self.suggestions[0])
+        
+            for k in controller.sortedDictionary.values():
+                for j in k:
+                    if j in self.suggestionsLev:
+                        pass
+                    else:
+                        self.suggestionsLev.append(j)
+
+            self.levSuggest.Set(self.suggestionsLev)
             self.Refresh()
             if (self.checkindexCurr == 0):
                     self.previousbtn.Disable()
@@ -390,20 +415,27 @@ class Example(wx.Frame):
         else:
             controller.spellingCheck(self, List)
             controller.suggestionslist = []
+            controller.sortedDictionary = dict()
             self.suggestions = []
+            self.suggestionsLev = []
             controller.displaySuggestions(self, self.currentword)
             for i in controller.suggestionslist:
                 self.suggestions.append(i)
             self.wordsuggest.Set(self.suggestions)
             self.checktext.Set(self.suggestions)
             self.checktext.SetLabel("Hello")
-            # ----------- dapat dili unicode
             misspelled = []
             for i in self.wrong:
                 misspelled.append(controller.ForceToUnicode(i))
             self.misspellings.SetValue(json.dumps(misspelled))
-            self.Refresh()
 
+            for k in controller.sortedDictionary.values():
+                for j in k:
+                    self.suggestionsLev.append(j)
+            self.levSuggest.Set(self.suggestionsLev)
+        
+            self.Refresh()
+        
         self.checktext.Enable()
         self.changebtn.Enable()
         self.changeallbtn.Enable()

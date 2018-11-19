@@ -204,18 +204,6 @@ class Example(wx.Frame):
     def OnShow(self, event):
         self.vbox1.Show(self.vbox6)
 
-    def OnHighlight(self, e):
-
-        self.findtext = self.originaltext.GetValue()
-        self.input = self.inputtext.GetValue()
-        self.position = self.input.find(self.findtext, self.position)
-
-        print ("target", self.position)
-
-        self.size = len(self.findtext)
-
-        self.inputtext.SetStyle(self.position, self.position + self.size, wx.TextAttr("black", "turquoise"))
-
     def OnIgnore(self, event):
         if wx.MessageBox("Remove word?", "Please confirm", wx.YES_NO) != wx.NO:
             self.checkindexCurr = self.wrong.index(self.currentword)
@@ -314,6 +302,11 @@ class Example(wx.Frame):
 
     def Next(self, e):
         try:
+            target1 = self.originaltext.GetValue()
+            start1 = self.inputtext.GetValue().find(target1)
+            position1 = start1 + len(target1)
+            self.inputtext.Bind(wx.EVT_SET_FOCUS, self.UnHighlight(start1, position1))
+
             self.previousbtn.Enable()
             self.checktext.Clear()
             self.checkindexCurr = self.checkindexCurr + 1
@@ -324,13 +317,13 @@ class Example(wx.Frame):
             controller.suggestionslist = []
             controller.sortedDictionary = dict()
             self.suggestions = []
-            controller.sortedDictionary = dict()        
+
             for i in controller.suggestionslist:
                 self.suggestions.append(i)
 
             self.wordsuggest.Set(self.suggestions)
             self.checktext.Set(self.suggestions)
-            self.checktext.SetLabel(self.suggestions[0])        
+
             for k in controller.sortedDictionary.values():
                 for j in k:
                     if j in self.suggestionsLev:
@@ -338,14 +331,32 @@ class Example(wx.Frame):
                     else:
                         self.suggestionsLev.append(j)
             self.levSuggest.Set(self.suggestionsLev)
+
             if (self.checkindexCurr == len(self.wrong)-1):
                 self.findnextbtn.Disable()
+
+            target = self.originaltext.GetValue()
+            count = 0
+            for i in range(self.inputtext.GetNumberOfLines()):
+                if count == 0:
+                    line = self.inputtext.GetLineText(i)
+                    if target in line:
+                        start = self.inputtext.GetValue().find(target)
+                        position = start + len(target)
+                        self.inputtext.Bind(wx.EVT_SET_FOCUS, self.OnHighlight(start, position))
+                        start = 0
+                        count = 1
         except IndexError:
             #self.findnextbtn.Disable()
             wx.MessageBox("No more words.")
 
     def Previous(self, e):
         try:
+            target1 = self.originaltext.GetValue()
+            start1 = self.inputtext.GetValue().find(target1)
+            position1 = start1 + len(target1)
+            self.inputtext.Bind(wx.EVT_SET_FOCUS, self.UnHighlight(start1, position1))
+            
             self.findnextbtn.Enable()
             self.checktext.Clear()
             self.checkindexCurr = self.checkindexCurr - 1
@@ -372,11 +383,24 @@ class Example(wx.Frame):
                         pass
                     else:
                         self.suggestionsLev.append(j)
-
             self.levSuggest.Set(self.suggestionsLev)
+
             self.Refresh()
             if (self.checkindexCurr == 0):
                     self.previousbtn.Disable()
+
+
+            target = self.originaltext.GetValue()
+            count = 0
+            for i in range(self.inputtext.GetNumberOfLines()):
+                if count == 0:
+                    line = self.inputtext.GetLineText(i)
+                    if target in line:
+                        start = self.inputtext.GetValue().find(target)
+                        position = start + len(target)
+                        self.inputtext.Bind(wx.EVT_SET_FOCUS, self.OnHighlight(start, position))
+                        start = 0
+                        count = 1
 
         except IndexError:
             wx.MessageBox("There's no previous word")
@@ -447,6 +471,17 @@ class Example(wx.Frame):
         if (self.checkindexCurr == 0):
             self.previousbtn.Disable()
 
+        target = self.originaltext.GetValue()
+        print ("target self.originaltext:", target)
+
+        for i in range(self.inputtext.GetNumberOfLines()):
+            line = self.inputtext.GetLineText(i)
+            if target in line:
+                start = self.inputtext.GetValue().find(target)
+                position = start + len(target)
+                self.inputtext.Bind(wx.EVT_SET_FOCUS, self.OnHighlight(start, position))
+                start = 0
+
         # self.value = str(self.inputtext.GetValue())
         # self.value2 = self.value.split()
         # words = self.value2
@@ -471,6 +506,27 @@ class Example(wx.Frame):
         # self.word.SetLabel(self.inputtext)
 
         # self.notfoundmsg.Hide()
+
+
+    # def OnFind(self, e):
+    #     target = self.originaltext.GetValue()
+    #     print ("target self.originaltext:", target)
+
+    #     for i in range(self.inputtext.GetNumberOfLines()):
+    #         line = self.inputtext.GetLineText(i)
+    #         if target in line:
+    #             start = self.inputtext.GetValue().find(target)
+    #             position = start + len(target)
+    #             self.inputtext.Bind(wx.EVT_SET_FOCUS, self.OnHighlight(start, position))
+    #             start = 0
+
+    def OnHighlight(self, start, position):
+        self.inputtext.SetStyle(start, position, wx.TextAttr("black", "turquoise"))
+        self.inputtext.SetInsertionPoint(start)
+
+    def UnHighlight(self, start, position):
+        self.inputtext.SetStyle(start, position, wx.TextAttr("black", "white"))
+        self.inputtext.SetInsertionPoint(start)
 
     def closeButton(self, event):
         print "Button pressed."

@@ -187,15 +187,8 @@ def sortSuggestions(distanceinput, suggList):
     if distanceinput in sortedDictionary:
         if suggList not in sortedDictionary.values():
             sortedDictionary[distanceinput].append(suggList)
-            print ("Values", sortedDictionary.get(distanceinput))
-        else:
-            print ("Appended Values", sortedDictionary.get(distanceinput))
     else:
         sortedDictionary[distanceinput] = [suggList]
-        print ("New Values", sortedDictionary.get(distanceinput))
-    for j in sortedDictionary.values():
-        print ("Check Individual Values:", j)
-    print ("Sorted Suggestions List", sortedDictionary)
 
 
 

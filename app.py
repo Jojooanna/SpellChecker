@@ -323,6 +323,7 @@ class Example(wx.Frame):
 
             self.wordsuggest.Set(self.suggestions)
             self.checktext.Set(self.suggestions)
+            controller.displaySuggestions(self, self.currentword)
 
             for k in controller.sortedDictionary.values():
                 for j in k:
@@ -472,7 +473,6 @@ class Example(wx.Frame):
             self.previousbtn.Disable()
 
         target = self.originaltext.GetValue()
-        print ("target self.originaltext:", target)
 
         for i in range(self.inputtext.GetNumberOfLines()):
             line = self.inputtext.GetLineText(i)

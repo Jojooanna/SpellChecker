@@ -2,6 +2,7 @@ from model import *
 import timeit
 import codecs
 import io
+from sqlalchemy import func
 # -*- coding: utf-8 -*-
 
 def connectToDatabase():
@@ -434,6 +435,9 @@ x = meta()
 # with io.open(path) as fp:
 #   line = fp.read().splitlines()
 #   for i in line:
+# for i in dictionary:
+#     print i
+
 
 def OnConvert(i):
     primary, secondary = x.process(i)

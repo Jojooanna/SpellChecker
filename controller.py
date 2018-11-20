@@ -31,7 +31,7 @@ def spellingCheck(self, List):
     self.wrong = []
     for i in List:
         converted = ForceToUnicode(i)
-        result = re.sub(r"[^A-Za-z !?@#$%^&*_=+]", "", converted)
+        result = re.sub(r"[^A-Za-z -@#$%^&*_=+]", "", converted)
         data = session.query(inputWords).filter(func.lower(inputWords.word) == result).first()
         if data is None:
             self.wrong.append(result)
@@ -62,31 +62,38 @@ def spellingCheck(self, List):
 def addCommon(self, List):
     for i in List:
         converted = ForceToUnicode(i)
-        result = re.sub(r'[^A-Za-z !?@#$%^&*_=+]', "", converted)
+        result = re.sub(r'[^A-Za-z -@#$%^&*_=+]', "", converted)
         priCode, secCode = x.process(result)
         if priCode == secCode:
             data = session.query(Common).filter(Common.code == priCode).first()
+            dictdata = session.query(Words).filter(Words.code == priCode).first()
             if data is None:
-                dict = Common(code=priCode, words=[result])
-                session.add(dict)
+                commmondict = Common(code=priCode, words=[result])
+                session.add(commondict)
+
+                session.delete(dictdata)
                 session.commit()
-                print ("WrongCommon:", data)
             else:
                 print ("Common Misspelled Word Already Added.")
         else: 
             data1 = session.query(Common).filter(Common.code == priCode).first()
+            dictdata1 = session.query(Words).filter(Words.code == priCode).first()
+
             data2 = session.query(Common).filter(Common.code == secCode).first()
+            dictdata2 = session.query(Words).filter(Words.code == secCode).first()
 
             if data1 is None:
-                dict1 = Common(code=priCode, words=[result])
-                session.add(dict1)
+                commondict1 = Common(code=priCode, words=[result])
+                session.add(commondict1)
+
+                session.delete(dictdata1)
                 session.commit()
-                print ("WrongCommon:", data)
             elif data2 is None:
-                dict2 = Common(code=secCode, words=[result])
-                session.add(dict2)
+                commondict2 = Common(code=secCode, words=[result])
+                session.add(commondict2)
+
+                session.delete(dictdata2)
                 session.commit()
-                print ("WrongCommon:", data)
             else:
                 print ("Common Misspelled Word Already Added.")
 
@@ -111,7 +118,7 @@ def displaySuggestions(self, input):
         if data is None:
             self.notfoundmsg.SetLabel("No suggestions found")
         else:
-            self.notfoundmsg.SetLabel("These are the suggestion base \n by levenshtein")
+            self.notfoundmsg.SetLabel("These are the suggestions.")
 
             for i in data.words:
                 print ("LEVENSHTEIN RESULT:", levenshtein(input,i))
@@ -125,7 +132,7 @@ def displaySuggestions(self, input):
         if data2 is None:
             self.notfoundmsg.SetLabel("No suggestions found")
         else:
-            self.notfoundmsg.SetLabel("These are the suggestion \n by levenshtein")
+            self.notfoundmsg.SetLabel("These are the suggestions.")
             for i in data2.words:
                 print ("LEVENSHTEIN RESULT:", levenshtein(input,i))
                 sortSuggestions(levenshtein(input,i), i)

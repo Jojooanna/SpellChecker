@@ -386,34 +386,42 @@ class Example(wx.Frame):
             position1 = start1 + len(target1)
             self.inputtext.Bind(wx.EVT_SET_FOCUS, self.UnHighlight(start1, position1))
             
+
             self.findnextbtn.Enable()
             self.checktext.Clear()
             self.checkindexCurr = self.checkindexCurr - 1
             self.previousbtn.Enable()
-
             self.originaltext.SetValue(self.wrong[self.checkindexCurr])
             self.currentword = self.wrong[self.checkindexCurr]
-            
+
             # for not sorted suggestions
             controller.suggestionslist = []
+            controller.sortedDictionary = dict()
             self.suggestions = []
+            self.suggestionsLev = []
             controller.displaySuggestions(self, self.currentword)
         
             for i in controller.suggestionslist:
                 self.suggestions.append(i)
             self.wordsuggest.Set(self.suggestions)
-            
-            # for Levenshtein-generated suggestions
-            controller.sortedDictionary = {}
-            self.suggestionsLev = []
+            self.checktext.Set(self.suggestions)
+            self.checktext.SetLabel(self.suggestions[0])
+        
+            # for levenshtein-generated suggestions
             for k in controller.sortedDictionary.values():
                 for j in k:
                     if j in self.suggestionsLev:
-                        continue
+                        pass
                     else:
                         self.suggestionsLev.append(j)
             self.levSuggest.Set(self.suggestionsLev)
-            self.checktext.Set(self.suggestionsLev)
+
+            self.Refresh()
+            if (self.checkindexCurr == 0):
+                    self.previousbtn.Disable()
+
+        except IndexError:
+            wx.MessageBox("There's no previous word")
 
             # for highlighting texts
             target = self.originaltext.GetValue()

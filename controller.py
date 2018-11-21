@@ -29,7 +29,7 @@ def ForceToUnicode(text):
 def spellingCheck(self, List):
     session = connectToDatabase()
     self.wrong = []
-    for i in List:
+    for i in self.List:
         converted = ForceToUnicode(i)
         result = re.sub(r"[^A-Za-z !?@#$%^&*_=+]", "", converted)
         data = session.query(inputWords).filter(func.lower(inputWords.word) == result).first()

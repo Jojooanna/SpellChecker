@@ -29,7 +29,7 @@ def ForceToUnicode(text):
 def spellingCheck(self, List):
     session = connectToDatabase()
     self.wrong = []
-    for i in List:
+    for i in self.List:
         converted = ForceToUnicode(i)
         result = re.sub(r"[^A-Za-z -@#$%^&*_=+]", "", converted)
         data = session.query(inputWords).filter(func.lower(inputWords.word) == func.lower(result)).first()
@@ -39,12 +39,13 @@ def spellingCheck(self, List):
             print ("spellingCheck results:", result)  # kung wala ang words e append sya sa wrong na list
     # print wrong
     print ("Misspelled words:", self.wrong)
-    addCommon(self, self.wrong) 
+    # addCommon(self, self.wrong) 
     if (self.wrong == []):
         wx.MessageBox("YEY NO MORE WRONG WORDS")
     else:
         self.checkindexCurr = 0
         self.currentword = self.wrong[self.checkindexCurr]
+        self.curwordindex = 0 
         self.originaltext.SetValue(self.currentword)
         self.check.Bind(wx.EVT_FIND, self.OnHighlight)
 

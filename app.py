@@ -62,8 +62,6 @@ class Example(wx.Frame):
 
         self.hbox = wx.BoxSizer(wx.HORIZONTAL)
 
-        # self.hbox.AddSpacer(5)
-
         self.vbox5 = wx.BoxSizer(wx.VERTICAL)
         self.vbox5.AddSpacer(15)
         self.filename = wx.StaticText(self.panel, style=wx.ALIGN_CENTER, label="", size=(900, 30))
@@ -302,6 +300,7 @@ class Example(wx.Frame):
 
     def Next(self, e):
         try:
+            # remove highlight from previous words
             target1 = self.originaltext.GetValue()
             start1 = self.inputtext.GetValue().find(target1)
             position1 = start1 + len(target1)
@@ -310,32 +309,33 @@ class Example(wx.Frame):
             self.previousbtn.Enable()
             self.checktext.Clear()
             self.checkindexCurr = self.checkindexCurr + 1
-            # print self.wrong[self.checkindexCurr]
-            # print self.checkindexCurr
+
             self.originaltext.SetValue(self.wrong[self.checkindexCurr])
             self.currentword = self.wrong[self.checkindexCurr]
+
+            # for not sorted suggestions
             controller.suggestionslist = []
-            controller.sortedDictionary = dict()
+            controller.sortedDictionary ={}
             self.suggestions = []
+            controller.displaySuggestions(self, self.currentword)
 
             for i in controller.suggestionslist:
                 self.suggestions.append(i)
 
             self.wordsuggest.Set(self.suggestions)
-            self.checktext.Set(self.suggestions)
-            controller.displaySuggestions(self, self.currentword)
 
+            # for Levenshtein-generated Suggestions
+            self.suggestionsLev = []
             for k in controller.sortedDictionary.values():
                 for j in k:
                     if j in self.suggestionsLev:
-                        pass
+                        continue
                     else:
                         self.suggestionsLev.append(j)
             self.levSuggest.Set(self.suggestionsLev)
+            self.checktext.Set(self.suggestionsLev)
 
-            if (self.checkindexCurr == len(self.wrong)-1):
-                self.findnextbtn.Disable()
-
+            # for highlighting text
             target = self.originaltext.GetValue()
             count = 0
             for i in range(self.inputtext.GetNumberOfLines()):
@@ -347,12 +347,17 @@ class Example(wx.Frame):
                         self.inputtext.Bind(wx.EVT_SET_FOCUS, self.OnHighlight(start, position))
                         start = 0
                         count = 1
+
+            if (self.checkindexCurr == len(self.wrong)-1):
+                self.findnextbtn.Disable()
+
         except IndexError:
             #self.findnextbtn.Disable()
             wx.MessageBox("No more words.")
 
     def Previous(self, e):
         try:
+            # for unhighlighting previous texts
             target1 = self.originaltext.GetValue()
             start1 = self.inputtext.GetValue().find(target1)
             position1 = start1 + len(target1)
@@ -362,35 +367,32 @@ class Example(wx.Frame):
             self.checktext.Clear()
             self.checkindexCurr = self.checkindexCurr - 1
             self.previousbtn.Enable()
+
             self.originaltext.SetValue(self.wrong[self.checkindexCurr])
             self.currentword = self.wrong[self.checkindexCurr]
-            # print self.wrong[self.checkindexCurr]
-            # print self.checkindexCurr
+            
+            # for not sorted suggestions
             controller.suggestionslist = []
-            controller.sortedDictionary = dict()
             self.suggestions = []
-            self.suggestionsLev = []
             controller.displaySuggestions(self, self.currentword)
         
             for i in controller.suggestionslist:
                 self.suggestions.append(i)
             self.wordsuggest.Set(self.suggestions)
-            self.checktext.Set(self.suggestions)
-            self.checktext.SetLabel(self.suggestions[0])
-        
+            
+            # for Levenshtein-generated suggestions
+            controller.sortedDictionary = {}
+            self.suggestionsLev = []
             for k in controller.sortedDictionary.values():
                 for j in k:
                     if j in self.suggestionsLev:
-                        pass
+                        continue
                     else:
                         self.suggestionsLev.append(j)
             self.levSuggest.Set(self.suggestionsLev)
+            self.checktext.Set(self.suggestionsLev)
 
-            self.Refresh()
-            if (self.checkindexCurr == 0):
-                    self.previousbtn.Disable()
-
-
+            # for highlighting texts
             target = self.originaltext.GetValue()
             count = 0
             for i in range(self.inputtext.GetNumberOfLines()):
@@ -402,6 +404,10 @@ class Example(wx.Frame):
                         self.inputtext.Bind(wx.EVT_SET_FOCUS, self.OnHighlight(start, position))
                         start = 0
                         count = 1
+
+            self.Refresh()
+            if (self.checkindexCurr == 0):
+                    self.previousbtn.Disable()
 
         except IndexError:
             wx.MessageBox("There's no previous word")
@@ -424,6 +430,12 @@ class Example(wx.Frame):
 
 
     def OnSpellCheck(self, e):
+        # for unhighlighting texts
+        target1 = self.originaltext.GetValue()
+        start1 = self.inputtext.GetValue().find(target1)
+        position1 = start1 + len(target1)
+        self.inputtext.Bind(wx.EVT_SET_FOCUS, self.UnHighlight(start1, position1))
+
         self.value = self.inputtext.GetValue()
         words = self.value.split()
         List = []
@@ -440,25 +452,30 @@ class Example(wx.Frame):
         else:
             controller.spellingCheck(self, List)
             controller.suggestionslist = []
-            controller.sortedDictionary = dict()
+            controller.sortedDictionary = {}
             self.suggestions = []
             self.suggestionsLev = []
+
+            # for not sorted suggestions
             controller.displaySuggestions(self, self.currentword)
             for i in controller.suggestionslist:
                 self.suggestions.append(i)
             self.wordsuggest.Set(self.suggestions)
-            self.checktext.Set(self.suggestions)
-            self.checktext.SetLabel("Hello")
+            
+            # appending misspelled words
             misspelled = []
+            
             for i in self.wrong:
                 misspelled.append(controller.ForceToUnicode(i))
             self.misspellings.SetValue(json.dumps(misspelled))
 
+            # for levenshtein-generated suggestions
             for k in controller.sortedDictionary.values():
                 for j in k:
                     self.suggestionsLev.append(j)
             self.levSuggest.Set(self.suggestionsLev)
-        
+            self.checktext.Set(self.suggestionsLev)
+            
             self.Refresh()
         
         self.checktext.Enable()
@@ -472,6 +489,7 @@ class Example(wx.Frame):
         if (self.checkindexCurr == 0):
             self.previousbtn.Disable()
 
+        # for highlighting texts
         target = self.originaltext.GetValue()
 
         for i in range(self.inputtext.GetNumberOfLines()):
@@ -481,44 +499,6 @@ class Example(wx.Frame):
                 position = start + len(target)
                 self.inputtext.Bind(wx.EVT_SET_FOCUS, self.OnHighlight(start, position))
                 start = 0
-
-        # self.value = str(self.inputtext.GetValue())
-        # self.value2 = self.value.split()
-        # words = self.value2
-        # print (words) # list and words?
-        # List = []
-        # for i in words:
-        #     #returns the position of the manually selected word
-        #     #para unta sa pag-highlight
-        #     #print (self.inputtext.GetSelection())
-        #     if i in List:
-        #         continue
-        #     else:
-        #         List.append(i)
-        # print (List)
-
-        # count = 0
-        # for i in List: #for phoenics and lev.
-        #     count = 0
-        #     for j in i:
-        #         count = count + 1
-        #     print count
-        # self.word.SetLabel(self.inputtext)
-
-        # self.notfoundmsg.Hide()
-
-
-    # def OnFind(self, e):
-    #     target = self.originaltext.GetValue()
-    #     print ("target self.originaltext:", target)
-
-    #     for i in range(self.inputtext.GetNumberOfLines()):
-    #         line = self.inputtext.GetLineText(i)
-    #         if target in line:
-    #             start = self.inputtext.GetValue().find(target)
-    #             position = start + len(target)
-    #             self.inputtext.Bind(wx.EVT_SET_FOCUS, self.OnHighlight(start, position))
-    #             start = 0
 
     def OnHighlight(self, start, position):
         self.inputtext.SetStyle(start, position, wx.TextAttr("black", "turquoise"))

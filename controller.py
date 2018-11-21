@@ -9,7 +9,7 @@ from sqlalchemy import func
 # encoding: utf-8
 
 suggestionslist =[]
-sortedDictionary = dict()
+sortedDictionary = {}
 
 def connectToDatabase():
     """
@@ -32,7 +32,7 @@ def spellingCheck(self, List):
     for i in List:
         converted = ForceToUnicode(i)
         result = re.sub(r"[^A-Za-z -@#$%^&*_=+]", "", converted)
-        data = session.query(inputWords).filter(func.lower(inputWords.word) == result).first()
+        data = session.query(inputWords).filter(func.lower(inputWords.word) == func.lower(result)).first()
         if data is None:
             self.wrong.append(result)
         else:
@@ -46,7 +46,8 @@ def spellingCheck(self, List):
         self.checkindexCurr = 0
         self.currentword = self.wrong[self.checkindexCurr]
         self.originaltext.SetValue(self.currentword)
-        self.check.Bind(wx.EVT_FIND, self.OnHighlight)  # HIGHLIGHTJUSEYO
+        self.check.Bind(wx.EVT_FIND, self.OnHighlight)
+
         # displaySuggestions(self, self.currentword)
     # primary, secondary = x.process(self.currentword)
     # suggestions = session.query(Words).filter(Words.code == primary)
@@ -66,33 +67,33 @@ def addCommon(self, List):
         priCode, secCode = x.process(result)
         if priCode == secCode:
             data = session.query(Common).filter(Common.code == priCode).first()
-            dictdata = session.query(Words).filter(Words.code == priCode).first()
+            # dictdata = session.query(Words).filter(Words.code == priCode).first()
             if data is None:
-                commmondict = Common(code=priCode, words=[result])
+                commondict = Common(code=priCode, words=[result])
                 session.add(commondict)
 
-                session.delete(dictdata)
+                # session.delete(dictdata)
                 session.commit()
             else:
                 print ("Common Misspelled Word Already Added.")
         else: 
             data1 = session.query(Common).filter(Common.code == priCode).first()
-            dictdata1 = session.query(Words).filter(Words.code == priCode).first()
+            # dictdata1 = session.query(Words).filter(Words.code == priCode).first()
 
             data2 = session.query(Common).filter(Common.code == secCode).first()
-            dictdata2 = session.query(Words).filter(Words.code == secCode).first()
+            # dictdata2 = session.query(Words).filter(Words.code == secCode).first()
 
             if data1 is None:
                 commondict1 = Common(code=priCode, words=[result])
                 session.add(commondict1)
 
-                session.delete(dictdata1)
+                # session.delete(dictdata1)
                 session.commit()
             elif data2 is None:
                 commondict2 = Common(code=secCode, words=[result])
                 session.add(commondict2)
 
-                session.delete(dictdata2)
+                # session.delete(dictdata2)
                 session.commit()
             else:
                 print ("Common Misspelled Word Already Added.")

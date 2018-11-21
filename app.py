@@ -7,18 +7,15 @@ import datetime
 import json
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-# -*- encoding: utf-8 -*-
-# encoding: utf-8
 from model import *
 import controller
 import rules
 
-engine = create_engine('postgresql://postgres:jojo123@localhost:5432/postgres')
+engine = create_engine('postgresql://postgres:mvjunetwo@localhost:5432/spell')
 checkindexNew = 0
 
 Session = sessionmaker(bind=engine)
 session = Session()
-
 
 class Example(wx.Frame):
     def __init__(self, *args, **kwargs):
@@ -269,18 +266,35 @@ class Example(wx.Frame):
         self.checktext.SetLabel(wrong[checkindexNew])
 
     def Change(self, e):
-        self.selected = self.checktext.GetStringSelection()
+        target1 = self.checktext.GetValue()
+        start1 = self.inputtext.GetValue().find(target1)
+        position1 = start1 + len(target1)
+        self.inputtext.Bind(wx.EVT_SET_FOCUS, self.UnHighlight(start1, position1))
+
+        self.selected = self.checktext.GetValue()
         if self.selected == "":
             wx.MessageBox("We can't change something into nothing")
-        else:
-            self.inputtext.SetValue(self.inputtext.GetValue().replace(self.currentword, self.selected))
+        else:   
+            # target = self.originaltext.GetValue()
+            # for i in range(self.inputtext.GetValue()):
+            #         line = self.inputtext.GetLineText(i)
+            #         if target in line:
+            #             self.inputtext.GetValue().replace(target, self.selected)
 
             try:
+                self.List[self.curwordindex] = self.selected
+                print self.List
+                self.inputtext.SetValue(' '.join(self.List))
+
+
                 self.checktext.Clear()
                 self.checkindexCurr = self.wrong.index(self.currentword)
-                self.wrong.remove(self.currentword)  # self.wrong.pop(self.checkindexCurr)
+                self.wrong.pop(self.checkindexCurr)
+
                 self.originaltext.SetValue(self.wrong[self.checkindexCurr]) #ma change ang original word sa nxt wrong words
                 self.currentword = self.wrong[self.checkindexCurr]
+                self.curwordindex = self.List.index(self.currentword)
+
                 # print (self.currentword)
                 # print (self.checkindexCurr)
                 # print (self.wrong)
@@ -293,6 +307,14 @@ class Example(wx.Frame):
                 self.levSuggest.Set(self.suggestionsLev)
                 self.checktext.Set(self.suggestions)
                 self.checktext.SetLabel(self.suggestions[0])
+
+                # misspelled = []
+                # for i in self.wrong:
+                #     if i in misspelled:
+                #         pass
+                #     else:
+                #         misspelled.append(controller.ForceToUnicode(i))
+                # self.misspellings.SetValue(json.dumps(misspelled))
 
                 self.Refresh()
                 #       dapat pa ba ma clear ang selected after ma change?
@@ -314,9 +336,12 @@ class Example(wx.Frame):
             # print self.checkindexCurr
             self.originaltext.SetValue(self.wrong[self.checkindexCurr])
             self.currentword = self.wrong[self.checkindexCurr]
+            self.curwordindex = self.List.index(self.currentword)
             controller.suggestionslist = []
             controller.sortedDictionary = dict()
             self.suggestions = []
+            controller.displaySuggestions(self, self.currentword)
+
 
             for i in controller.suggestionslist:
                 self.suggestions.append(i)
@@ -424,20 +449,17 @@ class Example(wx.Frame):
 
     def OnSpellCheck(self, e):
         self.value = self.inputtext.GetValue()
-        words = self.value.split()
-        List = []
-        for i in words:
+        self.words = self.value.split()
+        self.List = []
+        for i in self.words:
             result = controller.ForceToUnicode(i)
-            if result in List:
-                continue
-            else:
-                List.append(i)
-        print List
+            self.List.append(result)
+        print self.List
 
-        if not words:
+        if not self.words:
             wx.MessageBox("Please enter something for us to check your work!!")
         else:
-            controller.spellingCheck(self, List)
+            controller.spellingCheck(self, self.List)
             controller.suggestionslist = []
             controller.sortedDictionary = dict()
             self.suggestions = []
@@ -450,7 +472,10 @@ class Example(wx.Frame):
             self.checktext.SetLabel("Hello")
             misspelled = []
             for i in self.wrong:
-                misspelled.append(controller.ForceToUnicode(i))
+                if i in misspelled:
+                    pass
+                else:
+                    misspelled.append(controller.ForceToUnicode(i))
             self.misspellings.SetValue(json.dumps(misspelled))
 
             for k in controller.sortedDictionary.values():

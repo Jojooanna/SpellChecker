@@ -33,18 +33,19 @@ def spellingCheck(self, List):
         converted = ForceToUnicode(i)
         result = re.sub(r"[^A-Za-z !?@#$%^&*_=+]", "", converted)
         data = session.query(inputWords).filter(func.lower(inputWords.word) == result).first()
-        if data is None:
+        if data is None: 
             self.wrong.append(result)
         else:
             print ("spellingCheck results:", result)  # kung wala ang words e append sya sa wrong na list
     # print wrong
     print ("Misspelled words:", self.wrong)
-    addCommon(self, self.wrong) 
+    # addCommon(self, self.wrong) 
     if (self.wrong == []):
         wx.MessageBox("YEY NO MORE WRONG WORDS")
     else:
         self.checkindexCurr = 0
         self.currentword = self.wrong[self.checkindexCurr]
+        self.curwordindex = 0 
         self.originaltext.SetValue(self.currentword)
         self.check.Bind(wx.EVT_FIND, self.OnHighlight)  # HIGHLIGHTJUSEYO
         # displaySuggestions(self, self.currentword)

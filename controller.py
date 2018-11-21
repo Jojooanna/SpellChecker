@@ -32,7 +32,6 @@ def spellingCheck(self, List):
     for i in self.List:
         converted = ForceToUnicode(i)
         result = re.sub(r'[^A-Z a-z -]', "", converted)
-        # result = re.sub(r"[^A-Za-z -@#$%^&*_=+]", "", converted)
         data = session.query(inputWords).filter(func.lower(inputWords.word) == func.lower(result)).first()
         if data is None:
             self.wrong.append(result)

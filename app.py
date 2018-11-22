@@ -10,8 +10,10 @@ from sqlalchemy.orm import sessionmaker
 from model import *
 import controller
 import rules
+import timeit
 
-engine = create_engine('postgresql://postgres:mvjunetwo@localhost:5432/spell')
+
+engine = create_engine('postgresql://postgres:mvj unetwo@localhost:5432/spell')
 checkindexNew = 0
 
 Session = sessionmaker(bind=engine)
@@ -485,9 +487,14 @@ class Example(wx.Frame):
             self.suggestionsLev = []
 
             # for not sorted suggestions
+            start = timeit.default_timer()
             controller.displaySuggestions(self, self.currentword)
             for i in controller.suggestionslist:
                 self.suggestions.append(i)
+
+            stop = timeit.default_timer()
+            print('Time: ', stop - start)  
+
             self.wordsuggest.Set(self.suggestions)
             
             # appending misspelled words
@@ -500,13 +507,14 @@ class Example(wx.Frame):
                     misspelled.append(controller.ForceToUnicode(i))
             self.misspellings.SetValue(json.dumps(misspelled))
 
+
             # for levenshtein-generated suggestions
             for k in controller.sortedDictionary.values():
                 for j in k:
                     self.suggestionsLev.append(j)
             self.levSuggest.Set(self.suggestionsLev)
             self.checktext.Set(self.suggestionsLev)
-            
+
             self.Refresh()
         
         self.checktext.Enable()

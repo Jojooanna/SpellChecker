@@ -431,15 +431,15 @@ x = meta()
 # ***********************************************************
 # Dapat naa paniy condition
 
-# path = 'dictionary.txt'
-# with io.open(path) as fp:
-#   line = fp.read().splitlines()
-#   for i in line:
+path = 'dictionary.txt'
+with io.open(path) as fp:
+  line = fp.read().splitlines()
+  for i in line:
 # for i in dictionary:
 #     print i
 
 
-def OnConvert(i):
+# def OnConvert(i):
     primary, secondary = x.process(i)
 
     if primary == secondary:

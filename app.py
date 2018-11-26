@@ -265,6 +265,7 @@ class Example(wx.Frame):
 
     def Change(self, e):
         target1 = self.checktext.GetValue()
+        result1 = re.sub(r'[^A-Z a-z -\']', "", target1)
         start1 = self.inputtext.GetValue().find(target1)
         position1 = start1 + len(target1)
         self.inputtext.Bind(wx.EVT_SET_FOCUS, self.UnHighlight(start1, position1))
@@ -315,7 +316,7 @@ class Example(wx.Frame):
                 # self.misspellings.SetValue(json.dumps(misspelled))
 
                 self.Refresh()
-                #       dapat pa ba ma clear ang selected after ma change?
+                
             except IndexError:
                 wx.MessageBox("No more wrong words")
                 # eclear pa dapat ang display suggestions
@@ -324,8 +325,9 @@ class Example(wx.Frame):
         try:
             # remove highlight from previous words
             target1 = self.originaltext.GetValue()
-            start1 = self.inputtext.GetValue().find(target1)
-            position1 = start1 + len(target1)
+            result1 = re.sub(r'[^A-Z a-z -\']', "", target1)
+            start1 = self.inputtext.GetValue().find(result1)
+            position1 = start1 + len(result1)
             self.inputtext.Bind(wx.EVT_SET_FOCUS, self.UnHighlight(start1, position1))
 
             self.previousbtn.Enable()
@@ -360,13 +362,14 @@ class Example(wx.Frame):
 
             # for highlighting text
             target = self.originaltext.GetValue()
+            result = re.sub(r'[^A-Z a-z -\']', "", target)
             count = 0
             for i in range(self.inputtext.GetNumberOfLines()):
                 if count == 0:
                     line = self.inputtext.GetLineText(i)
                     if target in line:
-                        start = self.inputtext.GetValue().find(target)
-                        position = start + len(target)
+                        start = self.inputtext.GetValue().find(result)
+                        position = start + len(result)
                         self.inputtext.Bind(wx.EVT_SET_FOCUS, self.OnHighlight(start, position))
                         start = 0
                         count = 1
@@ -382,8 +385,9 @@ class Example(wx.Frame):
         try:
             # for unhighlighting previous texts
             target1 = self.originaltext.GetValue()
-            start1 = self.inputtext.GetValue().find(target1)
-            position1 = start1 + len(target1)
+            result1 = re.sub(r'[^A-Z a-z -\']', "", target1)
+            start1 = self.inputtext.GetValue().find(result1)
+            position1 = start1 + len(result1)
             self.inputtext.Bind(wx.EVT_SET_FOCUS, self.UnHighlight(start1, position1))
             
 
@@ -425,13 +429,14 @@ class Example(wx.Frame):
 
             # for highlighting texts
             target = self.originaltext.GetValue()
+            result = re.sub(r'[^A-Z a-z -\']', "", target)
             count = 0
             for i in range(self.inputtext.GetNumberOfLines()):
                 if count == 0:
                     line = self.inputtext.GetLineText(i)
-                    if target in line:
-                        start = self.inputtext.GetValue().find(target)
-                        position = start + len(target)
+                    if result in line:
+                        start = self.inputtext.GetValue().find(result)
+                        position = start + len(result)
                         self.inputtext.Bind(wx.EVT_SET_FOCUS, self.OnHighlight(start, position))
                         start = 0
                         count = 1
@@ -463,15 +468,17 @@ class Example(wx.Frame):
     def OnSpellCheck(self, e):
         # for unhighlighting texts
         target1 = self.originaltext.GetValue()
-        start1 = self.inputtext.GetValue().find(target1)
-        position1 = start1 + len(target1)
+        result1 = re.sub(r'[^A-Z a-z -\']', "", target1)
+        start1 = self.inputtext.GetValue().find(result1)
+        position1 = start1 + len(result1)
         self.inputtext.Bind(wx.EVT_SET_FOCUS, self.UnHighlight(start1, position1))
 
         self.value = self.inputtext.GetValue()
         self.words = self.value.split()
         self.List = []
         for i in self.words:
-            result = controller.ForceToUnicode(i)
+            converted = controller.ForceToUnicode(i)
+            result = re.sub(r'[^A-Z a-z -]', "", converted)
             self.List.append(result)
         print self.List
 
@@ -522,12 +529,12 @@ class Example(wx.Frame):
 
         # for highlighting texts
         target = self.originaltext.GetValue()
-
+        result = re.sub(r'[^A-Z a-z -\']', "", target)
         for i in range(self.inputtext.GetNumberOfLines()):
             line = self.inputtext.GetLineText(i)
-            if target in line:
-                start = self.inputtext.GetValue().find(target)
-                position = start + len(target)
+            if result in line:
+                start = self.inputtext.GetValue().find(result)
+                position = start + len(result)
                 self.inputtext.Bind(wx.EVT_SET_FOCUS, self.OnHighlight(start, position))
                 start = 0
 

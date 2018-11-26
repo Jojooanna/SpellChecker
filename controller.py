@@ -49,55 +49,56 @@ def spellingCheck(self, List):
         self.originaltext.SetValue(self.currentword)
         self.check.Bind(wx.EVT_FIND, self.OnHighlight)
 
-        # displaySuggestions(self, self.currentword)
-    # primary, secondary = x.process(self.currentword)
-    # suggestions = session.query(Words).filter(Words.code == primary)
-    # words = []
-    #
-    # for x.words in suggestions:
-    #     words.append(x.words)
-    #
-    # print primary, secondary
-    # print self.words
-
-
 def addCommon(self, List):
     for i in List:
         converted = ForceToUnicode(i)
         result = re.sub(r'[^A-Z a-z -]', "", converted)
-        priCode, secCode = x.process(result)
-        if priCode == secCode:
-            data = session.query(Common).filter(Common.code == priCode).first()
-            # dictdata = session.query(Words).filter(Words.code == priCode).first()
+        primary, secondary = x.process(result)
+
+        if primary == secondary:
+            # print("{}: {}".format(primary, i))
+            data = session.query(Common).filter(Common.code == primary).first()
             if data is None:
-                commondict = Common(code=priCode, words=[result])
-                session.add(commondict)
-
-                # session.delete(dictdata)
+                dict = Common(code=primary, words=[i])
+                session.add(dict)
                 session.commit()
             else:
-                print ("Common Misspelled Word Already Added.")
-        else: 
-            data1 = session.query(Common).filter(Common.code == priCode).first()
-            # dictdata1 = session.query(Words).filter(Words.code == priCode).first()
-
-            data2 = session.query(Common).filter(Common.code == secCode).first()
-            # dictdata2 = session.query(Words).filter(Words.code == secCode).first()
-
-            if data1 is None:
-                commondict1 = Common(code=priCode, words=[result])
-                session.add(commondict1)
-
-                # session.delete(dictdata1)
-                session.commit()
-            elif data2 is None:
-                commondict2 = Common(code=secCode, words=[result])
-                session.add(commondict2)
-
-                # session.delete(dictdata2)
+                if i in data.words:
+                    print ("Common Misspelled Word Already Added.")
+                else:
+                    data.words = list(data.words)
+                    data.words.append(i)
+                    session.merge(data)
+                    session.commit()
+        else:
+            dataPri = session.query(Common).filter(Common.code == primary).first()
+            if dataPri is None:
+                dict = Common(code=primary, words=[i])
+                session.add(dict)
                 session.commit()
             else:
-                print ("Common Misspelled Word Already Added.")
+                if i in dataPri.words:
+                    print ("Common Misspelled Word Already Added.")
+                else:
+                    dataPri.words = list(dataPri.words)
+                    dataPri.words.append(i)
+                    session.merge(dataPri)
+                    session.commit()
+
+            dataSec = session.query(Common).filter(Common.code == secondary).first()
+            if dataSec is None:
+                dict = Common(code=secondary, words=[i])
+                session.add(dict)
+                session.commit()
+            else:
+                if i in dataSec.words:
+                    print ("Common Misspelled Word Already Added.")
+                else:
+                    dataSec.words = list(dataSec.words)
+                    dataSec.words.append(i)
+                    session.merge(dataSec)
+                    session.commit()
+
 
 def displaySuggestions(self, input):
     priCode, secCode = x.process(input)

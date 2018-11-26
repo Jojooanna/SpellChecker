@@ -1,0 +1,18 @@
+\select@language {english}
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {2.1}{\ignorespaces Simplification of Phonetically Equivalent Syllables}}{21}
+\contentsline {figure}{\numberline {2.2}{\ignorespaces Words Matching Results for 166 Mispelled Forms of 116 Words}}{22}
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {3.1}{\ignorespaces Metaphone}}{29}
+\contentsline {figure}{\numberline {3.2}{\ignorespaces Minimum Edit Distance}}{30}
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {4.1}{\ignorespaces System Architecture}}{33}
+\contentsline {figure}{\numberline {4.2}{\ignorespaces Process Flowchart of Dictionary Preprocessing}}{34}
+\contentsline {figure}{\numberline {4.3}{\ignorespaces Process Flowchart of Misspelled Word Preprocessing}}{38}
+\contentsline {figure}{\numberline {4.4}{\ignorespaces Dictionary Layout}}{39}
+\contentsline {figure}{\numberline {4.5}{\ignorespaces The Edit Distance Table}}{41}
+\contentsline {figure}{\numberline {4.6}{\ignorespaces Relational Diagram}}{45}
+\contentsline {figure}{\numberline {4.7}{\ignorespaces ERD}}{45}
+\contentsline {figure}{\numberline {4.8}{\ignorespaces Class Diagram}}{46}
+\addvspace {10\p@ }

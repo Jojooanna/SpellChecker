@@ -1,0 +1,743 @@
+\begin{thebibliography}{}
+
+\bibitem [\protect \citeauthoryear {%
+Atkinson%
+}{%
+Atkinson%
+}{%
+{\protect \APACyear {{\protect \bibnodate {}}}}%
+}]{%
+atkinson2004}
+\APACinsertmetastar {%
+atkinson2004}%
+\begin{APACrefauthors}%
+Atkinson, K.%
+\end{APACrefauthors}%
+\unskip\
+\newblock
+\APACrefYearMonthDay{{\protect \bibnodate {}}}{}{}.
+\newblock
+\APACrefbtitle {How Aspell Works.} {How aspell works.}
+\newblock
+\APAChowpublished {\url{https://www.aspell.net}}.
+\PrintBackRefs{\CurrentBib}
+
+\bibitem [\protect \citeauthoryear {%
+Atkinson%
+}{%
+Atkinson%
+}{%
+{\protect \APACyear {2016}}%
+}]{%
+atkinson2016}
+\APACinsertmetastar {%
+atkinson2016}%
+\begin{APACrefauthors}%
+Atkinson, K.%
+\end{APACrefauthors}%
+\unskip\
+\newblock
+\APACrefYearMonthDay{2016}{}{}.
+\newblock
+\APACrefbtitle {GNU Aspell.} {Gnu aspell.}
+\newblock
+\APAChowpublished {\url{https://www.aspell.net}}.
+\PrintBackRefs{\CurrentBib}
+
+\bibitem [\protect \citeauthoryear {%
+Blank%
+}{%
+Blank%
+}{%
+{\protect \APACyear {2012}}%
+}]{%
+blank2012spelling}
+\APACinsertmetastar {%
+blank2012spelling}%
+\begin{APACrefauthors}%
+Blank, D.%
+\end{APACrefauthors}%
+\unskip\
+\newblock
+\APACrefYearMonthDay{2012}{}{}.
+\newblock
+{\BBOQ}\APACrefatitle {Spelling Checking Algorithms} {Spelling checking
+  algorithms}.{\BBCQ}
+\newblock
+
+\PrintBackRefs{\CurrentBib}
+
+\bibitem [\protect \citeauthoryear {%
+Boyer%
+\ \BBA {} Moore%
+}{%
+Boyer%
+\ \BBA {} Moore%
+}{%
+{\protect \APACyear {1977}}%
+}]{%
+boyer1977fast}
+\APACinsertmetastar {%
+boyer1977fast}%
+\begin{APACrefauthors}%
+Boyer, R\BPBI S.%
+\BCBT {}\ \BBA {} Moore, J\BPBI S.%
+\end{APACrefauthors}%
+\unskip\
+\newblock
+\APACrefYearMonthDay{1977}{}{}.
+\newblock
+{\BBOQ}\APACrefatitle {A fast string searching algorithm} {A fast string
+  searching algorithm}.{\BBCQ}
+\newblock
+\APACjournalVolNumPages{Communications of the ACM}{20}{10}{762--772}.
+\PrintBackRefs{\CurrentBib}
+
+\bibitem [\protect \citeauthoryear {%
+Cheng%
+, Alberto%
+, Chan%
+\BCBL {}\ \BBA {} Querol%
+}{%
+Cheng%
+\ \protect \BOthers {.}}{%
+{\protect \APACyear {2007}}%
+}]{%
+cheng2007spellchef}
+\APACinsertmetastar {%
+cheng2007spellchef}%
+\begin{APACrefauthors}%
+Cheng, C.%
+, Alberto, C\BPBI P.%
+, Chan, I\BPBI A.%
+\BCBL {}\ \BBA {} Querol, V\BPBI J.%
+\end{APACrefauthors}%
+\unskip\
+\newblock
+\APACrefYearMonthDay{2007}{}{}.
+\newblock
+{\BBOQ}\APACrefatitle {SpellCheF: Spelling Checker and Corrector for Filipino}
+  {Spellchef: Spelling checker and corrector for filipino}.{\BBCQ}
+\newblock
+\APACjournalVolNumPages{JOURNAL OF RESEARCH IN SCIENCE, COMPUTING, AND
+  ENGINEERING}{4}{3}{}.
+\PrintBackRefs{\CurrentBib}
+
+\bibitem [\protect \citeauthoryear {%
+Chowdhury%
+}{%
+Chowdhury%
+}{%
+{\protect \APACyear {2003}}%
+}]{%
+chowdhury2003natural}
+\APACinsertmetastar {%
+chowdhury2003natural}%
+\begin{APACrefauthors}%
+Chowdhury, G\BPBI G.%
+\end{APACrefauthors}%
+\unskip\
+\newblock
+\APACrefYearMonthDay{2003}{}{}.
+\newblock
+{\BBOQ}\APACrefatitle {Natural language processing} {Natural language
+  processing}.{\BBCQ}
+\newblock
+\APACjournalVolNumPages{Annual review of information science and
+  technology}{37}{1}{51--89}.
+\PrintBackRefs{\CurrentBib}
+
+\bibitem [\protect \citeauthoryear {%
+Christian%
+}{%
+Christian%
+}{%
+{\protect \APACyear {1998}}%
+}]{%
+christian1998soundex}
+\APACinsertmetastar {%
+christian1998soundex}%
+\begin{APACrefauthors}%
+Christian, P.%
+\end{APACrefauthors}%
+\unskip\
+\newblock
+\APACrefYearMonthDay{1998}{}{}.
+\newblock
+{\BBOQ}\APACrefatitle {Soundex-can it be improved?} {Soundex-can it be
+  improved?}{\BBCQ}
+\newblock
+\APACjournalVolNumPages{Computers in Genealogy}{6}{}{215--221}.
+\PrintBackRefs{\CurrentBib}
+
+\bibitem [\protect \citeauthoryear {%
+Frost%
+}{%
+Frost%
+}{%
+{\protect \APACyear {2003}}%
+}]{%
+frost2003monadic}
+\APACinsertmetastar {%
+frost2003monadic}%
+\begin{APACrefauthors}%
+Frost, R.%
+\end{APACrefauthors}%
+\unskip\
+\newblock
+\APACrefYearMonthDay{2003}{}{}.
+\newblock
+{\BBOQ}\APACrefatitle {Monadic memoization towards correctness-preserving
+  reduction of search} {Monadic memoization towards correctness-preserving
+  reduction of search}.{\BBCQ}
+\newblock
+\BIn{} \APACrefbtitle {Conference of the Canadian Society for Computational
+  Studies of Intelligence} {Conference of the canadian society for
+  computational studies of intelligence}\ (\BPGS\ 66--80).
+\PrintBackRefs{\CurrentBib}
+
+\bibitem [\protect \citeauthoryear {%
+Gredler%
+}{%
+Gredler%
+}{%
+{\protect \APACyear {2002}}%
+}]{%
+gredler2002snow}
+\APACinsertmetastar {%
+gredler2002snow}%
+\begin{APACrefauthors}%
+Gredler, G\BPBI R.%
+\end{APACrefauthors}%
+\unskip\
+\newblock
+\APACrefYearMonthDay{2002}{}{}.
+\newblock
+{\BBOQ}\APACrefatitle {Preventing reading difficulties in young children.}
+  {Preventing reading difficulties in young children.}{\BBCQ}
+\newblock
+\APACjournalVolNumPages{Psychology in the Schools}{39}{3}{343--344}.
+\PrintBackRefs{\CurrentBib}
+
+\bibitem [\protect \citeauthoryear {%
+Gucasan%
+}{%
+Gucasan%
+}{%
+{\protect \APACyear {2017}}%
+}]{%
+Filipino}
+\APACinsertmetastar {%
+Filipino}%
+\begin{APACrefauthors}%
+Gucasan, N.%
+\end{APACrefauthors}%
+\unskip\
+\newblock
+\APACrefYearMonthDay{2017}{}{}.
+\newblock
+\APACrefbtitle {Filipino. Tagalog. Pilipino.} {Filipino. tagalog. pilipino.}
+\newblock
+\APAChowpublished
+  {\url{https://www.tagaloglang.com/filipino-tagalog-pilipino/}}.
+\PrintBackRefs{\CurrentBib}
+
+\bibitem [\protect \citeauthoryear {%
+Hicham%
+}{%
+Hicham%
+}{%
+{\protect \APACyear {2012}}%
+}]{%
+hicham2012introduction}
+\APACinsertmetastar {%
+hicham2012introduction}%
+\begin{APACrefauthors}%
+Hicham, G.%
+\end{APACrefauthors}%
+\unskip\
+\newblock
+\APACrefYearMonthDay{2012}{}{}.
+\newblock
+{\BBOQ}\APACrefatitle {Introduction of the weight edition errors in the
+  Levenshtein distance} {Introduction of the weight edition errors in the
+  levenshtein distance}.{\BBCQ}
+\newblock
+\APACjournalVolNumPages{arXiv preprint arXiv:1208.4503}{}{}{}.
+\PrintBackRefs{\CurrentBib}
+
+\bibitem [\protect \citeauthoryear {%
+\APACcitebtitle {Ispell}}{%
+\APACcitebtitle {Ispell}}{%
+{\protect \APACyear {2006}}%
+}]{%
+ispell}
+\APACinsertmetastar {%
+ispell}%
+\APACrefbtitle {Ispell.} {Ispell.}
+\newblock
+\APACrefYearMonthDay{2006}{}{}.
+\newblock
+\APAChowpublished {\url{https://www.gnu.org/}}.
+\PrintBackRefs{\CurrentBib}
+
+\bibitem [\protect \citeauthoryear {%
+Johnson%
+}{%
+Johnson%
+}{%
+{\protect \APACyear {1995}}%
+}]{%
+johnson1995memoizationj}
+\APACinsertmetastar {%
+johnson1995memoizationj}%
+\begin{APACrefauthors}%
+Johnson, M.%
+\end{APACrefauthors}%
+\unskip\
+\newblock
+\APACrefYearMonthDay{1995}{}{}.
+\newblock
+{\BBOQ}\APACrefatitle {Memoization in top-down parsing} {Memoization in
+  top-down parsing}.{\BBCQ}
+\newblock
+\APACjournalVolNumPages{Computational Linguistics}{21}{3}{405--417}.
+\PrintBackRefs{\CurrentBib}
+
+\bibitem [\protect \citeauthoryear {%
+Johnson%
+\ \BBA {} D{\"o}rre%
+}{%
+Johnson%
+\ \BBA {} D{\"o}rre%
+}{%
+{\protect \APACyear {1995}}%
+}]{%
+johnson1995memoization}
+\APACinsertmetastar {%
+johnson1995memoization}%
+\begin{APACrefauthors}%
+Johnson, M.%
+\BCBT {}\ \BBA {} D{\"o}rre, J.%
+\end{APACrefauthors}%
+\unskip\
+\newblock
+\APACrefYearMonthDay{1995}{}{}.
+\newblock
+{\BBOQ}\APACrefatitle {Memoization of coroutined constraints} {Memoization of
+  coroutined constraints}.{\BBCQ}
+\newblock
+\BIn{} \APACrefbtitle {Proceedings of the 33rd annual meeting on Association
+  for Computational Linguistics} {Proceedings of the 33rd annual meeting on
+  association for computational linguistics}\ (\BPGS\ 100--107).
+\PrintBackRefs{\CurrentBib}
+
+\bibitem [\protect \citeauthoryear {%
+Knuth%
+, Morris%
+\BCBL {}\ \BBA {} Pratt%
+}{%
+Knuth%
+\ \protect \BOthers {.}}{%
+{\protect \APACyear {1977}}%
+}]{%
+knuth1977fast}
+\APACinsertmetastar {%
+knuth1977fast}%
+\begin{APACrefauthors}%
+Knuth, D\BPBI E.%
+, Morris, J\BPBI H., Jr%
+\BCBL {}\ \BBA {} Pratt, V\BPBI R.%
+\end{APACrefauthors}%
+\unskip\
+\newblock
+\APACrefYearMonthDay{1977}{}{}.
+\newblock
+{\BBOQ}\APACrefatitle {Fast pattern matching in strings} {Fast pattern matching
+  in strings}.{\BBCQ}
+\newblock
+\APACjournalVolNumPages{SIAM journal on computing}{6}{2}{323--350}.
+\PrintBackRefs{\CurrentBib}
+
+\bibitem [\protect \citeauthoryear {%
+Kukich%
+}{%
+Kukich%
+}{%
+{\protect \APACyear {1992}}%
+}]{%
+kukich1992techniques}
+\APACinsertmetastar {%
+kukich1992techniques}%
+\begin{APACrefauthors}%
+Kukich, K.%
+\end{APACrefauthors}%
+\unskip\
+\newblock
+\APACrefYearMonthDay{1992}{}{}.
+\newblock
+{\BBOQ}\APACrefatitle {Techniques for automatically correcting words in text}
+  {Techniques for automatically correcting words in text}.{\BBCQ}
+\newblock
+\APACjournalVolNumPages{Acm Computing Surveys (CSUR)}{24}{4}{377--439}.
+\PrintBackRefs{\CurrentBib}
+
+\bibitem [\protect \citeauthoryear {%
+Levenshtein%
+}{%
+Levenshtein%
+}{%
+{\protect \APACyear {1966}}%
+}]{%
+levenshtein1966binary}
+\APACinsertmetastar {%
+levenshtein1966binary}%
+\begin{APACrefauthors}%
+Levenshtein, V\BPBI I.%
+\end{APACrefauthors}%
+\unskip\
+\newblock
+\APACrefYearMonthDay{1966}{}{}.
+\newblock
+{\BBOQ}\APACrefatitle {Binary codes capable of correcting deletions,
+  insertions, and reversals} {Binary codes capable of correcting deletions,
+  insertions, and reversals}.{\BBCQ}
+\newblock
+\BIn{} \APACrefbtitle {Soviet physics doklady} {Soviet physics doklady}\
+  (\BVOL~10, \BPGS\ 707--710).
+\PrintBackRefs{\CurrentBib}
+
+\bibitem [\protect \citeauthoryear {%
+Liddy%
+}{%
+Liddy%
+}{%
+{\protect \APACyear {2001}}%
+}]{%
+liddy2001natural}
+\APACinsertmetastar {%
+liddy2001natural}%
+\begin{APACrefauthors}%
+Liddy, E\BPBI D.%
+\end{APACrefauthors}%
+\unskip\
+\newblock
+\APACrefYearMonthDay{2001}{}{}.
+\newblock
+{\BBOQ}\APACrefatitle {Natural language processing} {Natural language
+  processing}.{\BBCQ}
+\newblock
+
+\PrintBackRefs{\CurrentBib}
+
+\bibitem [\protect \citeauthoryear {%
+Moats%
+}{%
+Moats%
+}{%
+{\protect \APACyear {2005}}%
+}]{%
+moats2005spelling}
+\APACinsertmetastar {%
+moats2005spelling}%
+\begin{APACrefauthors}%
+Moats, L\BPBI C.%
+\end{APACrefauthors}%
+\unskip\
+\newblock
+\APACrefYearMonthDay{2005}{}{}.
+\newblock
+{\BBOQ}\APACrefatitle {How spelling supports reading} {How spelling supports
+  reading}.{\BBCQ}
+\newblock
+\APACjournalVolNumPages{American Educator}{6}{12--22}{42--43}.
+\PrintBackRefs{\CurrentBib}
+
+\bibitem [\protect \citeauthoryear {%
+Ndaba%
+}{%
+Ndaba%
+}{%
+{\protect \APACyear {{\protect \bibnodate {}}}}%
+}]{%
+ndabaafrispel}
+\APACinsertmetastar {%
+ndabaafrispel}%
+\begin{APACrefauthors}%
+Ndaba, B.%
+\end{APACrefauthors}%
+\unskip\
+\newblock
+\APACrefYearMonthDay{{\protect \bibnodate {}}}{}{}.
+\newblock
+{\BBOQ}\APACrefatitle {Afrispel: An isiZulu spellchecker} {Afrispel: An isizulu
+  spellchecker}.{\BBCQ}
+\newblock
+
+\PrintBackRefs{\CurrentBib}
+
+\bibitem [\protect \citeauthoryear {%
+Philips%
+}{%
+Philips%
+}{%
+{\protect \APACyear {2000}}%
+}]{%
+philips2000double}
+\APACinsertmetastar {%
+philips2000double}%
+\begin{APACrefauthors}%
+Philips, L.%
+\end{APACrefauthors}%
+\unskip\
+\newblock
+\APACrefYearMonthDay{2000}{}{}.
+\newblock
+{\BBOQ}\APACrefatitle {The double metaphone search algorithm} {The double
+  metaphone search algorithm}.{\BBCQ}
+\newblock
+\APACjournalVolNumPages{C/C++ users journal}{18}{6}{38--43}.
+\PrintBackRefs{\CurrentBib}
+
+\bibitem [\protect \citeauthoryear {%
+Sarveswaran%
+\ \BBA {} Mahesan%
+}{%
+Sarveswaran%
+\ \BBA {} Mahesan%
+}{%
+{\protect \APACyear {2015}}%
+}]{%
+sarveswaran2015hierarchical}
+\APACinsertmetastar {%
+sarveswaran2015hierarchical}%
+\begin{APACrefauthors}%
+Sarveswaran, K.%
+\BCBT {}\ \BBA {} Mahesan, S.%
+\end{APACrefauthors}%
+\unskip\
+\newblock
+\APACrefYearMonthDay{2015}{}{}.
+\newblock
+{\BBOQ}\APACrefatitle {Hierarchical Tag-set for Rule-based Processing of Tamil
+  Language} {Hierarchical tag-set for rule-based processing of tamil
+  language}.{\BBCQ}
+\newblock
+\APACjournalVolNumPages{International Journal of multidisciplinary
+  Studies}{1}{2}{}.
+\PrintBackRefs{\CurrentBib}
+
+\bibitem [\protect \citeauthoryear {%
+Sellers%
+}{%
+Sellers%
+}{%
+{\protect \APACyear {1980}}%
+}]{%
+sellers1980theory}
+\APACinsertmetastar {%
+sellers1980theory}%
+\begin{APACrefauthors}%
+Sellers, P\BPBI H.%
+\end{APACrefauthors}%
+\unskip\
+\newblock
+\APACrefYearMonthDay{1980}{}{}.
+\newblock
+{\BBOQ}\APACrefatitle {The theory and computation of evolutionary distances:
+  pattern recognition} {The theory and computation of evolutionary distances:
+  pattern recognition}.{\BBCQ}
+\newblock
+\APACjournalVolNumPages{Journal of algorithms}{1}{4}{359--373}.
+\PrintBackRefs{\CurrentBib}
+
+\bibitem [\protect \citeauthoryear {%
+Stanier%
+}{%
+Stanier%
+}{%
+{\protect \APACyear {1990}}%
+}]{%
+stanier1990accurate}
+\APACinsertmetastar {%
+stanier1990accurate}%
+\begin{APACrefauthors}%
+Stanier, A.%
+\end{APACrefauthors}%
+\unskip\
+\newblock
+\APACrefYearMonthDay{1990}{}{}.
+\newblock
+{\BBOQ}\APACrefatitle {How accurate is Soundex matching} {How accurate is
+  soundex matching}.{\BBCQ}
+\newblock
+\APACjournalVolNumPages{Computers in Genealogy}{3}{7}{286--288}.
+\PrintBackRefs{\CurrentBib}
+
+\bibitem [\protect \citeauthoryear {%
+Van~Huyssteen%
+, Eiselen%
+\BCBL {}\ \BBA {} Puttkammer%
+}{%
+Van~Huyssteen%
+\ \protect \BOthers {.}}{%
+{\protect \APACyear {2004}}%
+}]{%
+van2004re}
+\APACinsertmetastar {%
+van2004re}%
+\begin{APACrefauthors}%
+Van~Huyssteen, G\BPBI B.%
+, Eiselen, E.%
+\BCBL {}\ \BBA {} Puttkammer, M.%
+\end{APACrefauthors}%
+\unskip\
+\newblock
+\APACrefYearMonthDay{2004}{}{}.
+\newblock
+{\BBOQ}\APACrefatitle {Re-evaluating evaluation metrics for spelling checker
+  evaluations} {Re-evaluating evaluation metrics for spelling checker
+  evaluations}.{\BBCQ}
+\newblock
+\BIn{} \APACrefbtitle {Proceedings of First Workshop on International Proofing
+  Tools and Language Technologies} {Proceedings of first workshop on
+  international proofing tools and language technologies}\ (\BPGS\ 91--99).
+\PrintBackRefs{\CurrentBib}
+
+\bibitem [\protect \citeauthoryear {%
+Wagner%
+\ \BBA {} Fischer%
+}{%
+Wagner%
+\ \BBA {} Fischer%
+}{%
+{\protect \APACyear {1974}}%
+}]{%
+wagner1974string}
+\APACinsertmetastar {%
+wagner1974string}%
+\begin{APACrefauthors}%
+Wagner, R\BPBI A.%
+\BCBT {}\ \BBA {} Fischer, M\BPBI J.%
+\end{APACrefauthors}%
+\unskip\
+\newblock
+\APACrefYearMonthDay{1974}{}{}.
+\newblock
+{\BBOQ}\APACrefatitle {The string-to-string correction problem} {The
+  string-to-string correction problem}.{\BBCQ}
+\newblock
+\APACjournalVolNumPages{Journal of the ACM (JACM)}{21}{1}{168--173}.
+\PrintBackRefs{\CurrentBib}
+
+\bibitem [\protect \citeauthoryear {%
+Yacob%
+}{%
+Yacob%
+}{%
+{\protect \APACyear {2004}}%
+}]{%
+yacob2004application}
+\APACinsertmetastar {%
+yacob2004application}%
+\begin{APACrefauthors}%
+Yacob, D.%
+\end{APACrefauthors}%
+\unskip\
+\newblock
+\APACrefYearMonthDay{2004}{}{}.
+\newblock
+{\BBOQ}\APACrefatitle {Application of the double metaphone algorithm to amharic
+  orthography} {Application of the double metaphone algorithm to amharic
+  orthography}.{\BBCQ}
+\newblock
+\APACjournalVolNumPages{arXiv preprint cs/0408052}{}{}{}.
+\PrintBackRefs{\CurrentBib}
+
+\bibitem [\protect \citeauthoryear {%
+Zhao%
+\ \BBA {} Sahni%
+}{%
+Zhao%
+\ \BBA {} Sahni%
+}{%
+{\protect \APACyear {2017}}%
+}]{%
+zhao2017efficient}
+\APACinsertmetastar {%
+zhao2017efficient}%
+\begin{APACrefauthors}%
+Zhao, C.%
+\BCBT {}\ \BBA {} Sahni, S.%
+\end{APACrefauthors}%
+\unskip\
+\newblock
+\APACrefYearMonthDay{2017}{}{}.
+\newblock
+{\BBOQ}\APACrefatitle {Efficient computation of the Damerau-Levenshtein
+  distance between biological sequences} {Efficient computation of the
+  damerau-levenshtein distance between biological sequences}.{\BBCQ}
+\newblock
+\BIn{} \APACrefbtitle {Computational Advances in Bio and Medical Sciences
+  (ICCABS), 2017 IEEE 7th International Conference on} {Computational advances
+  in bio and medical sciences (iccabs), 2017 ieee 7th international conference
+  on}\ (\BPGS\ 1--1).
+\PrintBackRefs{\CurrentBib}
+
+\bibitem [\protect \citeauthoryear {%
+Zobel%
+\ \BBA {} Dart%
+}{%
+Zobel%
+\ \BBA {} Dart%
+}{%
+{\protect \APACyear {1995}}%
+}]{%
+zobel1995finding}
+\APACinsertmetastar {%
+zobel1995finding}%
+\begin{APACrefauthors}%
+Zobel, J.%
+\BCBT {}\ \BBA {} Dart, P.%
+\end{APACrefauthors}%
+\unskip\
+\newblock
+\APACrefYearMonthDay{1995}{}{}.
+\newblock
+{\BBOQ}\APACrefatitle {Finding approximate matches in large lexicons} {Finding
+  approximate matches in large lexicons}.{\BBCQ}
+\newblock
+\APACjournalVolNumPages{Software: Practice and Experience}{25}{3}{331--345}.
+\PrintBackRefs{\CurrentBib}
+
+\bibitem [\protect \citeauthoryear {%
+Zobel%
+\ \BBA {} Dart%
+}{%
+Zobel%
+\ \BBA {} Dart%
+}{%
+{\protect \APACyear {1996}}%
+}]{%
+zobel1996phonetic}
+\APACinsertmetastar {%
+zobel1996phonetic}%
+\begin{APACrefauthors}%
+Zobel, J.%
+\BCBT {}\ \BBA {} Dart, P.%
+\end{APACrefauthors}%
+\unskip\
+\newblock
+\APACrefYearMonthDay{1996}{}{}.
+\newblock
+{\BBOQ}\APACrefatitle {Phonetic string matching: Lessons from information
+  retrieval} {Phonetic string matching: Lessons from information
+  retrieval}.{\BBCQ}
+\newblock
+\BIn{} \APACrefbtitle {Proceedings of the 19th annual international ACM SIGIR
+  conference on Research and development in information retrieval} {Proceedings
+  of the 19th annual international acm sigir conference on research and
+  development in information retrieval}\ (\BPGS\ 166--172).
+\PrintBackRefs{\CurrentBib}
+
+\end{thebibliography}

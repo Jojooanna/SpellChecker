@@ -10,6 +10,7 @@ from sqlalchemy.orm import sessionmaker
 from model import *
 import controller
 import rules
+import timeit
 
 engine = create_engine('postgresql://postgres:mvjunetwo@localhost:5432/spell')
 checkindexNew = 0
@@ -467,6 +468,8 @@ class Example(wx.Frame):
 
     def OnSpellCheck(self, e):
         # for unhighlighting texts
+        start = timeit.default_timer()
+
         target1 = self.originaltext.GetValue()
         result1 = re.sub(r'[^A-Z a-z -\']', "", target1)
         start1 = self.inputtext.GetValue().find(result1)
@@ -491,11 +494,18 @@ class Example(wx.Frame):
             self.suggestions = []
             self.suggestionsLev = []
 
+            start = timeit.default_timer()
+
             # for not sorted suggestions
             controller.displaySuggestions(self, self.currentword)
             for i in controller.suggestionslist:
                 self.suggestions.append(i)
+            
+            stop = timeit.default_timer()
+            print('Time: ', stop - start) 
+
             self.wordsuggest.Set(self.suggestions)
+
             
             # appending misspelled words
             misspelled = []
@@ -507,13 +517,21 @@ class Example(wx.Frame):
                     misspelled.append(controller.ForceToUnicode(i))
             self.misspellings.SetValue(json.dumps(misspelled))
 
+            start = timeit.default_timer()
             # for levenshtein-generated suggestions
             for k in controller.sortedDictionary.values():
                 for j in k:
-                    self.suggestionsLev.append(j)
+                    if j in self.suggestionsLev:
+                        pass
+                    else:
+                        self.suggestionsLev.append(j)
+            
+            stop = timeit.default_timer()
+            print('Time: ', stop - start) 
+
             self.levSuggest.Set(self.suggestionsLev)
             self.checktext.Set(self.suggestionsLev)
-            
+
             self.Refresh()
         
         self.checktext.Enable()
@@ -537,6 +555,9 @@ class Example(wx.Frame):
                 position = start + len(result)
                 self.inputtext.Bind(wx.EVT_SET_FOCUS, self.OnHighlight(start, position))
                 start = 0
+
+        stop = timeit.default_timer()
+        print('Time: ', stop - start) 
 
     def OnHighlight(self, start, position):
         self.inputtext.SetStyle(start, position, wx.TextAttr("black", "turquoise"))

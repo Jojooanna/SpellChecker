@@ -467,10 +467,16 @@ class Example(wx.Frame):
             print('You entered: %s\n' % dlg.GetValue())
         dlg.Destroy()
 
+    overall_start=0
+    overall_stop=0
+    sugg_start=0
+    sugg_stop=0
+    levonly_start=0
+    levonly_stop=0
 
     def OnSpellCheck(self, e):
         # for unhighlighting texts
-        start = timeit.default_timer()
+        overall_start = timeit.default_timer()
 
         target1 = self.originaltext.GetValue()
         result1 = re.sub(r"[^A-Za-z /' -]", "", target1)
@@ -499,18 +505,15 @@ class Example(wx.Frame):
             self.suggestions = []
             self.suggestionsLev = []
 
-            start = timeit.default_timer()
 
             # for not sorted suggestions
             controller.displaySuggestions(self, self.currentword)
             for i in controller.suggestionslist:
                 self.suggestions.append(i)
-            
-            stop = timeit.default_timer()
-            print('Suggestions Runtime: ', stop - start) 
 
             self.wordsuggest.Set(self.suggestions)
 
+            sugg_start = timeit.default_timer()
             
             # appending misspelled words
             misspelled = []
@@ -522,8 +525,9 @@ class Example(wx.Frame):
                     misspelled.append(controller.ForceToUnicode(i))
             self.misspellings.SetValue(json.dumps(misspelled))
 
-            start = timeit.default_timer()
-            # for levenshtein-generated suggestions
+            levonly_start = timeit.default_timer()
+            # for levenshtein-generated suggestions with Metaphone
+            # dili ni plain Levenshtein
             for k in controller.sortedDictionary.values():
                 for j in k:
                     if j in self.suggestionsLev:
@@ -531,8 +535,8 @@ class Example(wx.Frame):
                     else:
                         self.suggestionsLev.append(j)
             
-            stop = timeit.default_timer()
-            print('Time: ', stop - start) 
+            sugg_stop = timeit.default_timer()
+            print('Producing Suggestions Metaphone&Lev Runtime: ', sugg_stop - sugg_start) 
 
             self.levSuggest.Set(self.suggestionsLev)
             self.checktext.Set(self.suggestionsLev)
@@ -561,8 +565,8 @@ class Example(wx.Frame):
                 self.inputtext.Bind(wx.EVT_SET_FOCUS, self.OnHighlight(start, position))
                 start = 0
 
-        stop = timeit.default_timer()
-        print('Time: ', stop - start) 
+        overall_stop = timeit.default_timer()
+        print('Overall Runtime: ', overall_stop - overall_start) 
 
     def OnHighlight(self, start, position):
         self.inputtext.SetStyle(start, position, wx.TextAttr("black", "turquoise"))

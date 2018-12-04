@@ -10,6 +10,8 @@ from sqlalchemy import func
 
 suggestionslist =[]
 sortedDictionary = {}
+inDict = 0
+notInDict = 0
 
 def connectToDatabase():
     """
@@ -40,9 +42,9 @@ def spellingCheck(self, List):
     # print wrong
     print ("Misspelled words:", self.wrong)
 
-
-    for i in self.wrong:
-        addCommon(self, i) 
+    # UNCOMMENT WHEN READY NA MAG TESTING
+    # for i in self.wrong:
+    #     addCommon(self, i) 
     
     if (self.wrong == []):
         wx.MessageBox("YEY NO MORE WRONG WORDS")
@@ -67,8 +69,10 @@ def addCommon(self, i):
             session.add(dict)
             session.commit()
             if dictdata is None:
+                notInDict += 1
                 print ("Misspelled Word doesn't exist.")
             else:
+                inDict += 1
                 session.delete(dictdata)
                 session.commit()
         else:
@@ -87,8 +91,10 @@ def addCommon(self, i):
             session.add(dict)
             session.commit()
             if dictdataPri is None:
+                notInDict += 1
                 print ("Misspelled Word doesn't exist.")
             else:
+                inDict += 1
                 session.delete(dictdataPri)
                 session.commit()
         else:
@@ -107,8 +113,10 @@ def addCommon(self, i):
             session.add(dict)
             session.commit()
             if dictdataSec is None:
+                notInDict += 1
                 print ("Misspelled Word doesn't exist.")
             else:
+                inDict += 1
                 session.delete(dictdataSec)
                 session.commit()
         else:
@@ -119,6 +127,9 @@ def addCommon(self, i):
                 dataSec.words.append(i)
                 session.merge(dataSec)
                 session.commit()
+
+    print ("Number of MW in dict: ", inDict) #Number of Correct Misspellings Detected
+    print ("Number of MW not in dict: ", notInDict) #Number of Correct Misspellings Not in Dictionary
 
 
 def displaySuggestions(self, input):
@@ -213,13 +224,11 @@ def levenshtein(frominput, fromdict):
     return distance
 
 def sortSuggestions(distanceinput, suggList):
-
     print ("suggList: ", suggList)
     if distanceinput in sortedDictionary:
         if suggList not in sortedDictionary.values():
             sortedDictionary[distanceinput].append(suggList)
     else:
         sortedDictionary[distanceinput] = [suggList]
-
 
 

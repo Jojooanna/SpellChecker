@@ -9,7 +9,7 @@ def connectToDatabase():
     """
     Connect to our SQLite database and return a Session object
     """
-    engine = create_engine("postgresql://postgres:jojo123@localhost:5432/postgres")
+    engine = create_engine("postgresql://postgres:jojo123@localhost:5432/spellcheck")
     Session = sessionmaker(bind=engine)
     session = Session()
     return session
@@ -424,29 +424,28 @@ class meta:
         return primary, secondary
 
 x = meta()
-# primary, secondary = x.process("nakakapagpabagabag")
-# print ("Primary: ", primary)
-# print ("Secondary: ", secondary)
 
-# ***********************************************************
-# Dapat naa paniy condition
 
 # path = 'dictionary.txt'
 # with io.open(path) as fp:
 #   line = fp.read().splitlines()
 #   for i in line:
+#     data1 = inputWords(word=i)
+#     session.add(data1)
+#     session.commit()
+        
 # for i in dictionary:
 #     print i
 
-
+# Adds words from 'Learn' method to Common DB
 def OnConvert(i):
     primary, secondary = x.process(i)
 
     if primary == secondary:
         # print("{}: {}".format(primary, i))
-        data = session.query(Words).filter(Words.code == primary).first()
+        data = session.query(Common).filter(Common.code == primary).first()
         if data is None:
-            dict = Words(code=primary, words=[i])
+            dict = Common(code=primary, words=[i])
             session.add(dict)
             session.commit()
         else:
@@ -458,9 +457,9 @@ def OnConvert(i):
                 session.merge(data)
                 session.commit()
     else:
-        dataPri = session.query(Words).filter(Words.code == primary).first()
+        dataPri = session.query(Common).filter(Common.code == primary).first()
         if dataPri is None:
-            dict = Words(code=primary, words=[i])
+            dict = Common(code=primary, words=[i])
             session.add(dict)
             session.commit()
         else:
@@ -472,9 +471,9 @@ def OnConvert(i):
                 session.merge(dataPri)
                 session.commit()
 
-        dataSec = session.query(Words).filter(Words.code == secondary).first()
+        dataSec = session.query(Common).filter(Common.code == secondary).first()
         if dataSec is None:
-            dict = Words(code=secondary, words=[i])
+            dict = Common(code=secondary, words=[i])
             session.add(dict)
             session.commit()
         else:

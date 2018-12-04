@@ -15,7 +15,7 @@ def connectToDatabase():
     """
     Connect to our SQLite database and return a Session object
     """
-    engine = create_engine('postgresql://postgres:jojo123@localhost:5432/postgres')
+    engine = create_engine('postgresql://postgres:jojo123@localhost:5432/spellcheck')
     Session = sessionmaker(bind=engine)
     session = Session()
     return session
@@ -31,7 +31,7 @@ def spellingCheck(self, List):
     self.wrong = []
     for i in self.List:
         converted = ForceToUnicode(i)
-        result = re.sub(r'[^A-Z a-z -]', "", converted)
+        result = re.sub(r"[^A-Za-z /' -]", "", converted)
         data = session.query(inputWords).filter(func.lower(inputWords.word) == func.lower(result)).first()
         if data is None:
             self.wrong.append(result)
@@ -39,7 +39,11 @@ def spellingCheck(self, List):
             print ("spellingCheck results:", result)  # kung wala ang words e append sya sa wrong na list
     # print wrong
     print ("Misspelled words:", self.wrong)
-    # addCommon(self, self.wrong) 
+
+
+    for i in self.wrong:
+        addCommon(self, i) 
+    
     if (self.wrong == []):
         wx.MessageBox("YEY NO MORE WRONG WORDS")
     else:
@@ -49,55 +53,72 @@ def spellingCheck(self, List):
         self.originaltext.SetValue(self.currentword)
         self.check.Bind(wx.EVT_FIND, self.OnHighlight)
 
-def addCommon(self, List):
-    for i in List:
-        converted = ForceToUnicode(i)
-        result = re.sub(r'[^A-Z a-z -]', "", converted)
-        primary, secondary = x.process(result)
-
-        if primary == secondary:
-            # print("{}: {}".format(primary, i))
-            data = session.query(Common).filter(Common.code == primary).first()
-            if data is None:
-                dict = Common(code=primary, words=[i])
-                session.add(dict)
-                session.commit()
+def addCommon(self, i):
+    # for i in List:
+    converted = ForceToUnicode(i)
+    result = re.sub(r"[^A-Za-z /' -]", "", converted)
+    primary, secondary = x.process(result)
+    if primary == secondary:
+        # print("{}: {}".format(primary, i))
+        data = session.query(Common).filter(Common.code == primary).first()
+        dictdata = session.query(Words).filter(Words.code == primary).first()
+        if data is None:
+            dict = Common(code=primary, words=[i])
+            session.add(dict)
+            session.commit()
+            if dictdata is None:
+                print ("Misspelled Word doesn't exist.")
             else:
-                if i in data.words:
-                    print ("Common Misspelled Word Already Added.")
-                else:
-                    data.words = list(data.words)
-                    data.words.append(i)
-                    session.merge(data)
-                    session.commit()
+                session.delete(dictdata)
+                session.commit()
         else:
-            dataPri = session.query(Common).filter(Common.code == primary).first()
-            if dataPri is None:
-                dict = Common(code=primary, words=[i])
-                session.add(dict)
-                session.commit()
+            if i in data.words:
+                print ("Common Misspelled Word Already Added.")
             else:
-                if i in dataPri.words:
-                    print ("Common Misspelled Word Already Added.")
-                else:
-                    dataPri.words = list(dataPri.words)
-                    dataPri.words.append(i)
-                    session.merge(dataPri)
-                    session.commit()
+                data.words = list(data.words)
+                data.words.append(i)
+                session.merge(data)
+                session.commit()
+    else:
+        dataPri = session.query(Common).filter(Common.code == primary).first()
+        dictdataPri = session.query(Words).filter(Words.code == primary).first()
+        if dataPri is None:
+            dict = Common(code=primary, words=[i])
+            session.add(dict)
+            session.commit()
+            if dictdataPri is None:
+                print ("Misspelled Word doesn't exist.")
+            else:
+                session.delete(dictdataPri)
+                session.commit()
+        else:
+            if i in dataPri.words:
+                print ("Common Misspelled Word Already Added.")
+            else:
+                dataPri.words = list(dataPri.words)
+                dataPri.words.append(i)
+                session.merge(dataPri)
+                session.commit()
 
-            dataSec = session.query(Common).filter(Common.code == secondary).first()
-            if dataSec is None:
-                dict = Common(code=secondary, words=[i])
-                session.add(dict)
-                session.commit()
+        dataSec = session.query(Common).filter(Common.code == secondary).first()
+        dictdataSec = session.query(Words).filter(Words.code == secondary).first()
+        if dataSec is None:
+            dict = Common(code=secondarySec, words=[i])
+            session.add(dict)
+            session.commit()
+            if dictdataSec is None:
+                print ("Misspelled Word doesn't exist.")
             else:
-                if i in dataSec.words:
-                    print ("Common Misspelled Word Already Added.")
-                else:
-                    dataSec.words = list(dataSec.words)
-                    dataSec.words.append(i)
-                    session.merge(dataSec)
-                    session.commit()
+                session.delete(dictdataSec)
+                session.commit()
+        else:
+            if i in dataSec.words:
+                print ("Common Misspelled Word Already Added.")
+            else:
+                dataSec.words = list(dataSec.words)
+                dataSec.words.append(i)
+                session.merge(dataSec)
+                session.commit()
 
 
 def displaySuggestions(self, input):

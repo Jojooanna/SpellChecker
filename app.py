@@ -5,14 +5,14 @@ import re
 import string
 import datetime
 import json
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, func
 from sqlalchemy.orm import sessionmaker
 from model import *
 import controller
 import rules
 import timeit
 
-engine = create_engine('postgresql://postgres:mvjunetwo@localhost:5432/spell')
+engine = create_engine('postgresql://postgres:jojo123@localhost:5432/spellcheck')
 checkindexNew = 0
 
 Session = sessionmaker(bind=engine)
@@ -223,10 +223,12 @@ class Example(wx.Frame):
     def OnLearn(self, event):
         input = inputWords(word=self.originaltext.GetValue())
         if input is None:
-            result = session.query(inputWords).filter(inputWords.word == input).first()
+            result = session.query(inputWords).filter(inputWords.word == func.lower(input)).first()
             if result is None:
                 session.add(input)
                 session.commit()
+
+                controller.addCommon(self, result)
 
                 rules.OnConvert(self.originaltext.GetValue())
                 if not self.word:
@@ -266,7 +268,7 @@ class Example(wx.Frame):
 
     def Change(self, e):
         target1 = self.checktext.GetValue()
-        result1 = re.sub(r'[^A-Z a-z -\']', "", target1)
+        result1 = re.sub(r"[^A-Za-z /' -]", "", target1)
         start1 = self.inputtext.GetValue().find(target1)
         position1 = start1 + len(target1)
         self.inputtext.Bind(wx.EVT_SET_FOCUS, self.UnHighlight(start1, position1))
@@ -326,7 +328,7 @@ class Example(wx.Frame):
         try:
             # remove highlight from previous words
             target1 = self.originaltext.GetValue()
-            result1 = re.sub(r'[^A-Z a-z -\']', "", target1)
+            result1 = re.sub(r"[^A-Za-z /' -]", "", target1)
             start1 = self.inputtext.GetValue().find(result1)
             position1 = start1 + len(result1)
             self.inputtext.Bind(wx.EVT_SET_FOCUS, self.UnHighlight(start1, position1))
@@ -363,7 +365,7 @@ class Example(wx.Frame):
 
             # for highlighting text
             target = self.originaltext.GetValue()
-            result = re.sub(r'[^A-Z a-z -\']', "", target)
+            result = re.sub(r"[^A-Za-z /' -]", "", target)
             count = 0
             for i in range(self.inputtext.GetNumberOfLines()):
                 if count == 0:
@@ -386,7 +388,7 @@ class Example(wx.Frame):
         try:
             # for unhighlighting previous texts
             target1 = self.originaltext.GetValue()
-            result1 = re.sub(r'[^A-Z a-z -\']', "", target1)
+            result1 = re.sub(r"[^A-Za-z /' -]", "", target1)
             start1 = self.inputtext.GetValue().find(result1)
             position1 = start1 + len(result1)
             self.inputtext.Bind(wx.EVT_SET_FOCUS, self.UnHighlight(start1, position1))
@@ -430,7 +432,7 @@ class Example(wx.Frame):
 
             # for highlighting texts
             target = self.originaltext.GetValue()
-            result = re.sub(r'[^A-Z a-z -\']', "", target)
+            result = re.sub(r"[^A-Za-z /' -]", "", target)
             count = 0
             for i in range(self.inputtext.GetNumberOfLines()):
                 if count == 0:
@@ -471,7 +473,7 @@ class Example(wx.Frame):
         start = timeit.default_timer()
 
         target1 = self.originaltext.GetValue()
-        result1 = re.sub(r'[^A-Z a-z -\']', "", target1)
+        result1 = re.sub(r"[^A-Za-z /' -]", "", target1)
         start1 = self.inputtext.GetValue().find(result1)
         position1 = start1 + len(result1)
         self.inputtext.Bind(wx.EVT_SET_FOCUS, self.UnHighlight(start1, position1))
@@ -481,8 +483,11 @@ class Example(wx.Frame):
         self.List = []
         for i in self.words:
             converted = controller.ForceToUnicode(i)
-            result = re.sub(r'[^A-Z a-z -]', "", converted)
-            self.List.append(result)
+            if converted.isdigit() == False:
+                result = re.sub(r"[^A-Za-z /' -]", "", converted)
+                self.List.append(result)
+            else:
+                pass
         print self.List
 
         if not self.words:
@@ -502,7 +507,7 @@ class Example(wx.Frame):
                 self.suggestions.append(i)
             
             stop = timeit.default_timer()
-            print('Time: ', stop - start) 
+            print('Suggestions Runtime: ', stop - start) 
 
             self.wordsuggest.Set(self.suggestions)
 
@@ -547,7 +552,7 @@ class Example(wx.Frame):
 
         # for highlighting texts
         target = self.originaltext.GetValue()
-        result = re.sub(r'[^A-Z a-z -\']', "", target)
+        result = re.sub(r"[^A-Za-z /' -]", "", target)
         for i in range(self.inputtext.GetNumberOfLines()):
             line = self.inputtext.GetLineText(i)
             if result in line:

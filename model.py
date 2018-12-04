@@ -4,7 +4,7 @@ from sqlalchemy.ext.declarative import declarative_base
 import sqlalchemy as db
 from sqlalchemy.dialects import postgresql as pg
 
-engine = create_engine('postgresql://postgres:jojo123@localhost:5432/postgres')
+engine = create_engine('postgresql://postgres:jojo123@localhost:5432/spellcheck')
 Base = declarative_base()
 
 class Words(Base):
@@ -21,7 +21,7 @@ class Words(Base):
 class Common(Base):
     __tablename__ = 'common'
 
-    wordid = Column(Integer, primary_key=True)
+    codeid = db.Column(db.Integer, primary_key=True)
     code = db.Column(db.String, nullable=False)
     words = db.Column(pg.ARRAY(db.String), nullable=False)
 

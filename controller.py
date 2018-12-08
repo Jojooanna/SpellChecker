@@ -123,48 +123,17 @@ def addCommon(self, i):
 
 
 def displaySuggestions(self, input):
-    priCode, secCode = x.process(input)
-    distance = []
-    if priCode == secCode:
-        data = session.query(Words).filter(Words.code == priCode).first()
-        if data is None:
-            self.notfoundmsg.SetLabel("No suggestions found")
+    for x in session.query(inputWords):
+        distanceinput = levenshtein(input, x.word)
+        if distanceinput <= 3:
+            print x.word.encode('utf-8')
+            sortSuggestions(levenshtein(input, x.word), x.word)
+            if x.word in suggestionslist:
+                pass
+            else:
+                suggestionslist.append(x.word)
         else:
-            self.notfoundmsg.SetLabel("These are the suggestions.")
-            for i in data.words:
-                print ("LEVENSHTEIN RESULT:", levenshtein(input,i))
-                sortSuggestions(levenshtein(input,i), i)
-                if i in suggestionslist:
-                    pass
-                else:
-                    suggestionslist.append(i)
-    else:
-        data = session.query(Words).filter(Words.code == priCode).first()
-        if data is None:
-            self.notfoundmsg.SetLabel("No suggestions found")
-        else:
-            self.notfoundmsg.SetLabel("These are the suggestions.")
-
-            for i in data.words:
-                print ("LEVENSHTEIN RESULT:", levenshtein(input,i))
-                sortSuggestions(levenshtein(input,i), i)
-                if i in suggestionslist:
-                    pass
-                else:
-                    suggestionslist.append(i)
-
-        data2 = session.query(Words).filter(Words.code == secCode).first()
-        if data2 is None:
-            self.notfoundmsg.SetLabel("No suggestions found")
-        else:
-            self.notfoundmsg.SetLabel("These are the suggestions.")
-            for i in data2.words:
-                print ("LEVENSHTEIN RESULT:", levenshtein(input,i))
-                sortSuggestions(levenshtein(input,i), i)
-                if i in suggestionslist:
-                    pass
-                else:
-                    suggestionslist.append(i)
+            pass
 
 def displayCommon(self):
     panel = wx.Panel(self)

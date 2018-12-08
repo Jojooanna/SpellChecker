@@ -12,7 +12,7 @@ import controller
 import rules
 import timeit
 
-engine = create_engine('postgresql://postgres:jojo123@localhost:5432/spellcheck')
+engine = create_engine('postgresql://postgres:mvjunetwo@localhost:5432/spell')
 checkindexNew = 0
 
 Session = sessionmaker(bind=engine)

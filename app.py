@@ -222,36 +222,41 @@ class Example(wx.Frame):
 
     def OnLearn(self, event):
         input = inputWords(word=self.originaltext.GetValue())
-        if input is None:
-            result = session.query(inputWords).filter(inputWords.word == func.lower(input)).first()
-            if result is None:
-                session.add(input)
-                session.commit()
+        result = session.query(inputWords).filter(inputWords.word == self.originaltext.GetValue()).first()
+        if result is None:
+            controller.addCommon(self, result)
+            
+            session.add(input)
+            session.commit()
 
-                controller.addCommon(self, result)
-
-                rules.OnConvert(self.originaltext.GetValue())
-                if not self.word:
-                    wx.MessageBox("No more words.")
-                else:
-                    self.checkindexCurr = self.wrong.index(self.currentword)
-                    self.wrong.remove(self.originaltext.GetValue())
-                    self.originaltext.SetValue(self.wrong[self.checkindexCurr])
-                    self.currentword = self.wrong[self.checkindexCurr]
-                    controller.suggestionslist = []
-                    self.suggestions = []
-                    controller.sortedDictionary = dict()
-                    controller.displaySuggestions(self, self.currentword)
-                    for i in controller.suggestionslist:
-                        self.suggestions.append(i)
-                    self.wordsuggest.Set(self.suggestions)
-                    self.levSuggest.Set(self.suggestionsLev)
-                    self.checktext.Set(self.suggestions)
-                    self.checktext.SetLabel(self.suggestions[0])
+            rules.OnConvert(self.originaltext.GetValue())
+            if not self.word:
+                wx.MessageBox("No more words.")
             else:
-                print ("End of array.")
-            wx.MessageBox("Word Added!")
-            self.Refresh()
+                self.checkindexCurr = self.wrong.index(self.currentword)
+                self.wrong.remove(self.originaltext.GetValue())
+                
+                self.originaltext.SetValue(self.wrong[self.checkindexCurr])
+                self.currentword = self.wrong[self.checkindexCurr]
+                
+                controller.suggestionslist = []
+                self.suggestions = []
+                controller.sortedDictionary = dict()
+
+                controller.displaySuggestions(self, self.currentword)
+
+                for i in controller.suggestionslist:
+                    self.suggestions.append(i)
+
+                self.wordsuggest.Set(self.suggestions)
+                self.levSuggest.Set(self.suggestionsLev)
+
+                self.checktext.Set(self.suggestions)
+                self.checktext.SetLabel(self.suggestions[0])
+        else:
+            print ("End of array.")
+        wx.MessageBox("Word Added!")
+        self.Refresh()
 
     def OnWordSuggest(self, event):
         self.checktext.SetValue(self.checktext.GetStringSelection())
@@ -471,8 +476,6 @@ class Example(wx.Frame):
     overall_stop=0
     sugg_start=0
     sugg_stop=0
-    levonly_start=0
-    levonly_stop=0
 
     def OnSpellCheck(self, e):
         # for unhighlighting texts

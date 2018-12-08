@@ -10,8 +10,6 @@ from sqlalchemy import func
 
 suggestionslist =[]
 sortedDictionary = {}
-inDict = 0
-notInDict = 0
 
 def connectToDatabase():
     """
@@ -43,6 +41,7 @@ def spellingCheck(self, List):
     print ("Misspelled words:", self.wrong)
 
     # UNCOMMENT WHEN READY NA MAG TESTING
+    # DON'T UNCOMMENT OMG
     # for i in self.wrong:
     #     addCommon(self, i) 
     
@@ -69,10 +68,8 @@ def addCommon(self, i):
             session.add(dict)
             session.commit()
             if dictdata is None:
-                notInDict += 1
                 print ("Misspelled Word doesn't exist.")
             else:
-                inDict += 1
                 session.delete(dictdata)
                 session.commit()
         else:
@@ -91,10 +88,8 @@ def addCommon(self, i):
             session.add(dict)
             session.commit()
             if dictdataPri is None:
-                notInDict += 1
                 print ("Misspelled Word doesn't exist.")
             else:
-                inDict += 1
                 session.delete(dictdataPri)
                 session.commit()
         else:
@@ -109,14 +104,12 @@ def addCommon(self, i):
         dataSec = session.query(Common).filter(Common.code == secondary).first()
         dictdataSec = session.query(Words).filter(Words.code == secondary).first()
         if dataSec is None:
-            dict = Common(code=secondarySec, words=[i])
+            dict = Common(code=secondary, words=[i])
             session.add(dict)
             session.commit()
             if dictdataSec is None:
-                notInDict += 1
                 print ("Misspelled Word doesn't exist.")
             else:
-                inDict += 1
                 session.delete(dictdataSec)
                 session.commit()
         else:
@@ -127,9 +120,6 @@ def addCommon(self, i):
                 dataSec.words.append(i)
                 session.merge(dataSec)
                 session.commit()
-
-    print ("Number of MW in dict: ", inDict) #Number of Correct Misspellings Detected
-    print ("Number of MW not in dict: ", notInDict) #Number of Correct Misspellings Not in Dictionary
 
 
 def displaySuggestions(self, input):
@@ -189,9 +179,7 @@ def displayCommon(self):
     wordsuggest = wx.ListBox(self.panel, choices=words, size=(200, 250), style=wx.LB_HSCROLL)
 
 def deleteDictionary():
-
     # funtion to delete all common words
-
     session = connectToDatabase()
     for x in session.query(inputWords):
         session.delete(x)

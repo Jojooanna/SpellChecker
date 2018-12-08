@@ -369,11 +369,17 @@ class Example(wx.Frame):
             self.suggestions = []
             controller.displaySuggestions(self, self.currentword)
 
+            sugg_start = timeit.default_timer()
+            
             for i in controller.suggestionslist:
                 self.suggestions.append(i)
+            
+            sugg_stop = timeit.default_timer()
 
             self.wordsuggest.Set(self.suggestions)
 
+
+            sorted_start = timeit.default_timer()
             # for Levenshtein-generated Suggestions
             sugg_start = timeit.default_timer()
 
@@ -388,11 +394,13 @@ class Example(wx.Frame):
                         continue
                     else:
                         self.suggestionsLev.append(j)
+            sorted_stop = timeit.default_timer()
+
             self.levSuggest.Set(self.suggestionsLev)
             self.checktext.Set(self.suggestionsLev)
 
             sugg_stop = timeit.default_timer()
-            totaltime = sugg_stop - sugg_start
+            totaltime = sorted_stop - sorted_start
 
             print('Producing Suggestions Metaphone&Lev Runtime: ', totaltime) 
             # adding all runtime para sa metlev-suggestions
@@ -415,6 +423,7 @@ class Example(wx.Frame):
             if (self.checkindexCurr == len(self.wrong)-1):
                 self.findnextbtn.Disable()
                 print ("Overall Lev-Suggestion Runtime:", self.overalltime)
+
 
         except IndexError:
             #self.findnextbtn.Disable()
@@ -441,13 +450,18 @@ class Example(wx.Frame):
             controller.suggestionslist = []
             self.suggestions = []
             controller.displaySuggestions(self, self.currentword)
+
+            sugg_start = timeit.default_timer()
         
             for i in controller.suggestionslist:
                 self.suggestions.append(i)
+            
+            sugg_stop = timeit.default_timer()
+
             self.wordsuggest.Set(self.suggestions)
         
             # for levenshtein-generated suggestions
-            sugg_start = timeit.default_timer()
+            sorted_start = timeit.default_timer()
 
             controller.sortedDictionary = dict()
             self.suggestionsLev = []
@@ -463,8 +477,8 @@ class Example(wx.Frame):
             self.levSuggest.Set(self.suggestionsLev)
             self.checktext.Set(self.suggestionsLev)
 
-            sugg_stop = timeit.default_timer()
-            totaltime = sugg_stop - sugg_start
+            sorted_stop = timeit.default_timer()
+            totaltime = sorted_stop - sorted_start
 
             print('Producing Suggestions Metaphone&Lev Runtime: ', totaltime) 
             # adding all runtime para sa metlev-suggestions
@@ -472,7 +486,7 @@ class Example(wx.Frame):
 
             self.Refresh()
             if (self.checkindexCurr == 0):
-                    self.previousbtn.Disable()
+                    self.previousbtn.Disable() 
 
         except IndexError:
             wx.MessageBox("There's no previous word")
@@ -552,8 +566,10 @@ class Example(wx.Frame):
             controller.displaySuggestions(self, self.currentword)
             for i in controller.suggestionslist:
                 self.suggestions.append(i)
-
-            self.wordsuggest.Set(self.suggestions)
+            
+            sugg_stop = timeit.default_timer()
+            
+            self.wordsuggest.Set(self.suggestions)\
             
             # appending misspelled words
             misspelled = []
@@ -565,9 +581,8 @@ class Example(wx.Frame):
                     misspelled.append(controller.ForceToUnicode(i))
             self.misspellings.SetValue(json.dumps(misspelled))
 
-
             # for levenshtein-generated suggestions with Metaphone
-            sugg_start = timeit.default_timer()
+            sorted_start = timeit.default_timer()
 
             controller.sortedDictionary = {}
             self.suggestionsLev = []
@@ -579,13 +594,13 @@ class Example(wx.Frame):
                     if j in self.suggestionsLev:
                         pass
                     else:
-                        self.suggestionsLev.append(j)            
+                        self.suggestionsLev.append(j)
 
             self.levSuggest.Set(self.suggestionsLev)
             self.checktext.Set(self.suggestionsLev)
 
-            sugg_stop = timeit.default_timer()
-            totaltime = sugg_stop - sugg_start
+            sorted_stop = timeit.default_timer()
+            totaltime = sorted_stop - sorted_start
 
             print('Producing Suggestions Metaphone&Lev Runtime: ', totaltime) 
             # adding all runtime para sa metlev-suggestions

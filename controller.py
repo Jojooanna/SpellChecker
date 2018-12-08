@@ -15,7 +15,7 @@ def connectToDatabase():
     """
     Connect to our SQLite database and return a Session object
     """
-    engine = create_engine('postgresql://postgres:jojo123@localhost:5432/spellcheck')
+    engine = create_engine('postgresql://postgres:jojo123@localhost:5432/fortesting')
     Session = sessionmaker(bind=engine)
     session = Session()
     return session
@@ -42,8 +42,8 @@ def spellingCheck(self, List):
 
     # UNCOMMENT WHEN READY NA MAG TESTING
     # DON'T UNCOMMENT OMG
-    # for i in self.wrong:
-    #     addCommon(self, i) 
+    for i in self.wrong:
+        addCommon(self, i) 
     
     if (self.wrong == []):
         wx.MessageBox("YEY NO MORE WRONG WORDS")
@@ -56,71 +56,59 @@ def spellingCheck(self, List):
 
 def addCommon(self, i):
     # for i in List:
-    converted = ForceToUnicode(i)
-    result = re.sub(r"[^A-Za-z /' -]", "", converted)
-    primary, secondary = x.process(result)
+    # converted = ForceToUnicode(i)
+    # result = re.sub(r"[^A-Za-z /' -]", "", converted)
+    primary, secondary = x.process(i)
+
     if primary == secondary:
-        # print("{}: {}".format(primary, i))
         data = session.query(Common).filter(Common.code == primary).first()
-        dictdata = session.query(Words).filter(Words.code == primary).first()
+        dictdata = session.query(Words).filter(Words.code==primary).first()
         if data is None:
             dict = Common(code=primary, words=[i])
             session.add(dict)
             session.commit()
+        else:
             if dictdata is None:
-                print ("Misspelled Word doesn't exist.")
+                pass
             else:
+                for j in dictdata.words:
+                    OnConvertCommon(j)
+
                 session.delete(dictdata)
                 session.commit()
-        else:
-            if i in data.words:
-                print ("Common Misspelled Word Already Added.")
-            else:
-                data.words = list(data.words)
-                data.words.append(i)
-                session.merge(data)
-                session.commit()
+
     else:
         dataPri = session.query(Common).filter(Common.code == primary).first()
-        dictdataPri = session.query(Words).filter(Words.code == primary).first()
+        dictdataPri = session.query(Words).filter(Words.code==primary).first()
         if dataPri is None:
-            dict = Common(code=primary, words=[i])
-            session.add(dict)
+            dictPri = Common(code=primary, words=[i])
+            session.add(dictPri)
             session.commit()
+        else:
             if dictdataPri is None:
-                print ("Misspelled Word doesn't exist.")
+                pass
             else:
+                for j in dictdataPri.words:
+                    OnConvertCommon(j)
+
                 session.delete(dictdataPri)
                 session.commit()
-        else:
-            if i in dataPri.words:
-                print ("Common Misspelled Word Already Added.")
-            else:
-                dataPri.words = list(dataPri.words)
-                dataPri.words.append(i)
-                session.merge(dataPri)
-                session.commit()
 
-        dataSec = session.query(Common).filter(Common.code == secondary).first()
-        dictdataSec = session.query(Words).filter(Words.code == secondary).first()
+        dataSec = session.query(Common).filter(Common.code == primary).first()
+        dictdataSec = session.query(Words).filter(Words.code==primary).first()
         if dataSec is None:
-            dict = Common(code=secondary, words=[i])
-            session.add(dict)
+            dictSec = Common(code=primary, words=[i])
+            session.add(dictSec)
             session.commit()
+        else:
             if dictdataSec is None:
-                print ("Misspelled Word doesn't exist.")
+                pass
             else:
+                for j in dictdataSec.words:
+                    OnConvertCommon(j)
+
                 session.delete(dictdataSec)
                 session.commit()
-        else:
-            if i in dataSec.words:
-                print ("Common Misspelled Word Already Added.")
-            else:
-                dataSec.words = list(dataSec.words)
-                dataSec.words.append(i)
-                session.merge(dataSec)
-                session.commit()
-
 
 def displaySuggestions(self, input):
     priCode, secCode = x.process(input)
@@ -132,8 +120,6 @@ def displaySuggestions(self, input):
         else:
             self.notfoundmsg.SetLabel("These are the suggestions.")
             for i in data.words:
-                print ("LEVENSHTEIN RESULT:", levenshtein(input,i))
-                sortSuggestions(levenshtein(input,i), i)
                 if i in suggestionslist:
                     pass
                 else:
@@ -146,8 +132,6 @@ def displaySuggestions(self, input):
             self.notfoundmsg.SetLabel("These are the suggestions.")
 
             for i in data.words:
-                print ("LEVENSHTEIN RESULT:", levenshtein(input,i))
-                sortSuggestions(levenshtein(input,i), i)
                 if i in suggestionslist:
                     pass
                 else:
@@ -159,31 +143,42 @@ def displaySuggestions(self, input):
         else:
             self.notfoundmsg.SetLabel("These are the suggestions.")
             for i in data2.words:
-                print ("LEVENSHTEIN RESULT:", levenshtein(input,i))
-                sortSuggestions(levenshtein(input,i), i)
                 if i in suggestionslist:
                     pass
                 else:
                     suggestionslist.append(i)
 
-def displayCommon(self):
-    panel = wx.Panel(self)
-    session = connectToDatabase()
-    # display all data in words table
+def displayLevSugg(self, input):
+    priCode, secCode = x.process(input)
+    distance = []
+    if priCode == secCode:
+        data = session.query(Words).filter(Words.code == priCode).first()
+        if data is None:
+            self.notfoundmsg.SetLabel("No suggestions found")
+        else:
+            self.notfoundmsg.SetLabel("These are the suggestions.")
+            for i in data.words:
+                print ("LEVENSHTEIN RESULT:", levenshtein(input,i))
+                sortSuggestions(levenshtein(input,i), i)
+    else:
+        data = session.query(Words).filter(Words.code == priCode).first()
+        if data is None:
+            self.notfoundmsg.SetLabel("No suggestions found")
+        else:
+            self.notfoundmsg.SetLabel("These are the suggestions.")
 
-    words = []
-    for x in session.query(Common):
-        for i in x.words:
-            print ("Common Words: ", i) # ma print tanan words sa common words
-            words.append(i)
-    wordsuggest = wx.ListBox(self.panel, choices=words, size=(200, 250), style=wx.LB_HSCROLL)
+            for i in data.words:
+                print ("LEVENSHTEIN RESULT:", levenshtein(input,i))
+                sortSuggestions(levenshtein(input,i), i)
 
-def deleteDictionary():
-    # funtion to delete all common words
-    session = connectToDatabase()
-    for x in session.query(inputWords):
-        session.delete(x)
-        session.commit()
+        data2 = session.query(Words).filter(Words.code == secCode).first()
+        if data2 is None:
+            self.notfoundmsg.SetLabel("No suggestions found")
+        else:
+            self.notfoundmsg.SetLabel("These are the suggestions.")
+            for i in data2.words:
+                print ("LEVENSHTEIN RESULT:", levenshtein(input,i))
+                sortSuggestions(levenshtein(input,i), i)
 
 def levenshtein(frominput, fromdict):  
     input = len(frominput) + 1
@@ -219,4 +214,24 @@ def sortSuggestions(distanceinput, suggList):
     else:
         sortedDictionary[distanceinput] = [suggList]
 
+# ******************************************************************************************
+# PARA AHA GANE NI????
+def displayCommon(self):
+    panel = wx.Panel(self)
+    session = connectToDatabase()
+    # display all data in words table
+
+    words = []
+    for x in session.query(Common):
+        for i in x.words:
+            print ("Common Words: ", i) # ma print tanan words sa common words
+            words.append(i)
+    wordsuggest = wx.ListBox(self.panel, choices=words, size=(200, 250), style=wx.LB_HSCROLL)
+
+def deleteDictionary():
+    # funtion to delete all common words
+    session = connectToDatabase()
+    for x in session.query(inputWords):
+        session.delete(x)
+        session.commit()
 

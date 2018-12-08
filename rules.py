@@ -9,7 +9,7 @@ def connectToDatabase():
     """
     Connect to our SQLite database and return a Session object
     """
-    engine = create_engine("postgresql://postgres:jojo123@localhost:5432/spellcheck")
+    engine = create_engine("postgresql://postgres:jojo123@localhost:5432/fortesting")
     Session = sessionmaker(bind=engine)
     session = Session()
     return session
@@ -64,17 +64,17 @@ class meta:
                         primary += "A"
                         secondary += "A"
                     elif (symbol == "E"):
-                        primary += "E"
-                        secondary += "I"
+                        primary += "A"
+                        secondary += "A"
                     elif (symbol == "I"):
-                        primary += "I"
-                        secondary += "I"
+                        primary += "A"
+                        secondary += "A"
                     elif (symbol == "O"):
-                        primary += "O"
-                        secondary += "O"
+                        primary += "A"
+                        secondary += "A"
                     elif (symbol == "U"):
-                        primary += "U"
-                        secondary += "U"
+                        primary += "A"
+                        secondary += "A"
                     else:
                         continue
                     current += 1
@@ -430,15 +430,62 @@ x = meta()
 # with io.open(path) as fp:
 #   line = fp.read().splitlines()
 #   for i in line:
-#     data1 = inputWords(word=i)
-#     session.add(data1)
-#     session.commit()
+    # data1 = inputWords(word=i)
+    # session.add(data1)
+    # session.commit()
         
 # for i in dictionary:
 #     print i
 
-# Adds words from 'Learn' method to Common DB
+# Adds words to DB
 def OnConvert(i):
+    primary, secondary = x.process(i)
+
+    if primary == secondary:
+        # print("{}: {}".format(primary, i))
+        data = session.query(Words).filter(Words.code == primary).first()
+        if data is None:
+            dict = Words(code=primary, words=[i])
+            session.add(dict)
+            session.commit()
+        else:
+            if i in data.words:
+                pass
+            else:
+                data.words = list(data.words)
+                data.words.append(i)
+                session.merge(data)
+                session.commit()
+    else:
+        dataPri = session.query(Words).filter(Words.code == primary).first()
+        if dataPri is None:
+            dict = Words(code=primary, words=[i])
+            session.add(dict)
+            session.commit()
+        else:
+            if i in dataPri.words:
+                pass
+            else:
+                dataPri.words = list(dataPri.words)
+                dataPri.words.append(i)
+                session.merge(dataPri)
+                session.commit()
+
+        dataSec = session.query(Words).filter(Words.code == secondary).first()
+        if dataSec is None:
+            dict = Words(code=secondary, words=[i])
+            session.add(dict)
+            session.commit()
+        else:
+            if i in dataSec.words:
+                pass
+            else:
+                dataSec.words = list(dataSec.words)
+                dataSec.words.append(i)
+                session.merge(dataSec)
+                session.commit()
+
+def OnConvertCommon(i):
     primary, secondary = x.process(i)
 
     if primary == secondary:

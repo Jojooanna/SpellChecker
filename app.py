@@ -12,7 +12,7 @@ import controller
 import rules
 import timeit
 
-engine = create_engine('postgresql://postgres:jojo123@localhost:5432/spellcheck')
+engine = create_engine('postgresql://postgres:jojo123@localhost:5432/fortesting')
 checkindexNew = 0
 
 Session = sessionmaker(bind=engine)
@@ -21,7 +21,7 @@ session = Session()
 class Example(wx.Frame):
     def __init__(self, *args, **kwargs):
         super(Example, self).__init__(*args, **kwargs)
-
+        self.overalltime = 0
         self.aboutme = wx.MessageDialog(self, "Basic Commands in this Program", "About Spell Checker", wx.OK)
         self.InitUI()
 
@@ -210,6 +210,7 @@ class Example(wx.Frame):
             self.suggestions = []
             controller.sortedDictionary = dict()
             controller.displaySuggestions(self, self.currentword)
+            controller.displayLevSugg(self, self.currentword)
             for i in controller.suggestionslist:
                 self.suggestions.append(i)
             # for i in controller.sortedDictionary.
@@ -229,7 +230,7 @@ class Example(wx.Frame):
             session.add(input)
             session.commit()
 
-            rules.OnConvert(self.originaltext.GetValue())
+            controller.addCommon(self, self.originaltext.GetValue())
             if not self.word:
                 wx.MessageBox("No more words.")
             else:
@@ -241,7 +242,6 @@ class Example(wx.Frame):
                 
                 controller.suggestionslist = []
                 self.suggestions = []
-                controller.sortedDictionary = dict()
 
                 controller.displaySuggestions(self, self.currentword)
 
@@ -249,10 +249,20 @@ class Example(wx.Frame):
                     self.suggestions.append(i)
 
                 self.wordsuggest.Set(self.suggestions)
-                self.levSuggest.Set(self.suggestionsLev)
 
-                self.checktext.Set(self.suggestions)
-                self.checktext.SetLabel(self.suggestions[0])
+                # MET AND LEV
+                # sugg_start = timeit.default_timer()
+
+                controller.sortedDictionary = dict()
+                controller.displayLevSugg(self, self.currentword)
+                self.levSuggest.Set(self.suggestionsLev)
+                self.checktext.Set(self.suggestionsLev)
+
+                # sugg_stop = timeit.default_timer()
+                # totaltime = sugg_stop - sugg_start
+                # print('Producing Suggestions Metaphone&Lev Runtime: ', totaltime) 
+                # overalltime+=totaltime
+
         else:
             print ("End of array.")
         wx.MessageBox("Word Added!")
@@ -302,18 +312,26 @@ class Example(wx.Frame):
                 self.currentword = self.wrong[self.checkindexCurr]
                 self.curwordindex = self.List.index(self.currentword)
 
-                # print (self.currentword)
-                # print (self.checkindexCurr)
-                # print (self.wrong)
                 controller.suggestionslist = []
                 self.suggestions = []
                 controller.displaySuggestions(self, self.currentword)
                 for i in controller.suggestionslist:
                     self.suggestions.append(i)
                 self.wordsuggest.Set(self.suggestions)
+
+                # MET AND LEV
+                # sugg_start = timeit.default_timer()
+
+                controller.displayLevSugg(self, self.currentword)
                 self.levSuggest.Set(self.suggestionsLev)
+                
                 self.checktext.Set(self.suggestions)
                 self.checktext.SetLabel(self.suggestions[0])
+
+                # sugg_stop = timeit.default_timer()
+                # totaltime = sugg_stop - sugg_start
+                # print('Producing Suggestions Metaphone&Lev Runtime: ', totaltime) 
+                # overalltime+=totaltime
 
                 # misspelled = []
                 # for i in self.wrong:
@@ -348,7 +366,6 @@ class Example(wx.Frame):
 
             # for not sorted suggestions
             controller.suggestionslist = []
-            controller.sortedDictionary ={}
             self.suggestions = []
             controller.displaySuggestions(self, self.currentword)
 
@@ -358,7 +375,13 @@ class Example(wx.Frame):
             self.wordsuggest.Set(self.suggestions)
 
             # for Levenshtein-generated Suggestions
+            sugg_start = timeit.default_timer()
+
+            controller.sortedDictionary ={}
             self.suggestionsLev = []
+
+            controller.displayLevSugg(self, self.currentword)
+
             for k in controller.sortedDictionary.values():
                 for j in k:
                     if j in self.suggestionsLev:
@@ -367,6 +390,13 @@ class Example(wx.Frame):
                         self.suggestionsLev.append(j)
             self.levSuggest.Set(self.suggestionsLev)
             self.checktext.Set(self.suggestionsLev)
+
+            sugg_stop = timeit.default_timer()
+            totaltime = sugg_stop - sugg_start
+
+            print('Producing Suggestions Metaphone&Lev Runtime: ', totaltime) 
+            # adding all runtime para sa metlev-suggestions
+            self.overalltime+=totaltime
 
             # for highlighting text
             target = self.originaltext.GetValue()
@@ -384,6 +414,7 @@ class Example(wx.Frame):
 
             if (self.checkindexCurr == len(self.wrong)-1):
                 self.findnextbtn.Disable()
+                print ("Overall Lev-Suggestion Runtime:", self.overalltime)
 
         except IndexError:
             #self.findnextbtn.Disable()
@@ -408,25 +439,36 @@ class Example(wx.Frame):
 
             # for not sorted suggestions
             controller.suggestionslist = []
-            controller.sortedDictionary = dict()
             self.suggestions = []
-            self.suggestionsLev = []
             controller.displaySuggestions(self, self.currentword)
         
             for i in controller.suggestionslist:
                 self.suggestions.append(i)
             self.wordsuggest.Set(self.suggestions)
-            self.checktext.Set(self.suggestions)
-            self.checktext.SetLabel(self.suggestions[0])
         
             # for levenshtein-generated suggestions
+            sugg_start = timeit.default_timer()
+
+            controller.sortedDictionary = dict()
+            self.suggestionsLev = []
+            controller.displayLevSugg(self, self.currentword)
+
             for k in controller.sortedDictionary.values():
                 for j in k:
                     if j in self.suggestionsLev:
                         pass
                     else:
                         self.suggestionsLev.append(j)
+
             self.levSuggest.Set(self.suggestionsLev)
+            self.checktext.Set(self.suggestionsLev)
+
+            sugg_stop = timeit.default_timer()
+            totaltime = sugg_stop - sugg_start
+
+            print('Producing Suggestions Metaphone&Lev Runtime: ', totaltime) 
+            # adding all runtime para sa metlev-suggestions
+            self.overalltime+=totaltime
 
             self.Refresh()
             if (self.checkindexCurr == 0):
@@ -504,10 +546,7 @@ class Example(wx.Frame):
         else:
             controller.spellingCheck(self, self.List)
             controller.suggestionslist = []
-            controller.sortedDictionary = {}
             self.suggestions = []
-            self.suggestionsLev = []
-
 
             # for not sorted suggestions
             controller.displaySuggestions(self, self.currentword)
@@ -515,8 +554,6 @@ class Example(wx.Frame):
                 self.suggestions.append(i)
 
             self.wordsuggest.Set(self.suggestions)
-
-            sugg_start = timeit.default_timer()
             
             # appending misspelled words
             misspelled = []
@@ -528,21 +565,32 @@ class Example(wx.Frame):
                     misspelled.append(controller.ForceToUnicode(i))
             self.misspellings.SetValue(json.dumps(misspelled))
 
-            levonly_start = timeit.default_timer()
+
             # for levenshtein-generated suggestions with Metaphone
-            # dili ni plain Levenshtein
+            sugg_start = timeit.default_timer()
+
+            controller.sortedDictionary = {}
+            self.suggestionsLev = []
+
+            controller.displayLevSugg(self, self.currentword)
+
             for k in controller.sortedDictionary.values():
                 for j in k:
                     if j in self.suggestionsLev:
                         pass
                     else:
-                        self.suggestionsLev.append(j)
-            
-            sugg_stop = timeit.default_timer()
-            print('Producing Suggestions Metaphone&Lev Runtime: ', sugg_stop - sugg_start) 
+                        self.suggestionsLev.append(j)            
 
             self.levSuggest.Set(self.suggestionsLev)
             self.checktext.Set(self.suggestionsLev)
+
+            sugg_stop = timeit.default_timer()
+            totaltime = sugg_stop - sugg_start
+
+            print('Producing Suggestions Metaphone&Lev Runtime: ', totaltime) 
+            # adding all runtime para sa metlev-suggestions
+            self.overalltime+=totaltime
+
 
             self.Refresh()
         

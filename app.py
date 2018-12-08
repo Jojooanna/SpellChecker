@@ -347,11 +347,17 @@ class Example(wx.Frame):
             self.suggestions = []
             controller.displaySuggestions(self, self.currentword)
 
+            sugg_start = timeit.default_timer()
+            
             for i in controller.suggestionslist:
                 self.suggestions.append(i)
+            
+            sugg_stop = timeit.default_timer()
 
             self.wordsuggest.Set(self.suggestions)
 
+
+            sorted_start = timeit.default_timer()
             # for Levenshtein-generated Suggestions
             self.suggestionsLev = []
             for k in controller.sortedDictionary.values():
@@ -360,6 +366,8 @@ class Example(wx.Frame):
                         continue
                     else:
                         self.suggestionsLev.append(j)
+            sorted_stop = timeit.default_timer()
+
             self.levSuggest.Set(self.suggestionsLev)
             self.checktext.Set(self.suggestionsLev)
 
@@ -379,6 +387,10 @@ class Example(wx.Frame):
 
             if (self.checkindexCurr == len(self.wrong)-1):
                 self.findnextbtn.Disable()
+
+            print('Producing Suggestions Metaphone&Lev Runtime: ', sugg_stop - sugg_start) 
+            print('Producing Suggestions Sorted Metaphone&Lev Runtime: ', sorted_stop - sorted_start) 
+
 
         except IndexError:
             #self.findnextbtn.Disable()
@@ -407,13 +419,19 @@ class Example(wx.Frame):
             self.suggestions = []
             self.suggestionsLev = []
             controller.displaySuggestions(self, self.currentword)
+
+            sugg_start = timeit.default_timer()
         
             for i in controller.suggestionslist:
                 self.suggestions.append(i)
+            
+            sugg_stop = timeit.default_timer()
+
             self.wordsuggest.Set(self.suggestions)
             self.checktext.Set(self.suggestions)
             self.checktext.SetLabel(self.suggestions[0])
         
+            sorted_start = timeit.default_timer()
             # for levenshtein-generated suggestions
             for k in controller.sortedDictionary.values():
                 for j in k:
@@ -421,11 +439,16 @@ class Example(wx.Frame):
                         pass
                     else:
                         self.suggestionsLev.append(j)
+            sorted_stop = timeit.default_timer()
+
             self.levSuggest.Set(self.suggestionsLev)
 
             self.Refresh()
             if (self.checkindexCurr == 0):
                     self.previousbtn.Disable()
+
+            print('Producing Suggestions Metaphone&Lev Runtime: ', sugg_stop - sugg_start) 
+            print('Producing Suggestions Sorted Metaphone&Lev Runtime: ', sorted_stop - sorted_start) 
 
         except IndexError:
             wx.MessageBox("There's no previous word")
@@ -505,15 +528,17 @@ class Example(wx.Frame):
             self.suggestions = []
             self.suggestionsLev = []
 
-
+            sugg_start = timeit.default_timer()
             # for not sorted suggestions
             controller.displaySuggestions(self, self.currentword)
             for i in controller.suggestionslist:
                 self.suggestions.append(i)
-
+            
+            sugg_stop = timeit.default_timer()
+            
             self.wordsuggest.Set(self.suggestions)
 
-            sugg_start = timeit.default_timer()
+
             
             # appending misspelled words
             misspelled = []
@@ -525,7 +550,7 @@ class Example(wx.Frame):
                     misspelled.append(controller.ForceToUnicode(i))
             self.misspellings.SetValue(json.dumps(misspelled))
 
-            levonly_start = timeit.default_timer()
+            sorted_start = timeit.default_timer()
             # for levenshtein-generated suggestions with Metaphone
             # dili ni plain Levenshtein
             for k in controller.sortedDictionary.values():
@@ -534,9 +559,11 @@ class Example(wx.Frame):
                         pass
                     else:
                         self.suggestionsLev.append(j)
-            
-            sugg_stop = timeit.default_timer()
+            sorted_stop = timeit.default_timer()
+
+
             print('Producing Suggestions Metaphone&Lev Runtime: ', sugg_stop - sugg_start) 
+            print('Producing Suggestions Sorted Metaphone&Lev Runtime: ', sorted_stop - sorted_start) 
 
             self.levSuggest.Set(self.suggestionsLev)
             self.checktext.Set(self.suggestionsLev)

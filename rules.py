@@ -9,7 +9,7 @@ def connectToDatabase():
     """
     Connect to our SQLite database and return a Session object
     """
-    engine = create_engine("postgresql://postgres:jojo123@localhost:5432/fortesting")
+    engine = create_engine('postgresql://postgres:jojo123@localhost:5432/fortesting')
     Session = sessionmaker(bind=engine)
     session = Session()
     return session
@@ -144,11 +144,10 @@ class meta:
                 continue
 
             elif (symbol == "B"):
-                if (self.sub(word, current + 1, 1, ["B"])):
+                if (self.sub(word, current, 2, ["BB"])):
                     primary += "B"
-                    secondary += "V"
-                    current += 1
-
+                    secondary += "B"
+                    current += 2
                 else:
                     primary += "B"
                     secondary += "V"
@@ -161,7 +160,11 @@ class meta:
                 # 	secondary+="K"
                 # 	current+=2
                 # 	continue
-                if (self.sub(word, current, 2, ["CH"])):
+                if (self.sub(word, current, 2, ["CC"])):
+                    primary += "C"
+                    secondary += "C"
+                    current += 2
+                elif (self.sub(word, current, 2, ["CH"])):
                     primary += "TS"
                     secondary += "S"
                     current += 2
@@ -173,7 +176,11 @@ class meta:
                     continue
 
             elif (symbol == "D"):
-                if (self.sub(word, current, 2, ["DY"])):
+                if (self.sub(word, current, 2, ["DD"])):
+                    primary += "D"
+                    secondary += "D"
+                    current += 2
+                elif (self.sub(word, current, 2, ["DY"])):
                     primary += "J"
                     secondary += "J"
                     current += 2
@@ -183,8 +190,10 @@ class meta:
                     current += 1
                 continue
             elif (symbol == "F"):
-                if (self.sub(word, current + 1, 1, ["F"])):
-                    current += 1
+                if (self.sub(word, current, 2, ["FF"])):
+                    primary += "F"
+                    secondary += "F"
+                    current += 2
                 else:
                     primary += "F"
                     secondary += "P"
@@ -225,7 +234,7 @@ class meta:
                     continue
                 elif (self.sub(word, current, 2, ["KW"])):
                     primary += "Q"
-                    secondary += "Q"
+                    secondary += "K"
                     current += 2
                     continue
                 elif (self.sub(word, current, 2, ["KY"])):
@@ -234,17 +243,16 @@ class meta:
                     current += 2
                     continue
                 else:
-                    primary += "K"
+                    primary += "Q"
                     secondary += "K"
                     current += 1
                     continue
 
             elif (symbol == "L"):
-                if (self.sub(word, current + 1, 1, ["L"])):
+                if (self.sub(word, current, 2, ["LL"])):
                     primary += "L"
                     secondary += "L"
-                    current += 1
-                    continue
+                    current += 2
                 elif ((self.sub(word, current + 1, 1, ["LY"])) or (self.sub(word, current + 1, 1, ["Y"]))):
                     primary += "L"
                     secondary += "L"
@@ -257,19 +265,22 @@ class meta:
                     continue
 
             elif (symbol == "M"):
-                if (self.sub(word, current + 1, 1, ["M"])):
-                    current += 1
+                if (self.sub(word, current, 2, ["MM"])):
+                    primary += "M"
+                    secondary += "M"
+                    current += 2
                 else:
+                    primary += "M"
+                    secondary += "M"
                     current += 1
-                primary += "M"
-                secondary += "M"
                 continue
 
+
             elif (symbol == "N"):
-                if (self.sub(word, current + 1, 1, ["N"])):
+                if (self.sub(word, current, 2, ["NN"])):
                     primary += "N"
                     secondary += "N"
-                    current += 1
+                    current += 2
                 else:
                     primary += "N"
                     secondary += "N"
@@ -287,27 +298,34 @@ class meta:
                 continue
 
             elif (symbol == "P"):
-                if (self.sub(word, current + 1, 1, ["H"])):
-                    current += 2
-                    primary += "F"
-                    secondary += "F"
-                    continue
-
-                if (self.sub(word, current + 1, 1, ["P", "F"])):
-                    current += 2
-                else:
+                # if (self.sub(word, current + 1, 1, ["H"])):
+                #     current += 2
+                #     primary += "F"
+                #     secondary += "F"
+                #     continue
+                if (self.sub(word, current, 2, ["PP"])):
+                    primary += "P"
+                    secondary += "P"
                     current += 1
 
-                primary += "P"
-                secondary += "F"
+                elif (self.sub(word, current+1, 1, ["P","N"])):
+                    primary += "P"
+                    secondary += "F"
+                    current += 1
+                else:
+                    primary += "P"
+                    secondary += "F"
+                    current += 1
                 continue
 
             elif (symbol == "Q"):
-                if (self.sub(word, current, 1, ["Q"])):
+                if (self.sub(word, current, 2, ["QQ"])):
                     primary += "Q"
                     secondary += "Q"
                     current += 1
                 else:
+                    primary += "Q"
+                    secondary += "K"
                     current += 1
                 continue
             elif (symbol == "R"):
@@ -353,10 +371,10 @@ class meta:
                 continue
 
             elif (symbol == "T"):
-                if (self.sub(word, current + 1, 1, ["T"])):
+                if (self.sub(word, current, 2, ["TT"])):
                     primary += "T"
-                    secondary += "T"
-                    current += 1
+                    secondary += "TT"
+                    current += 2
                 elif (self.sub(word, current, 2, ["TS"])):
                     primary += "TS"
                     secondary += "S"
@@ -592,11 +610,5 @@ def OnConvertCommon(i):
 
 
 # primary, secondary = x.process(raw_input('Enter a word: '))
-# suggestions = session.query(Words).filter(Words.code == primary)
-# words = []
-#
-# for x.words in suggestions:
-#     words.append(x.words)
-#
+
 # print primary, secondary
-# print words

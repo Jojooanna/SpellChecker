@@ -225,13 +225,13 @@ class Example(wx.Frame):
         input = inputWords(word=self.originaltext.GetValue())
         result = session.query(inputWords).filter(inputWords.word == self.originaltext.GetValue()).first()
         if result is None:
-            controller.addCommon(self, result)
-            
+            controller.addCommon(self, self.originaltext.GetValue())
+            print("Correct Word Identified as Misspelling:", self.originaltext.GetValue())
             session.add(input)
             session.commit()
 
-            controller.addCommon(self, self.originaltext.GetValue())
-            if not self.word:
+            # No need to add sa common bc na-add na sya
+            if not self.words:
                 wx.MessageBox("No more words.")
             else:
                 self.checkindexCurr = self.wrong.index(self.currentword)
@@ -365,24 +365,17 @@ class Example(wx.Frame):
             self.curwordindex = self.List.index(self.currentword)
 
             # for not sorted suggestions
+            # Start sa timer
+            sugg_start = timeit.default_timer()
+
             controller.suggestionslist = []
             self.suggestions = []
             controller.displaySuggestions(self, self.currentword)
-
-            sugg_start = timeit.default_timer()
             
             for i in controller.suggestionslist:
                 self.suggestions.append(i)
-            
-            sugg_stop = timeit.default_timer()
 
-            self.wordsuggest.Set(self.suggestions)
-
-
-            sorted_start = timeit.default_timer()
             # for Levenshtein-generated Suggestions
-            sugg_start = timeit.default_timer()
-
             controller.sortedDictionary ={}
             self.suggestionsLev = []
 
@@ -394,17 +387,18 @@ class Example(wx.Frame):
                         continue
                     else:
                         self.suggestionsLev.append(j)
-            sorted_stop = timeit.default_timer()
 
-            self.levSuggest.Set(self.suggestionsLev)
-            self.checktext.Set(self.suggestionsLev)
-
+            #End sa timer
             sugg_stop = timeit.default_timer()
-            totaltime = sorted_stop - sorted_start
+            totaltime = sugg_stop - sugg_start
 
             print('Producing Suggestions Metaphone&Lev Runtime: ', totaltime) 
             # adding all runtime para sa metlev-suggestions
             self.overalltime+=totaltime
+
+            self.wordsuggest.Set(self.suggestions)
+            self.levSuggest.Set(self.suggestionsLev)
+            self.checktext.Set(self.suggestionsLev)
 
             # for highlighting text
             target = self.originaltext.GetValue()
@@ -450,19 +444,13 @@ class Example(wx.Frame):
             controller.suggestionslist = []
             self.suggestions = []
             controller.displaySuggestions(self, self.currentword)
-
-            sugg_start = timeit.default_timer()
         
             for i in controller.suggestionslist:
                 self.suggestions.append(i)
-            
-            sugg_stop = timeit.default_timer()
 
             self.wordsuggest.Set(self.suggestions)
         
             # for levenshtein-generated suggestions
-            sorted_start = timeit.default_timer()
-
             controller.sortedDictionary = dict()
             self.suggestionsLev = []
             controller.displayLevSugg(self, self.currentword)
@@ -476,13 +464,6 @@ class Example(wx.Frame):
 
             self.levSuggest.Set(self.suggestionsLev)
             self.checktext.Set(self.suggestionsLev)
-
-            sorted_stop = timeit.default_timer()
-            totaltime = sorted_stop - sorted_start
-
-            print('Producing Suggestions Metaphone&Lev Runtime: ', totaltime) 
-            # adding all runtime para sa metlev-suggestions
-            self.overalltime+=totaltime
 
             self.Refresh()
             if (self.checkindexCurr == 0):
@@ -563,13 +544,13 @@ class Example(wx.Frame):
             self.suggestions = []
 
             # for not sorted suggestions
+            # Start sa timer
+            sugg_stop = timeit.default_timer()
+
             controller.displaySuggestions(self, self.currentword)
             for i in controller.suggestionslist:
                 self.suggestions.append(i)
             
-            sugg_stop = timeit.default_timer()
-            
-            self.wordsuggest.Set(self.suggestions)\
             
             # appending misspelled words
             misspelled = []
@@ -582,8 +563,6 @@ class Example(wx.Frame):
             self.misspellings.SetValue(json.dumps(misspelled))
 
             # for levenshtein-generated suggestions with Metaphone
-            sorted_start = timeit.default_timer()
-
             controller.sortedDictionary = {}
             self.suggestionsLev = []
 
@@ -596,16 +575,17 @@ class Example(wx.Frame):
                     else:
                         self.suggestionsLev.append(j)
 
-            self.levSuggest.Set(self.suggestionsLev)
-            self.checktext.Set(self.suggestionsLev)
-
-            sorted_stop = timeit.default_timer()
-            totaltime = sorted_stop - sorted_start
+            # End sa time
+            sugg_stop = timeit.default_timer()
+            totaltime = sugg_stop - sugg_start
 
             print('Producing Suggestions Metaphone&Lev Runtime: ', totaltime) 
             # adding all runtime para sa metlev-suggestions
             self.overalltime+=totaltime
 
+            self.wordsuggest.Set(self.suggestions)
+            self.levSuggest.Set(self.suggestionsLev)
+            self.checktext.Set(self.suggestionsLev)
 
             self.Refresh()
         

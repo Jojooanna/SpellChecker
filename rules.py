@@ -430,9 +430,9 @@ x = meta()
 # with io.open(path) as fp:
 #   line = fp.read().splitlines()
 #   for i in line:
-    # data1 = inputWords(word=i)
-    # session.add(data1)
-    # session.commit()
+#     data1 = inputWords(word=i)
+#     session.add(data1)
+#     session.commit()
         
 # for i in dictionary:
 #     print i
@@ -485,6 +485,7 @@ def OnConvert(i):
                 session.merge(dataSec)
                 session.commit()
 
+# Adding Words to Common DB
 def OnConvertCommon(i):
     primary, secondary = x.process(i)
 

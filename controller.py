@@ -43,7 +43,7 @@ def spellingCheck(self, List):
     # UNCOMMENT WHEN READY NA MAG TESTING
     # DON'T UNCOMMENT OMG
     for i in self.wrong:
-        addCommon(self, i) 
+        transferfromDict(self, i) 
     
     if (self.wrong == []):
         wx.MessageBox("YEY NO MORE WRONG WORDS")
@@ -55,60 +55,69 @@ def spellingCheck(self, List):
         self.check.Bind(wx.EVT_FIND, self.OnHighlight)
 
 def addCommon(self, i):
+    primary, secondary = x.process(i)
+    if primary == secondary:
+        data = session.query(Common).filter(Common.code == primary).first()
+        if data is None:
+            dict = Common(code=primary, words=[i])
+            session.add(dict)
+            session.commit()
+        else:
+            OnConvertCommon(i)
+    else:
+        dataPri = session.query(Common).filter(Common.code == primary).first()
+        if dataPri is None:
+            dictPri = Common(code=primary, words=[i])
+            session.add(dictPri)
+            session.commit()
+        else:
+            OnConvertCommon(i)
+
+        dataSec = session.query(Common).filter(Common.code == primary).first()
+        if dataSec is None:
+            dictSec = Common(code=primary, words=[i])
+            session.add(dictSec)
+            session.commit()
+        else:
+            OnConvertCommon(i)
+
+def transferfromDict(self, i):
     # for i in List:
     # converted = ForceToUnicode(i)
     # result = re.sub(r"[^A-Za-z /' -]", "", converted)
     primary, secondary = x.process(i)
 
     if primary == secondary:
-        data = session.query(Common).filter(Common.code == primary).first()
         dictdata = session.query(Words).filter(Words.code==primary).first()
-        if data is None:
-            dict = Common(code=primary, words=[i])
-            session.add(dict)
-            session.commit()
+        if dictdata is None:
+            pass
         else:
-            if dictdata is None:
-                pass
-            else:
-                for j in dictdata.words:
-                    OnConvertCommon(j)
+            for j in dictdata.words:
+                OnConvertCommon(j)
 
-                session.delete(dictdata)
-                session.commit()
+            session.delete(dictdata)
+            session.commit()
 
     else:
-        dataPri = session.query(Common).filter(Common.code == primary).first()
         dictdataPri = session.query(Words).filter(Words.code==primary).first()
-        if dataPri is None:
-            dictPri = Common(code=primary, words=[i])
-            session.add(dictPri)
-            session.commit()
+        if dictdataPri is None:
+            pass
         else:
-            if dictdataPri is None:
-                pass
-            else:
-                for j in dictdataPri.words:
-                    OnConvertCommon(j)
+            for j in dictdataPri.words:
+                OnConvertCommon(j)
 
-                session.delete(dictdataPri)
-                session.commit()
+            session.delete(dictdataPri)
+            session.commit()
 
-        dataSec = session.query(Common).filter(Common.code == primary).first()
         dictdataSec = session.query(Words).filter(Words.code==primary).first()
-        if dataSec is None:
-            dictSec = Common(code=primary, words=[i])
-            session.add(dictSec)
-            session.commit()
+        if dictdataSec is None:
+            pass
         else:
-            if dictdataSec is None:
-                pass
-            else:
-                for j in dictdataSec.words:
-                    OnConvertCommon(j)
+            for j in dictdataSec.words:
+                OnConvertCommon(j)
 
-                session.delete(dictdataSec)
-                session.commit()
+            session.delete(dictdataSec)
+            session.commit()
 
 def displaySuggestions(self, input):
     priCode, secCode = x.process(input)

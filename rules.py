@@ -9,7 +9,7 @@ def connectToDatabase():
     """
     Connect to our SQLite database and return a Session object
     """
-    engine = create_engine('postgresql://postgres:jojo123@localhost:5432/fortesting')
+    engine = create_engine('postgresql://postgres:jojo123@localhost:5432/spellcheck')
     Session = sessionmaker(bind=engine)
     session = Session()
     return session

@@ -12,7 +12,7 @@ import controller
 import rules
 import timeit
 
-engine = create_engine('postgresql://postgres:jojo123@localhost:5432/fortesting')
+engine = create_engine('postgresql://postgres:jojo123@localhost:5432/spellcheck')
 checkindexNew = 0
 
 Session = sessionmaker(bind=engine)
@@ -365,9 +365,6 @@ class Example(wx.Frame):
             self.curwordindex = self.List.index(self.currentword)
 
             # for not sorted suggestions
-            # Start sa timer
-            sugg_start = timeit.default_timer()
-
             controller.suggestionslist = []
             self.suggestions = []
             controller.displaySuggestions(self, self.currentword)
@@ -376,6 +373,8 @@ class Example(wx.Frame):
                 self.suggestions.append(i)
 
             # for Levenshtein-generated Suggestions
+            # Diri jud ang start sa timer bc ang method
+            sugg_start = timeit.default_timer()
             controller.sortedDictionary ={}
             self.suggestionsLev = []
 
@@ -544,9 +543,6 @@ class Example(wx.Frame):
             self.suggestions = []
 
             # for not sorted suggestions
-            # Start sa timer
-            sugg_stop = timeit.default_timer()
-
             controller.displaySuggestions(self, self.currentword)
             for i in controller.suggestionslist:
                 self.suggestions.append(i)
@@ -563,6 +559,9 @@ class Example(wx.Frame):
             self.misspellings.SetValue(json.dumps(misspelled))
 
             # for levenshtein-generated suggestions with Metaphone
+            # Diri jud ang start sa timer kay controller.displayLevSugg does a thing
+            sugg_start = timeit.default_timer()
+
             controller.sortedDictionary = {}
             self.suggestionsLev = []
 
@@ -586,6 +585,9 @@ class Example(wx.Frame):
             self.wordsuggest.Set(self.suggestions)
             self.levSuggest.Set(self.suggestionsLev)
             self.checktext.Set(self.suggestionsLev)
+
+            print ("Non-sorted suggestions:", self.suggestions)
+            print ("Sorted suggestions:", self.suggestionsLev)
 
             self.Refresh()
         

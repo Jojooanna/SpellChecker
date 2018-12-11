@@ -4,7 +4,7 @@ from sqlalchemy.ext.declarative import declarative_base
 import sqlalchemy as db
 from sqlalchemy.dialects import postgresql as pg
 
-engine = create_engine('postgresql://postgres:jojo123@localhost:5432/fortesting')
+engine = create_engine('postgresql://postgres:jojo123@localhost:5432/spellcheck')
 Base = declarative_base()
 
 class Words(Base):

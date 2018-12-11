@@ -15,7 +15,7 @@ def connectToDatabase():
     """
     Connect to our SQLite database and return a Session object
     """
-    engine = create_engine('postgresql://postgres:jojo123@localhost:5432/fortesting')
+    engine = create_engine('postgresql://postgres:jojo123@localhost:5432/spellcheck')
     Session = sessionmaker(bind=engine)
     session = Session()
     return session
@@ -123,35 +123,64 @@ def displaySuggestions(self, input):
     priCode, secCode = x.process(input)
     distance = []
     if priCode == secCode:
-        data = session.query(Words).filter(Words.code == priCode).first()
-        if data is None:
-            self.notfoundmsg.SetLabel("No suggestions found")
+        # checks at common db first, then dictionary db
+        dataCommon = session.query(Common).filter(Common.code == priCode).first()
+        if dataCommon is None:
+            data = session.query(Words).filter(Words.code == priCode).first()
+            if data is None:
+                self.notfoundmsg.SetLabel("No suggestions found")
+            else:
+                self.notfoundmsg.SetLabel("These are the suggestions.")
+                for i in data.words:
+                    if i in suggestionslist:
+                        pass
+                    else:
+                        suggestionslist.append(i)
         else:
             self.notfoundmsg.SetLabel("These are the suggestions.")
-            for i in data.words:
+            for i in dataCommon.words:
                 if i in suggestionslist:
                     pass
                 else:
                     suggestionslist.append(i)
     else:
-        data = session.query(Words).filter(Words.code == priCode).first()
-        if data is None:
-            self.notfoundmsg.SetLabel("No suggestions found")
+        # checks at common db first, then dictionary db
+        dataCommon = session.query(Common).filter(Common.code == priCode).first()
+        if dataCommon is None:
+            data = session.query(Words).filter(Words.code == priCode).first()
+            if data is None:
+                self.notfoundmsg.SetLabel("No suggestions found")
+            else:
+                self.notfoundmsg.SetLabel("These are the suggestions.")
+                for i in data.words:
+                    if i in suggestionslist:
+                        pass
+                    else:
+                        suggestionslist.append(i)
         else:
             self.notfoundmsg.SetLabel("These are the suggestions.")
-
-            for i in data.words:
+            for i in dataCommon.words:
                 if i in suggestionslist:
                     pass
                 else:
                     suggestionslist.append(i)
 
-        data2 = session.query(Words).filter(Words.code == secCode).first()
-        if data2 is None:
-            self.notfoundmsg.SetLabel("No suggestions found")
+        # Checks at common db first, then dictionary db
+        dataCommon2 = session.query(Common).filter(Common.code == secCode).first()
+        if dataCommon2 is None:
+            data2 = session.query(Words).filter(Words.code == secCode).first()
+            if data2 is None:
+                self.notfoundmsg.SetLabel("No suggestions found")
+            else:
+                self.notfoundmsg.SetLabel("These are the suggestions.")
+                for i in data2.words:
+                    if i in suggestionslist:
+                        pass
+                    else:
+                        suggestionslist.append(i)
         else:
             self.notfoundmsg.SetLabel("These are the suggestions.")
-            for i in data2.words:
+            for i in dataCommon2.words:
                 if i in suggestionslist:
                     pass
                 else:
@@ -161,32 +190,51 @@ def displayLevSugg(self, input):
     priCode, secCode = x.process(input)
     distance = []
     if priCode == secCode:
-        data = session.query(Words).filter(Words.code == priCode).first()
-        if data is None:
-            self.notfoundmsg.SetLabel("No suggestions found")
+        # Checks at common db first, then dictionary db
+        dataCommon = session.query(Common).filter(Common.code == priCode).first()
+        if dataCommon is None:
+            data = session.query(Words).filter(Words.code == priCode).first()
+            if data is None:
+                self.notfoundmsg.SetLabel("No suggestions found")
+            else:
+                self.notfoundmsg.SetLabel("These are the suggestions.")
+                for i in data.words:
+                    print ("LEVENSHTEIN RESULT:", i, levenshtein(input,i))
+                    sortSuggestions(levenshtein(input,i), i)
         else:
             self.notfoundmsg.SetLabel("These are the suggestions.")
-            for i in data.words:
-                print ("LEVENSHTEIN RESULT:", levenshtein(input,i))
+            for i in dataCommon.words:
                 sortSuggestions(levenshtein(input,i), i)
     else:
-        data = session.query(Words).filter(Words.code == priCode).first()
-        if data is None:
-            self.notfoundmsg.SetLabel("No suggestions found")
+        # Checks common db first, then dictionary db
+        dataCommon = session.query(Common).filter(Common.code == priCode).first()
+        if dataCommon is None:
+            data = session.query(Words).filter(Words.code == priCode).first()
+            if data is None:
+                self.notfoundmsg.SetLabel("No suggestions found")
+            else:
+                self.notfoundmsg.SetLabel("These are the suggestions.")
+
+                for i in data.words:
+                    sortSuggestions(levenshtein(input,i), i)
         else:
             self.notfoundmsg.SetLabel("These are the suggestions.")
-
-            for i in data.words:
-                print ("LEVENSHTEIN RESULT:", levenshtein(input,i))
+            for i in dataCommon.words:
                 sortSuggestions(levenshtein(input,i), i)
 
-        data2 = session.query(Words).filter(Words.code == secCode).first()
-        if data2 is None:
-            self.notfoundmsg.SetLabel("No suggestions found")
+        # Checks common db first, then dictionary db
+        dataCommon2 = session.query(Common).filter(Common.code == priCode).first()
+        if dataCommon2 is None:
+            data2 = session.query(Words).filter(Words.code == secCode).first()
+            if data2 is None:
+                self.notfoundmsg.SetLabel("No suggestions found")
+            else:
+                self.notfoundmsg.SetLabel("These are the suggestions.")
+                for i in data2.words:
+                    sortSuggestions(levenshtein(input,i), i)
         else:
             self.notfoundmsg.SetLabel("These are the suggestions.")
-            for i in data2.words:
-                print ("LEVENSHTEIN RESULT:", levenshtein(input,i))
+            for i in dataCommon2.words:
                 sortSuggestions(levenshtein(input,i), i)
 
 def levenshtein(frominput, fromdict):  
@@ -216,7 +264,6 @@ def levenshtein(frominput, fromdict):
     return distance
 
 def sortSuggestions(distanceinput, suggList):
-    print ("suggList: ", suggList)
     if distanceinput in sortedDictionary:
         if suggList not in sortedDictionary.values():
             sortedDictionary[distanceinput].append(suggList)

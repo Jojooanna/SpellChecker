@@ -12,7 +12,7 @@ import controller
 import rules
 import timeit
 
-engine = create_engine('postgresql://postgres:jojo123@localhost:5432/spellcheck')
+engine = create_engine('postgresql://postgres:jojo123@localhost:5432/fortesting')
 checkindexNew = 0
 
 Session = sessionmaker(bind=engine)
@@ -398,6 +398,10 @@ class Example(wx.Frame):
             self.wordsuggest.Set(self.suggestions)
             self.levSuggest.Set(self.suggestionsLev)
             self.checktext.Set(self.suggestionsLev)
+            
+            print("Current Word:", self.currentword)
+            print ("Non-sorted suggestions:", self.suggestions)
+            print ("Sorted suggestions:", self.suggestionsLev)
 
             # for highlighting text
             target = self.originaltext.GetValue()
@@ -534,6 +538,7 @@ class Example(wx.Frame):
             else:
                 pass
         print self.List
+        print ("Number of words:", len(self.List))
 
         if not self.words:
             wx.MessageBox("Please enter something for us to check your work!!")
@@ -546,7 +551,6 @@ class Example(wx.Frame):
             controller.displaySuggestions(self, self.currentword)
             for i in controller.suggestionslist:
                 self.suggestions.append(i)
-            
             
             # appending misspelled words
             misspelled = []
@@ -573,6 +577,7 @@ class Example(wx.Frame):
                         pass
                     else:
                         self.suggestionsLev.append(j)
+                        print ("List suggestions:", self.suggestionsLev)
 
             # End sa time
             sugg_stop = timeit.default_timer()
@@ -586,6 +591,7 @@ class Example(wx.Frame):
             self.levSuggest.Set(self.suggestionsLev)
             self.checktext.Set(self.suggestionsLev)
 
+            print("Current Word:", self.currentword)
             print ("Non-sorted suggestions:", self.suggestions)
             print ("Sorted suggestions:", self.suggestionsLev)
 

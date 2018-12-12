@@ -9,7 +9,7 @@ def connectToDatabase():
     """
     Connect to our SQLite database and return a Session object
     """
-    engine = create_engine('postgresql://postgres:jojo123@localhost:5432/spellcheck')
+    engine = create_engine('postgresql://postgres:jojo123@localhost:5432/fortesting')
     Session = sessionmaker(bind=engine)
     session = Session()
     return session
@@ -162,7 +162,7 @@ class meta:
                 # 	continue
                 if (self.sub(word, current, 2, ["CC"])):
                     primary += "C"
-                    secondary += "C"
+                    secondary += "K"
                     current += 2
                 elif (self.sub(word, current, 2, ["CH"])):
                     primary += "TS"
@@ -170,8 +170,8 @@ class meta:
                     current += 2
                     continue
                 else:
-                    primary += "K"
-                    secondary += "C"
+                    primary += "C"
+                    secondary += "K"
                     current += 1
                     continue
 

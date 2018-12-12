@@ -15,7 +15,7 @@ def connectToDatabase():
     """
     Connect to our SQLite database and return a Session object
     """
-    engine = create_engine('postgresql://postgres:jojo123@localhost:5432/spellcheck')
+    engine = create_engine('postgresql://postgres:jojo123@localhost:5432/fortesting')
     Session = sessionmaker(bind=engine)
     session = Session()
     return session
@@ -39,6 +39,7 @@ def spellingCheck(self, List):
             print ("spellingCheck results:", result)  # kung wala ang words e append sya sa wrong na list
     # print wrong
     print ("Misspelled words:", self.wrong)
+    print ("No. of FP:", len(self.wrong))
 
     # UNCOMMENT WHEN READY NA MAG TESTING
     # DON'T UNCOMMENT OMG
@@ -204,6 +205,7 @@ def displayLevSugg(self, input):
         else:
             self.notfoundmsg.SetLabel("These are the suggestions.")
             for i in dataCommon.words:
+                print ("LEVENSHTEIN RESULT:", i, levenshtein(input,i))
                 sortSuggestions(levenshtein(input,i), i)
     else:
         # Checks common db first, then dictionary db
@@ -216,10 +218,12 @@ def displayLevSugg(self, input):
                 self.notfoundmsg.SetLabel("These are the suggestions.")
 
                 for i in data.words:
+                    print ("LEVENSHTEIN RESULT:", i, levenshtein(input,i))
                     sortSuggestions(levenshtein(input,i), i)
         else:
             self.notfoundmsg.SetLabel("These are the suggestions.")
             for i in dataCommon.words:
+                print ("LEVENSHTEIN RESULT:", i, levenshtein(input,i))
                 sortSuggestions(levenshtein(input,i), i)
 
         # Checks common db first, then dictionary db
@@ -231,10 +235,12 @@ def displayLevSugg(self, input):
             else:
                 self.notfoundmsg.SetLabel("These are the suggestions.")
                 for i in data2.words:
+                    print ("LEVENSHTEIN RESULT:", i, levenshtein(input,i))
                     sortSuggestions(levenshtein(input,i), i)
         else:
             self.notfoundmsg.SetLabel("These are the suggestions.")
             for i in dataCommon2.words:
+                print ("LEVENSHTEIN RESULT:", i, levenshtein(input,i))
                 sortSuggestions(levenshtein(input,i), i)
 
 def levenshtein(frominput, fromdict):  

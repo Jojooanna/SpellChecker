@@ -126,7 +126,7 @@ def displaySuggestions(self, input):
     for x in session.query(inputWords):
         distanceinput = levenshtein(input, x.word)
         if distanceinput <= 3:
-            print x.word.encode('utf-8')
+            # print x.word.encode('utf-8')
             sortSuggestions(levenshtein(input, x.word), x.word)
             if x.word in suggestionslist:
                 pass
@@ -181,7 +181,7 @@ def levenshtein(frominput, fromdict):
     return distance
 
 def sortSuggestions(distanceinput, suggList):
-    print ("suggList: ", suggList)
+    # print ("suggList: ", suggList)
     if distanceinput in sortedDictionary:
         if suggList not in sortedDictionary.values():
             sortedDictionary[distanceinput].append(suggList)

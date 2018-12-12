@@ -23,6 +23,7 @@ class Example(wx.Frame):
         super(Example, self).__init__(*args, **kwargs)
 
         self.aboutme = wx.MessageDialog(self, "Basic Commands in this Program", "About Spell Checker", wx.OK)
+        self.overalltime = 0
         self.InitUI()
 
     def InitUI(self):
@@ -242,7 +243,7 @@ class Example(wx.Frame):
                 controller.suggestionslist = []
                 self.suggestions = []
                 controller.sortedDictionary = dict()
-
+ 
                 controller.displaySuggestions(self, self.currentword)
 
                 for i in controller.suggestionslist:
@@ -350,19 +351,17 @@ class Example(wx.Frame):
             controller.suggestionslist = []
             controller.sortedDictionary ={}
             self.suggestions = []
+            sugg_start = timeit.default_timer()
             controller.displaySuggestions(self, self.currentword)
 
-            sugg_start = timeit.default_timer()
             
             for i in controller.suggestionslist:
                 self.suggestions.append(i)
             
-            sugg_stop = timeit.default_timer()
 
             self.wordsuggest.Set(self.suggestions)
 
 
-            sorted_start = timeit.default_timer()
             # for Levenshtein-generated Suggestions
             self.suggestionsLev = []
             for k in controller.sortedDictionary.values():
@@ -371,8 +370,12 @@ class Example(wx.Frame):
                         continue
                     else:
                         self.suggestionsLev.append(j)
-            sorted_stop = timeit.default_timer()
+            
 
+            sugg_stop = timeit.default_timer()
+            
+            print ("suggList: ", self.suggestionsLev)
+            
             self.levSuggest.Set(self.suggestionsLev)
             self.checktext.Set(self.suggestionsLev)
 
@@ -389,13 +392,19 @@ class Example(wx.Frame):
                         self.inputtext.Bind(wx.EVT_SET_FOCUS, self.OnHighlight(start, position))
                         start = 0
                         count = 1
+            totaltime = sugg_stop - sugg_start
+            print('Producing Suggestions Metaphone&Lev Runtime: ', totaltime) 
+            #End sa timer
+
+            self.overalltime+=totaltime
+
+            print('Overall Time: ', self.overalltime) 
 
             if (self.checkindexCurr == len(self.wrong)-1):
                 self.findnextbtn.Disable()
+                print('Overall Time: ', self.overalltime) 
 
-            print('Producing Suggestions Metaphone&Lev Runtime: ', sugg_stop - sugg_start) 
-            print('Producing Suggestions Sorted Metaphone&Lev Runtime: ', sorted_stop - sorted_start) 
-
+            # adding all runtime para sa metlev-suggestions
 
         except IndexError:
             #self.findnextbtn.Disable()
@@ -403,6 +412,7 @@ class Example(wx.Frame):
 
     def Previous(self, e):
         try:
+            overall_
             # for unhighlighting previous texts
             target1 = self.originaltext.GetValue()
             result1 = re.sub(r"[^A-Za-z /' -]", "", target1)
@@ -423,20 +433,18 @@ class Example(wx.Frame):
             controller.sortedDictionary = dict()
             self.suggestions = []
             self.suggestionsLev = []
+            sugg_start = timeit.default_timer()
             controller.displaySuggestions(self, self.currentword)
 
-            sugg_start = timeit.default_timer()
         
             for i in controller.suggestionslist:
                 self.suggestions.append(i)
             
-            sugg_stop = timeit.default_timer()
 
             self.wordsuggest.Set(self.suggestions)
             self.checktext.Set(self.suggestions)
             self.checktext.SetLabel(self.suggestions[0])
         
-            sorted_start = timeit.default_timer()
             # for levenshtein-generated suggestions
             for k in controller.sortedDictionary.values():
                 for j in k:
@@ -444,7 +452,7 @@ class Example(wx.Frame):
                         pass
                     else:
                         self.suggestionsLev.append(j)
-            sorted_stop = timeit.default_timer()
+            sugg_stop = timeit.default_timer()
 
             self.levSuggest.Set(self.suggestionsLev)
 
@@ -453,7 +461,7 @@ class Example(wx.Frame):
                     self.previousbtn.Disable()
 
             print('Producing Suggestions Metaphone&Lev Runtime: ', sugg_stop - sugg_start) 
-            print('Producing Suggestions Sorted Metaphone&Lev Runtime: ', sorted_stop - sorted_start) 
+
 
         except IndexError:
             wx.MessageBox("There's no previous word")
@@ -502,7 +510,6 @@ class Example(wx.Frame):
 
     def OnSpellCheck(self, e):
         # for unhighlighting texts
-        overall_start = timeit.default_timer()
 
         target1 = self.originaltext.GetValue()
         result1 = re.sub(r"[^A-Za-z /' -]", "", target1)
@@ -537,7 +544,6 @@ class Example(wx.Frame):
             for i in controller.suggestionslist:
                 self.suggestions.append(i)
             
-            sugg_stop = timeit.default_timer()
             
             self.wordsuggest.Set(self.suggestions)
 
@@ -553,7 +559,6 @@ class Example(wx.Frame):
                     misspelled.append(controller.ForceToUnicode(i))
             self.misspellings.SetValue(json.dumps(misspelled))
 
-            sorted_start = timeit.default_timer()
             # for levenshtein-generated suggestions with Metaphone
             # dili ni plain Levenshtein
             for k in controller.sortedDictionary.values():
@@ -562,11 +567,9 @@ class Example(wx.Frame):
                         pass
                     else:
                         self.suggestionsLev.append(j)
-            sorted_stop = timeit.default_timer()
-
-
-            print('Producing Suggestions Metaphone&Lev Runtime: ', sugg_stop - sugg_start) 
-            print('Producing Suggestions Sorted Metaphone&Lev Runtime: ', sorted_stop - sorted_start) 
+            sugg_stop = timeit.default_timer()
+            totaltime = sugg_stop - sugg_start
+            print('Producing Suggestions Metaphone&Lev Runtime: ', totaltime) 
 
             self.levSuggest.Set(self.suggestionsLev)
             self.checktext.Set(self.suggestionsLev)
@@ -595,8 +598,8 @@ class Example(wx.Frame):
                 self.inputtext.Bind(wx.EVT_SET_FOCUS, self.OnHighlight(start, position))
                 start = 0
 
-        overall_stop = timeit.default_timer()
-        print('Overall Runtime: ', overall_stop - overall_start) 
+        self.overalltime += totaltime
+        print('Overall Runtime: ', self.overalltime) 
 
     def OnHighlight(self, start, position):
         self.inputtext.SetStyle(start, position, wx.TextAttr("black", "turquoise"))

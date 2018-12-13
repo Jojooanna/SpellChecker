@@ -33,6 +33,7 @@ def spellingCheck(self, List):
         converted = ForceToUnicode(i)
         result = re.sub(r"[^A-Za-z /' -]", "", converted)
         data = session.query(inputWords).filter(func.lower(inputWords.word) == func.lower(result)).first()
+        print data
         if data is None:
             self.wrong.append(result)
         else:
@@ -56,9 +57,7 @@ def spellingCheck(self, List):
 
 def addCommon(self, i):
     # for i in List:
-    converted = ForceToUnicode(i)
-    result = re.sub(r"[^A-Za-z /' -]", "", converted)
-    primary, secondary = x.process(result)
+    primary, secondary = x.process(i)
     if primary == secondary:
         # print("{}: {}".format(primary, i))
         data = session.query(Common).filter(Common.code == primary).first()

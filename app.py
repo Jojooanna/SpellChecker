@@ -11,6 +11,7 @@ from model import *
 import controller
 import rules
 import timeit
+from pathlib import Path
 
 engine = create_engine('postgresql://postgres:mvjunetwo@localhost:5432/spell')
 checkindexNew = 0
@@ -225,13 +226,22 @@ class Example(wx.Frame):
         input = inputWords(word=self.originaltext.GetValue())
         result = session.query(inputWords).filter(inputWords.word == self.originaltext.GetValue()).first()
         if result is None:
-            controller.addCommon(self, result)
+            controller.addCommon(self, self.originaltext.GetValue())
+            print("Correct Word Identified as Misspelling:", self.originaltext.GetValue())
             
             session.add(input)
             session.commit()
+            cur_path = os.path.dirname(__file__)
+
+            new_path = os.path.relpath('C:\\Users\\Villanueva\\Documents\\GitHub\\SpellChecker\\Datasets\\Dictionary Data\\dictionary.txt', cur_path)
+
+            f = open(new_path, 'a')
+            f.write("\n")
+            f.write(self.originaltext.GetValue())
+            f.close()
 
             rules.OnConvert(self.originaltext.GetValue())
-            if not self.word:
+            if not self.words:
                 wx.MessageBox("No more words.")
             else:
                 self.checkindexCurr = self.wrong.index(self.currentword)
@@ -254,6 +264,7 @@ class Example(wx.Frame):
 
                 self.checktext.Set(self.suggestions)
                 self.checktext.SetLabel(self.suggestions[0])
+
         else:
             print ("End of array.")
         wx.MessageBox("Word Added!")

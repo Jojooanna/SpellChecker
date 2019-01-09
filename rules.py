@@ -9,7 +9,7 @@ def connectToDatabase():
     """
     Connect to our SQLite database and return a Session object
     """
-    engine = create_engine('postgresql://postgres:jojo123@localhost:5432/fortesting')
+    engine = create_engine('postgresql://postgres:jojo123@localhost:5432/spellcheck')
     Session = sessionmaker(bind=engine)
     session = Session()
     return session
@@ -201,11 +201,13 @@ class meta:
                 continue
 
             elif (symbol == "G"):
-                primary += "G"
-                secondary += "G"
-                if (self.sub(word, current + 1, 1, ["G"])):
-                    current += 1
+                if(self.sub(word, current, 2, ["GG"])):
+                    primary += "G"
+                    secondary += "G"
+                    current += 2
                 else:
+                    primary += "G"
+                    secondary += "G"
                     current += 1
                 continue
             elif (symbol == "H"):
@@ -214,14 +216,20 @@ class meta:
                     primary += "H"
                     secondary += "J"
                     current += 1
+                elif(self.sub(word,current, 2, ["HH"])):
+                    primary += "H"
+                    secondary += "J"
+                    current +=2
                 else:
+                    primary += "H"
+                    secondary += "J"
                     current += 1
                 continue
             elif (symbol == "J"):
-                if (self.sub(word, current, 1, ["J"])):
+                if (self.sub(word, current, 2, ["JJ"])):
                     primary += "J"
                     secondary += "H"
-                    current += 1
+                    current += 2
                     continue
                 else:
                     current += 1
@@ -241,6 +249,11 @@ class meta:
                     primary += "Q"
                     secondary += "Q"
                     current += 2
+                    continue
+                elif(self.sub(word, current, 2, ["KK"])):
+                    primary+="Q"
+                    secondary+="K"
+                    current +=2
                     continue
                 else:
                     primary += "Q"
@@ -321,19 +334,21 @@ class meta:
             elif (symbol == "Q"):
                 if (self.sub(word, current, 2, ["QQ"])):
                     primary += "Q"
-                    secondary += "Q"
-                    current += 1
+                    secondary += "K"
+                    current += 2
                 else:
                     primary += "Q"
                     secondary += "K"
                     current += 1
                 continue
             elif (symbol == "R"):
-                if (self.sub(word, current, 1, ["R"])):
+                if (self.sub(word, current, 2, ["RR"])):
                     primary += "R"
                     secondary += "R"
-                    current += 1
+                    current += 2
                 else:
+                    primary += "R"
+                    secondary += "R"
                     current += 1
                 continue
 
@@ -344,14 +359,18 @@ class meta:
                     current += 1
                     continue
 
-                if (self.sub(word, current + 1, 1, ["Z"])):
+                if (self.sub(word, current, 2, ["SS"])):
                     primary += "S"
-                    secondary += "X"
-                    if (self.sub(word, current + 1, 1, ["Z"])):
-                        current += 1
-                    else:
-                        current += 1
+                    secondary += "S"
+                    current += 2
                     continue
+                else:
+                    primary += "S"
+                    secondary += "S"
+                    current +=1
+                    continue
+
+
                 if (self.sub(word, current, 2, ["SC"])):
                     if (self.sub(word, current + 2, 1, ["H"])):
                         if (self.sub(word, current + 3, 2, ["OO", "ER", "EN", "UY", "ED", "EM"])):
@@ -373,7 +392,7 @@ class meta:
             elif (symbol == "T"):
                 if (self.sub(word, current, 2, ["TT"])):
                     primary += "T"
-                    secondary += "TT"
+                    secondary += "T"
                     current += 2
                 elif (self.sub(word, current, 2, ["TS"])):
                     primary += "TS"
@@ -387,6 +406,8 @@ class meta:
             elif (symbol == "V"):
                 if (self.sub(word, current + 1, 1, ["V"])):
                     current += 1
+                elif (self.sub(word, current, 2, ["VV"])):
+                    current +=2
                 else:
                     current += 1
                 primary += "V"
@@ -398,6 +419,11 @@ class meta:
                     primary += "W"
                     secondary += "W"
                     current += 1
+                    continue
+                elif(self.sub(word, current, 2, ["WW"])):
+                    primary += "W"
+                    secondary += "W"
+                    current +=2
                     continue
                 else:
                     current += 1
@@ -427,11 +453,13 @@ class meta:
                     secondary += "S"
                     current += 1
                     continue
-                elif (self.sub(word, current+1, 1, ['Z'])):
+                elif (self.sub(word, current, 2, ['ZZ'])):
                     primary += "Z"
                     secondary += "S"
-                    current += 1
+                    current += 2
                 else:
+                    primary += "Z"
+                    secondary += "S"
                     current += 1
                 continue
             else:
@@ -550,65 +578,3 @@ def OnConvertCommon(i):
                 dataSec.words.append(i)
                 session.merge(dataSec)
                 session.commit()
-#
-# stop = timeit.default_timer()
-#
-# print('Time: ', stop - start)
-
-# *******************************************************************
-# dict = {"hell": [1, 2, 3], "ej": [1, 2], "TSK": ['hello', 'world']}
-# # How to use metaphone algorithm
-# x = meta()
-# # to produce primary and secondary hash just use the following
-# word = raw_input('Enter a word: ')
-#
-# primary, secondary = x.process(word)
-# print primary
-# print secondary
-
-# dictionary = open("dictionarytest.txt", "r")
-#
-# if dictionary.mode == 'r':
-#     content = dictionary.read()
-#
-#     x = meta()
-#
-#     primary, secondary = x.process(content)
-#     print (primary, content)
-#     print (secondary, content)
-
-# dict = {"HL": ['hala','halo', 'holo'], "JL": ['haja', 'hajo'], "TSK": ['hello', 'world'], "CHK":['choco', 'choko', 'chook']}
-# # How to use metaphone algorithm
-# x = meta()
-# # to produce primary and secondary hash just use the following
-# word = raw_input('Enter a word: ')
-#
-# primary, secondary = x.process(word)
-# print primary
-# print secondary
-
-# if primary in dict.keys():
-#     dict[primary].append(word)
-#
-# list_name = primary
-# vars()[list_name] = []
-# print dict[primary]
-# print dict
-# print dict["hell"]
-
-# words = []
-#
-# for x in dict[primary]:
-#     words.append(x)
-#
-# if dict[secondary]:
-#     for y in dict[secondary]:
-#         words.append(y)
-#
-# print words
-
-
-
-# primary, secondary = x.process(raw_input('Enter a word: '))
-
-# print primary, secondary

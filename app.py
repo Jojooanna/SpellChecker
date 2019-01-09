@@ -12,7 +12,7 @@ import controller
 import rules
 import timeit
 
-engine = create_engine('postgresql://postgres:jojo123@localhost:5432/fortesting')
+engine = create_engine('postgresql://postgres:jojo123@localhost:5432/spellcheck')
 checkindexNew = 0
 
 Session = sessionmaker(bind=engine)
@@ -22,6 +22,7 @@ class Example(wx.Frame):
     def __init__(self, *args, **kwargs):
         super(Example, self).__init__(*args, **kwargs)
         self.overalltime = 0
+        self.totalLearned = 0
         self.aboutme = wx.MessageDialog(self, "Basic Commands in this Program", "About Spell Checker", wx.OK)
         self.InitUI()
 
@@ -227,6 +228,7 @@ class Example(wx.Frame):
         if result is None:
             controller.addCommon(self, self.originaltext.GetValue())
             print("Correct Word Identified as Misspelling:", self.originaltext.GetValue())
+            self.totalLearned+=1
             session.add(input)
             session.commit()
 
@@ -257,7 +259,7 @@ class Example(wx.Frame):
                 controller.displayLevSugg(self, self.currentword)
                 self.levSuggest.Set(self.suggestionsLev)
                 self.checktext.Set(self.suggestionsLev)
-
+                
                 # sugg_stop = timeit.default_timer()
                 # totaltime = sugg_stop - sugg_start
                 # print('Producing Suggestions Metaphone&Lev Runtime: ', totaltime) 
@@ -283,7 +285,7 @@ class Example(wx.Frame):
 
     def Change(self, e):
         target1 = self.checktext.GetValue()
-        result1 = re.sub(r"[^A-Za-z /' -]", "", target1)
+        result1 = re.sub(r"[:;!?@#$%^&*()~`\"_+=.,]", "", target1)
         start1 = self.inputtext.GetValue().find(target1)
         position1 = start1 + len(target1)
         self.inputtext.Bind(wx.EVT_SET_FOCUS, self.UnHighlight(start1, position1))
@@ -351,7 +353,7 @@ class Example(wx.Frame):
         try:
             # remove highlight from previous words
             target1 = self.originaltext.GetValue()
-            result1 = re.sub(r"[^A-Za-z /' -]", "", target1)
+            result1 = re.sub(r"[:;!?@#$%^&*()~`\"_+=.,]", "", target1)
             start1 = self.inputtext.GetValue().find(result1)
             position1 = start1 + len(result1)
             self.inputtext.Bind(wx.EVT_SET_FOCUS, self.UnHighlight(start1, position1))
@@ -405,7 +407,7 @@ class Example(wx.Frame):
 
             # for highlighting text
             target = self.originaltext.GetValue()
-            result = re.sub(r"[^A-Za-z /' -]", "", target)
+            result = re.sub(r"[:;!?@#$%^&*()~`\"_+=.,]", "", target)
             count = 0
             for i in range(self.inputtext.GetNumberOfLines()):
                 if count == 0:
@@ -420,6 +422,7 @@ class Example(wx.Frame):
             if (self.checkindexCurr == len(self.wrong)-1):
                 self.findnextbtn.Disable()
                 print ("Overall Lev-Suggestion Runtime:", self.overalltime)
+                print("Total True Negatives:", self.totalLearned)
 
 
         except IndexError:
@@ -430,7 +433,7 @@ class Example(wx.Frame):
         try:
             # for unhighlighting previous texts
             target1 = self.originaltext.GetValue()
-            result1 = re.sub(r"[^A-Za-z /' -]", "", target1)
+            result1 = re.sub(r"[:;!?@#$%^&*()~`\"_+=.,]", "", target1)
             start1 = self.inputtext.GetValue().find(result1)
             position1 = start1 + len(result1)
             self.inputtext.Bind(wx.EVT_SET_FOCUS, self.UnHighlight(start1, position1))
@@ -477,7 +480,7 @@ class Example(wx.Frame):
 
             # for highlighting texts
             target = self.originaltext.GetValue()
-            result = re.sub(r"[^A-Za-z /' -]", "", target)
+            result = re.sub(r"[:;!?@#$%^&*()~`\"_+=.,]", "", target)
             count = 0
             for i in range(self.inputtext.GetNumberOfLines()):
                 if count == 0:
@@ -522,7 +525,7 @@ class Example(wx.Frame):
         overall_start = timeit.default_timer()
 
         target1 = self.originaltext.GetValue()
-        result1 = re.sub(r"[^A-Za-z /' -]", "", target1)
+        result1 = re.sub(r"[:;!?@#$%^&*()~`\"_+=.,]", "", target1)
         start1 = self.inputtext.GetValue().find(result1)
         position1 = start1 + len(result1)
         self.inputtext.Bind(wx.EVT_SET_FOCUS, self.UnHighlight(start1, position1))
@@ -533,7 +536,7 @@ class Example(wx.Frame):
         for i in self.words:
             converted = controller.ForceToUnicode(i)
             if converted.isdigit() == False:
-                result = re.sub(r"[^A-Za-z /' -]", "", converted)
+                result = re.sub(r"[:;!?@#$%^&*()~`\"_+=.,]", "", converted)
                 self.List.append(result)
             else:
                 pass
@@ -577,7 +580,6 @@ class Example(wx.Frame):
                         pass
                     else:
                         self.suggestionsLev.append(j)
-                        print ("List suggestions:", self.suggestionsLev)
 
             # End sa time
             sugg_stop = timeit.default_timer()
@@ -610,7 +612,7 @@ class Example(wx.Frame):
 
         # for highlighting texts
         target = self.originaltext.GetValue()
-        result = re.sub(r"[^A-Za-z /' -]", "", target)
+        result = re.sub(r"[:;!?@#$%^&*()~`\"_+=.,]", "", target)
         for i in range(self.inputtext.GetNumberOfLines()):
             line = self.inputtext.GetLineText(i)
             if result in line:

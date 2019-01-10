@@ -108,7 +108,7 @@ class Example(wx.Frame):
         self.changebtn = wx.Button(self.panel, label="Change", size=(100,30))
         self.changebtn.Bind(wx.EVT_BUTTON, self.Change)
         self.changeallbtn = wx.Button(self.panel, label="Change All", size=(100,30))
-        #self.changeallbtn.Bind(wx.EVT_BUTTON, self.OnTest)
+        self.changeallbtn.Bind(wx.EVT_BUTTON, self.ChangeAll)
 
         self.vbox7.Add(self.changebtn, flag=wx.RIGHT)
         self.vbox7.Add(self.changeallbtn, flag=wx.RIGHT)
@@ -292,7 +292,7 @@ class Example(wx.Frame):
 
         self.selected = self.checktext.GetValue()
         if self.selected == "":
-            wx.MessageBox("We can't change something into nothing")
+            wx.MessageBox("Please Select a word")
         else:   
             # target = self.originaltext.GetValue()
             # for i in range(self.inputtext.GetValue()):
@@ -308,11 +308,89 @@ class Example(wx.Frame):
 
                 self.checktext.Clear()
                 self.checkindexCurr = self.wrong.index(self.currentword)
-                self.wrong.pop(self.checkindexCurr)
+                self.wrong.pop(self.checkindexCurr) #para e delete ang word sa wrong[] (given the index of the word)
 
                 self.originaltext.SetValue(self.wrong[self.checkindexCurr]) #ma change ang original word sa nxt wrong words
                 self.currentword = self.wrong[self.checkindexCurr]
                 self.curwordindex = self.List.index(self.currentword)
+
+                controller.suggestionslist = []
+                self.suggestions = []
+                controller.displaySuggestions(self, self.currentword)
+                for i in controller.suggestionslist:
+                    self.suggestions.append(i)
+                self.wordsuggest.Set(self.suggestions)
+
+                # MET AND LEV
+                # sugg_start = timeit.default_timer()
+
+                controller.displayLevSugg(self, self.currentword)
+                self.levSuggest.Set(self.suggestionsLev)
+                
+                self.checktext.Set(self.suggestions)
+                self.checktext.SetLabel(self.suggestions[0])
+
+                # sugg_stop = timeit.default_timer()
+                # totaltime = sugg_stop - sugg_start
+                # print('Producing Suggestions Metaphone&Lev Runtime: ', totaltime) 
+                # overalltime+=totaltime
+
+                # misspelled = []
+                # for i in self.wrong:
+                #     if i in misspelled:
+                #         pass
+                #     else:
+                #         misspelled.append(controller.ForceToUnicode(i))
+                # self.misspellings.SetValue(json.dumps(misspelled))
+
+                self.Refresh()
+                
+            except IndexError:
+                wx.MessageBox("No more wrong words")
+                # eclear pa dapat ang display suggestions
+
+    def ChangeAll(self, e):
+        target1 = self.checktext.GetValue()
+        result1 = re.sub(r"[:;!?@#$%^&*()~`\"_+=.,]", "", target1)
+        start1 = self.inputtext.GetValue().find(target1)
+        position1 = start1 + len(target1)
+        self.inputtext.Bind(wx.EVT_SET_FOCUS, self.UnHighlight(start1, position1))
+
+        self.selected = self.checktext.GetValue()
+        if self.selected == "":
+            wx.MessageBox("Please Select a word")
+        else:   
+            # target = self.originaltext.GetValue()
+            # for i in range(self.inputtext.GetValue()):
+            #         line = self.inputtext.GetLineText(i)
+            #         if target in line:
+            #             self.inputtext.GetValue().replace(target, self.selected)
+
+            try:
+                self.List[self.curwordindex] = self.selected
+                
+                for item in self.List:
+                    if item == self.currentword:
+                        self.List[self.List.index(item)] = self.selected
+
+                print self.List
+                
+                self.inputtext.SetValue(' '.join(self.List))
+
+
+                self.checktext.Clear()
+                self.checkindexCurr = self.wrong.index(self.currentword)
+                for item in self.wrong:
+                    if item == self.currentword:
+                        self.wrong.remove(self.currentword)
+                print self.wrong
+
+                self.originaltext.SetValue(self.wrong[self.checkindexCurr]) #ma change ang original word sa nxt wrong words
+                self.currentword = self.wrong[self.checkindexCurr]
+                self.curwordindex = self.List.index(self.currentword)
+                print self.wrong
+
+
 
                 controller.suggestionslist = []
                 self.suggestions = []

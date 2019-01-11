@@ -347,7 +347,7 @@ class Example(wx.Frame):
                 
             except IndexError:
                 wx.MessageBox("No more wrong words")
-                # eclear pa dapat ang display suggestions
+                # eclear pa dapat ang display suggestions(mana ni. look for self.suggestion =[])
 
     def ChangeAll(self, e):
         target1 = self.checktext.GetValue()
@@ -600,6 +600,9 @@ class Example(wx.Frame):
 
     def OnSpellCheck(self, e):
         # for unhighlighting texts
+        session.query(Common).delete()
+        session.commit()
+
         overall_start = timeit.default_timer()
 
         target1 = self.originaltext.GetValue()

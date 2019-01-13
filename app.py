@@ -477,7 +477,7 @@ class Example(wx.Frame):
 
             self.wordsuggest.Set(self.suggestions)
             self.levSuggest.Set(self.suggestionsLev)
-            self.checktext.Set(self.suggestionsLev)
+            self.checktext.Set(self.suggestionsLev[:5])
             
             print("Current Word:", self.currentword)
             print ("Non-sorted suggestions:", self.suggestions)
@@ -547,7 +547,7 @@ class Example(wx.Frame):
                         self.suggestionsLev.append(j)
 
             self.levSuggest.Set(self.suggestionsLev)
-            self.checktext.Set(self.suggestionsLev)
+            self.checktext.Set(self.suggestionsLev[:5])
 
             self.Refresh()
             if (self.checkindexCurr == 0):
@@ -600,8 +600,8 @@ class Example(wx.Frame):
 
     def OnSpellCheck(self, e):
         # for unhighlighting texts
-        session.query(Common).delete()
-        session.commit()
+        # session.query(Common).delete()
+        # session.commit()
 
         overall_start = timeit.default_timer()
 
@@ -666,13 +666,14 @@ class Example(wx.Frame):
             sugg_stop = timeit.default_timer()
             totaltime = sugg_stop - sugg_start
 
+            self.seggestionsLev = self.suggestionsLev[:4]
+
             print('Producing Suggestions Metaphone&Lev Runtime: ', totaltime) 
             # adding all runtime para sa metlev-suggestions
             self.overalltime+=totaltime
-
             self.wordsuggest.Set(self.suggestions)
             self.levSuggest.Set(self.suggestionsLev)
-            self.checktext.Set(self.suggestionsLev)
+            self.checktext.Set(self.suggestionsLev[:5])
 
             print("Current Word:", self.currentword)
             print ("Non-sorted suggestions:", self.suggestions)

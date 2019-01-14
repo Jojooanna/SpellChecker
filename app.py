@@ -272,7 +272,6 @@ class Example(wx.Frame):
 
     def OnWordSuggest(self, event):
         self.checktext.SetValue(self.checktext.GetStringSelection())
-        self.checktext.SetLabel(self.checktext.GetStringSelection())
 
     def OnLevSuggest(self, event):
         pass
@@ -399,7 +398,7 @@ class Example(wx.Frame):
 
             self.wordsuggest.Set(self.suggestions)
             self.levSuggest.Set(self.suggestionsLev)
-            self.checktext.Set(self.suggestionsLev)
+            self.checktext.Set(self.suggestionsLev[:5])
             
             print("Current Word:", self.currentword)
             print ("Non-sorted suggestions:", self.suggestions)
@@ -469,7 +468,7 @@ class Example(wx.Frame):
                         self.suggestionsLev.append(j)
 
             self.levSuggest.Set(self.suggestionsLev)
-            self.checktext.Set(self.suggestionsLev)
+            self.checktext.Set(self.suggestionsLev[:5])
 
             self.Refresh()
             if (self.checkindexCurr == 0):
@@ -591,7 +590,7 @@ class Example(wx.Frame):
 
             self.wordsuggest.Set(self.suggestions)
             self.levSuggest.Set(self.suggestionsLev)
-            self.checktext.Set(self.suggestionsLev)
+            self.checktext.Set(self.suggestionsLev[:5])
 
             print("Current Word:", self.currentword)
             print ("Non-sorted suggestions:", self.suggestions)

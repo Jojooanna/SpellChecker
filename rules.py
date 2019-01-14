@@ -472,13 +472,17 @@ class meta:
 x = meta()
 
 
-# path = 'dictionary.txt'
+# path = 'new dictionary.txt'
 # with io.open(path) as fp:
 #   line = fp.read().splitlines()
 #   for i in line:
-#     data1 = inputWords(word=i)
-#     session.add(data1)
-#     session.commit()
+    # data = session.query(inputWords).filter(inputWords.word == i).first()
+    # if data is None:
+    #     data1 = inputWords(word=i)
+    #     session.add(data1)
+    #     session.commit()
+    # else:
+    #     print ("Word already exists.")
         
 # for i in dictionary:
 #     print i

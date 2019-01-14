@@ -132,6 +132,7 @@ def displaySuggestions(self, input):
                 self.notfoundmsg.SetLabel("No suggestions found")
             else:
                 self.notfoundmsg.SetLabel("These are the suggestions.")
+                addCommon(self, input)
                 for i in data.words:
                     if i in suggestionslist:
                         pass
@@ -153,6 +154,7 @@ def displaySuggestions(self, input):
                 self.notfoundmsg.SetLabel("No suggestions found")
             else:
                 self.notfoundmsg.SetLabel("These are the suggestions.")
+                addCommon(self, input)                
                 for i in data.words:
                     if i in suggestionslist:
                         pass
@@ -174,6 +176,7 @@ def displaySuggestions(self, input):
                 self.notfoundmsg.SetLabel("No suggestions found")
             else:
                 self.notfoundmsg.SetLabel("These are the suggestions.")
+                addCommon(self, input)                
                 for i in data2.words:
                     if i in suggestionslist:
                         pass
